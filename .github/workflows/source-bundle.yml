@@ -1,0 +1,24 @@
+name: Source checkpoint bundle
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive tracked source only
+        run: |
+          mkdir -p recovery
+          git archive --format=tar HEAD | gzip -n > recovery/project-source.tar.gz
+          git rev-parse HEAD > recovery/project-revision.txt
+          (cd recovery && sha256sum project-source.tar.gz > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-checkpoint
+          path: recovery/
+          retention-days: 30
