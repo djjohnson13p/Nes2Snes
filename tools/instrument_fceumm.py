@@ -15,7 +15,9 @@ def main():
     f=args.source/'src/x6502.c'
     text=f.read_text()
     if '#include "n2s_probe.inc"' in text:
-        print('Probe already installed.');return
+        (f.parent/'n2s_probe.inc').write_bytes(Path(__file__).with_name('fceumm_probe.inc').read_bytes())
+        f.touch()  # upstream make does not track our added include dependency
+        print('Probe refreshed; rebuild the core.');return
     changes=[('#include "sound.h"', '#include "sound.h"\n#include "n2s_probe.inc"'),
              ('\t\tb1 = RdMem(_PC);','\t\tn2s_instruction((uint16_t)_PC);\n\t\tb1 = RdMem(_PC);'),
              ('return(_DB = ARead[A](A));', 'n2s_io(A, 0, 0);\n\treturn(_DB = ARead[A](A));'),

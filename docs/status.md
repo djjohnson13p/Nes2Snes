@@ -8,7 +8,11 @@ The supplied-ROM build is 262,144 bytes. Its SHA-256 is `f52945b5c12ee8213afdc5b
 
 All 32 pages, containing 8,192 tiles, were compared against the NES source pixel indices: 524,288 indices checked, zero mismatches. Next/previous, page wraparound, held-button debouncing and diagnostic palette selection passed. The synthetic fixture independently passed 65,536 pixel-index comparisons.
 
-The Python unit suite passed 35 tests. Details are reproducible using `make test`, `make verify-synthetic` and `make verify-viewer`.
+The Python unit suite passed 43 tests. Details are reproducible using `make test`, `make verify-synthetic` and `make verify-viewer`.
+
+## Frozen native scene
+
+A second native SNES ROM reconstructs the captured title using native background and sprite layers, not a screenshot bitmap. All 57,344 visible pixels match the reference after SNES color-precision conversion. The independent procedural scene also passes all 57,344 pixel comparisons, including sprite flip and priority cases. See `scene-renderer.md` and `scene-verification.json`. This scene remains frozen: no original game logic executes.
 
 ## Reverse engineering
 
@@ -20,6 +24,6 @@ Each of the 32 disassembled PRG banks was assembled and linked, then compared ag
 
 ## Not implemented
 
-No original game logic executes in the SNES build. Game-state scheduling, NES PPU command translation, MMC5 bank/IRQ behavior, SNES sprite rendering, collision, enemies, music and sound effects are not ported. No full-game speedup or reduced gameplay flicker has been measured. No physical SNES or flash-cartridge test has been performed.
+No original game logic executes in the SNES build. Game-state scheduling, NES PPU command translation, MMC5 bank/IRQ behavior, dynamic sprite updates, collision, enemies, music and sound effects are not ported. No full-game speedup or reduced gameplay flicker has been measured. No physical SNES or flash-cartridge test has been performed.
 
-The next milestone is a native scene renderer and a validated single gameplay path, not cosmetic polishing of the viewer.
+The next milestone is IRQ-aware scrolling/HUD rendering and a validated original gameplay path, not cosmetic polishing of the viewer.

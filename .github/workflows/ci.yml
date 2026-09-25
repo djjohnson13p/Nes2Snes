@@ -30,6 +30,14 @@ jobs:
             --core build/snes9x/libretro/snes9x_libretro.so \
             --sfc build/synthetic/chr-viewer.sfc \
             --synthetic --out build/synthetic/verification
+      - name: Build and verify procedural native sprite scene
+        run: |
+          /usr/bin/python3 tools/synthetic_scene.py --out build/synthetic-scene-capture
+          /usr/bin/python3 tools/build_scene.py --snapshot build/synthetic-scene-capture --out build/synthetic-scene
+          /usr/bin/python3 tools/verify_scene.py \
+            --core build/snes9x/libretro/snes9x_libretro.so \
+            --sfc build/synthetic-scene/frozen-scene.sfc \
+            --snapshot build/synthetic-scene-capture --out build/synthetic-scene/verification
       - name: Archive the tested source revision
         run: git archive --format=zip --output=build/tested-source.zip HEAD
       - uses: actions/upload-artifact@v4
@@ -40,4 +48,7 @@ jobs:
             build/synthetic/chr-viewer.sfc
             build/synthetic/viewer-build.json
             build/synthetic/verification/
+            build/synthetic-scene/frozen-scene.sfc
+            build/synthetic-scene/scene-build.json
+            build/synthetic-scene/verification/
           retention-days: 14

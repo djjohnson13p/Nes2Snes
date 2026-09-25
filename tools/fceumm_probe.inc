@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include "cart.h"
 #include "ppu.h"
+#include "palette.h"
 static uint32_t *n2s_exec;
 static uint16_t *n2s_pc, *n2s_io_min, *n2s_io_max;
 static uint8_t *n2s_io_flags;
@@ -14,7 +15,8 @@ static uint32_t n2s_size, n2s_off = 0xffffffff;
 static uint32_t n2s_reads[0x4000], n2s_writes[0x4000];
 static uint8_t n2s_mmc5_values[0x207 * 32];
 static uint8_t n2s_snapshot[8192];
-extern uint8_t PALRAM[0x20], SPRAM[0x100];
+extern uint8_t PALRAM[0x20], SPRAM[0x100], XOffset;
+extern uint32_t TempAddr, RefreshAddr;
 
 static void n2s_instruction(uint16_t pc) {
     uintptr_t p, base;
@@ -62,6 +64,8 @@ __attribute__((visibility("default"))) size_t retro_n2s_size(unsigned kind) {
         case 10:case 11:return 8192;
         case 12:return 256;
         case 13:return 4;
+        case 14:return 192;
+        case 15:return 5;
     }
     return 0;
 }
@@ -89,6 +93,12 @@ __attribute__((visibility("default"))) const void *retro_n2s_data(unsigned kind)
             return n2s_snapshot;
         case 12:return SPRAM;
         case 13:return PPU;
+        case 14:return palo;
+        case 15:
+            n2s_snapshot[0] = TempAddr; n2s_snapshot[1] = TempAddr >> 8;
+            n2s_snapshot[2] = RefreshAddr; n2s_snapshot[3] = RefreshAddr >> 8;
+            n2s_snapshot[4] = XOffset;
+            return n2s_snapshot;
     }
     return NULL;
 }

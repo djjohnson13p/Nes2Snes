@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "pixels_checked": 57344,
+  "normalized_mismatched_pixels": 0,
+  "raw_rgb_different_pixels": 3738,
+  "comparison": "NES RGB quantized to RGB555, then Snes9x RGB565 output expansion",
+  "rom": {
+    "bytes": 65536,
+    "sha256": "d100d2d7f41a141794fc3956ffa0e2a6944a46a266bc8021d2b147c615d69081",
+    "map": "LoROM",
+    "checksum": "7DC3",
+    "reset": "$8000"
+  },
+  "core_sha256": "954fa8e0f80dd65f8a511189e2c9190ebdb80de753fc6dd9c6407530d990728f",
+  "scene_is_static": true,
+  "original_game_logic_executed": false,
+  "physical_snes_tested": false
+}

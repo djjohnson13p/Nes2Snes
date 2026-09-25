@@ -28,4 +28,4 @@ SNES CGRAM has 256 color entries (512 bytes), not 512 entries. Mode 0 supports n
 
 ## Completion criteria
 
-A port is not complete until the original game runs through its supported content, audiovisual behavior is validated, known regressions are documented, and representative physical-hardware tests are performed. Current artifacts meet the earlier extraction/reconstruction/viewer gates only.
+A port is not complete until the original game runs through its supported content, audiovisual behavior is validated, known regressions are documented, and representative physical-hardware tests are performed. Current artifacts meet extraction/reconstruction/viewer gates and a zero-scroll frozen-scene comparison, not the gameplay gates.
