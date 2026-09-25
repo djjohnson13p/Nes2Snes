@@ -1,0 +1,40 @@
+{
+  "format": 1,
+  "message": "Accelerate native bridge with guarded fast paths and differential regression tests",
+  "reference_revision": "bfe12bc08d1c04748ad62ef97e16a6e947dc9644",
+  "patch_sha256": "de1cb752f01cda3c8eee0dd12d857e58b998ba0161e06130b24fa5f005da3b87",
+  "before": {
+    "snes/src/native.s": "d2576aaa03e9e9beec77b256f753b5cffe26d658fe9eb277e400bc0cf7b83aba",
+    "snes/src/native_video.inc": "033195ea1fa199d32a57408a2f36ad627d349e61b6403db8c0532174c1ca289e",
+    "tools/benchmark_native.py": null,
+    "tools/build_native.py": "197a22d367e3b56d127f003e7ff9facd071adfb70e6422d3cb19fa3e498a6403",
+    "tools/compare_benchmarks.py": null,
+    "tools/fastpath_fixture.py": null,
+    "tools/instrument_snes9x.py": null,
+    "tools/native_fixture.py": "afe29344718779179224e3843fba2d8efe5888fe2f9edab2849a9ac7ca5b6f5a",
+    "tools/verify_native_cpu.py": "45f33b8b143370dbaf48aa9815fe69836c3a4b161314f6862822c9aaa51d94d6",
+    "tests/test_native.py": "ad499a75ed548d132a11db9e8e540ea74b1273780f1e9bbc50681a5bbc3b3e4d",
+    "docs/native-bridge.md": "fc732e785909c91057fbf998459356a4d6b41f79561068c33d80e4bd973d868d",
+    "docs/performance-2026-09-25.md": null,
+    "docs/performance-results.json": null,
+    "docs/status.md": "bfa4c5b6f002da3825960255fd488a463f7e4502c520b84502a715e0d4906bc7",
+    "README.md": "9b2a0d4ac13a7c6f95280e0fbc31e2963055780bf07139ac10f29ade18f7303a"
+  },
+  "after": {
+    "snes/src/native.s": "feb5b4d4689d6a1edd8645e33d7566af8bd3e7f774d87a39bc086f8528fb01de",
+    "snes/src/native_video.inc": "0421475e24cf6d905bb0ddf867374117b7e25e183e422c54e72eb86e23601484",
+    "tools/benchmark_native.py": "3b8d5ec6a47903087ccc46703bf12d94a72b1a6e91b02f6ba0867f92bd9c27d2",
+    "tools/build_native.py": "add441248e87fd706c8520683504750a40d3929e597be162b0cdc2e54905f24a",
+    "tools/compare_benchmarks.py": "447502d59246ee7116a5aa5fc3d4dd3fee3c0a085d2bbe1de6688d7cfb4cf314",
+    "tools/fastpath_fixture.py": "edc4e8be095248da46d31df4ddb129989cdcaf097e98e4c3bde2fcd0609533e0",
+    "tools/instrument_snes9x.py": "0e55955bb6c9f9ce61bb377349d53faa827c5584929c9c21988eb8f81fe28818",
+    "tools/native_fixture.py": "0b720086423fd34ecafd067689f57a75c4716535e3043dfb1613045a73c0df56",
+    "tools/verify_native_cpu.py": "7f9225cca17447674eff537a802d9bb38c3524e80cb597b2233ee1888676d931",
+    "tests/test_native.py": "128453883fc4cf28739afdfdd1bb4c71c1cf9e6db312ebc0a96a75041dcc60a8",
+    "docs/native-bridge.md": "6e939a2a97f7a40b8544a3f4ae3a9f6fe01cea057c0b9c1f44aa79516d7396c5",
+    "docs/performance-2026-09-25.md": "da41c35cdde1ea174487a26f60ed22b4573c74719624a5bc8e8489428d0e8ee8",
+    "docs/performance-results.json": "50dc786fb7b8fabe921e98fd6333471bd57290e8fd434cda628dd748e25eb952",
+    "docs/status.md": "f6d47c2b35fabc29f003bd99da3921c4cc0df64febce74e09d52ed5587780d82",
+    "README.md": "bff458bc1a58ab68d44817c282ce4e960a2eaf21680293098ae40fdf99a2b16c"
+  }
+}

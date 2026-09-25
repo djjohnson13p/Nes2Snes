@@ -48,6 +48,16 @@ jobs:
           /usr/bin/python3 tools/native_fixture.py --out build/native-fixture
           /usr/bin/python3 tools/build_native.py --rom build/native-fixture/fixture.nes --trace build/native-fixture --out build/native-fixture/snes
           /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture build/native-fixture --out build/native-fixture/verification
+      - name: Fast-path regression, live bank changes and OAM copies
+        run: |
+          if [ -f tools/fastpath_fixture.py ]; then
+            for seed in 0 7; do
+              out="build/fastpath-seed${seed}"
+              /usr/bin/python3 tools/fastpath_fixture.py --out "$out" --seed "$seed"
+              /usr/bin/python3 tools/build_native.py --rom "$out/fixture.nes" --trace "$out" --out "$out/snes"
+              /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture "$out" --out "$out/verification"
+            done
+          fi
       - name: Archive the tested source revision
         run: git archive --format=zip --output=build/tested-source.zip HEAD
       - uses: actions/upload-artifact@v4
@@ -55,6 +65,7 @@ jobs:
           name: synthetic-snes-viewer-and-verification
           path: |
             build/native-fixture/verification/
+            build/fastpath-seed*/verification/
             build/tested-source.zip
             build/synthetic/chr-viewer.sfc
             build/synthetic/viewer-build.json

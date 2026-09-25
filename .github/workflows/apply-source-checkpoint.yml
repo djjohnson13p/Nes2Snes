@@ -1,0 +1,80 @@
+name: Apply verified source checkpoint
+on:
+  push:
+    branches: [main]
+    paths: ['maintenance/checkpoint/manifest.json']
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: source-checkpoint-main
+  cancel-in-progress: false
+jobs:
+  apply:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Validate and apply exact source-only patch
+        run: |
+          /usr/bin/python3 - <<'PY'
+          import base64, gzip, hashlib, json, pathlib, subprocess
+          root = pathlib.Path.cwd()
+          folder = root / 'maintenance/checkpoint'
+          spec = json.loads((folder / 'manifest.json').read_text())
+          assert spec['format'] == 1
+          assert set(spec['before']) == set(spec['after'])
+          subprocess.run(['git', 'merge-base', '--is-ancestor', spec['reference_revision'], 'HEAD'], check=True)
+          for name, expected in spec['before'].items():
+              p = pathlib.PurePosixPath(name)
+              assert not p.is_absolute() and '..' not in p.parts
+              assert name == 'README.md' or p.parts[0] in {'snes', 'tools', 'tests', 'docs'}
+              assert p.suffix in {'.s', '.inc', '.py', '.md', '.json'}
+              target = root / p
+              assert root in target.resolve().parents and not target.is_symlink()
+              actual = hashlib.sha256(target.read_bytes()).hexdigest() if target.exists() else None
+              assert actual == expected, f'Unexpected existing content: {name}'
+          encoded = ''.join((folder / f'part{i}.b64').read_text().strip() for i in range(3))
+          patch = gzip.decompress(base64.b64decode(encoded, validate=True))
+          assert hashlib.sha256(patch).hexdigest() == spec['patch_sha256']
+          patch_file = pathlib.Path('/tmp/verified-source.patch')
+          patch_file.write_bytes(patch)
+          stats = subprocess.check_output(['git', 'apply', '--numstat', str(patch_file)], text=True)
+          changed = {line.split('\t', 2)[2] for line in stats.splitlines()}
+          assert changed == set(spec['after']), 'Patch paths differ from approved manifest'
+          subprocess.run(['git', 'apply', '--check', str(patch_file)], check=True)
+          subprocess.run(['git', 'apply', str(patch_file)], check=True)
+          for name, expected in spec['after'].items():
+              assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected, name
+          pathlib.Path('build').mkdir(exist_ok=True)
+          pathlib.Path('build/checkpoint-source-verification.json').write_text(json.dumps({'patch_sha256': spec['patch_sha256'], 'verified_source_files': spec['after']}, indent=2) + '\n')
+          print(f"Verified and applied {len(changed)} source files; no ROM or game assets included.")
+          PY
+      - name: Regression tests before publishing
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: Commit verified source without overwriting concurrent changes
+        run: |
+          /usr/bin/python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          spec = json.loads(Path('maintenance/checkpoint/manifest.json').read_text())
+          subprocess.run(['git', 'config', 'user.name', 'github-actions[bot]'], check=True)
+          subprocess.run(['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], check=True)
+          subprocess.run(['git', 'add', '--', *sorted(spec['after'])], check=True)
+          subprocess.run(['git', 'rm', '--', 'maintenance/checkpoint/manifest.json', *[f'maintenance/checkpoint/part{i}.b64' for i in range(3)]], check=True)
+          subprocess.run(['git', 'commit', '-m', spec['message']], check=True)
+          subprocess.run(['git', 'push', 'origin', 'HEAD:main'], check=True)
+          PY
+      - name: Run independent build and emulator verification
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci.yml --ref main
+      - uses: actions/upload-artifact@v4
+        with:
+          name: checkpoint-source-verification
+          path: build/checkpoint-source-verification.json
+          retention-days: 14
