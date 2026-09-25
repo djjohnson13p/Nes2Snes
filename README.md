@@ -1,6 +1,6 @@
 # Nes2Snes
 
-**Latest update:** native-bridge walking benchmark improved from 608 to 388 SNES frames for 120 guest frames (1.567x prototype speed). The build remains slow, silent and not full-game validated. [Measured results and regression tests](docs/performance-2026-09-25.md).
+**Latest update:** queued video presentation and guarded PPU/sprite fast paths reduce the fixed-input walking sample from 386 to 242 SNES frames per 120 game updates (1.595x the previous checkpoint speed). The interactive build also passes its controller-driven benchmark. **Still slow, silent and not full-game validated.** [Results, replay methodology and limitations](docs/performance-pipeline-2026-09-25.md).
 
 A source-only NES-to-SNES reverse-engineering and porting workspace, initially targeting the supplied MMC5 version of CV3.
 
@@ -15,7 +15,7 @@ The independently tested graphics viewer and frozen title renderer remain availa
 - A headless libretro test frontend and optional FCEUmm execution/I/O probe.
 - A repeatable input script that reaches the original NES game's early first stage.
 - Trace-guided disassembly of all 32 PRG banks. Only observed instructions are marked as code; other bytes remain unclassified byte tables. All banks reassemble exactly, and the resulting NES file matches the input SHA-256.
-- 54 unit tests plus independent Snes9x checks of all 8,192 converted tiles: 524,288 pixel indices checked with zero mismatches. Controller next/previous, wraparound, held-button behavior and palette switching also passed.
+- 75 unit tests plus independent Snes9x checks of all 8,192 converted tiles: 524,288 pixel indices checked with zero mismatches. Controller next/previous, wraparound, held-button behavior and palette switching also passed.
 
 - A native frozen title-screen renderer using BG1, OBJ and CGRAM, matching 57,344 pixels after color-precision conversion. An independent procedural sprite/attribute scene also matches. This does not execute original gameplay.
 
@@ -63,4 +63,4 @@ The output includes bank assembly, da65 classification files, hardware-access si
 
 This work was implemented, assembled, executed, debugged and tested from the ChatGPT conversation. GitHub Actions bootstrapped the external tools and runs public synthetic checks; no Codex/Work handoff was used.
 
-No physical SNES validation, end-to-end gameplay port, audio port, or measured game-performance improvement is claimed.
+No physical SNES validation, end-to-end gameplay port, audio port, or speedup over the NES original is claimed. Measured improvements are relative to earlier SNES prototypes.

@@ -1,14 +1,22 @@
 # Verified status — 2026-09-25
 
-## Latest measured update
+## Latest measured update: pipelined video
 
-The native bridge now has verified CPU/I/O fast paths and reduced rendering work.
-The walking sample improved from 608 to 388 SNES frames for 120 guest frames
-(1.567x the previous prototype speed), with five selected frames matching exactly.
-58 unit tests and eight seeded independent-emulator regression sets pass.
-See [measured results and limits](performance-2026-09-25.md).
-The build is still slow, silent, and not full-game validated.
+The controlled fixed-input walking comparison improves from 386 to 242 SNES
+frames for 120 logical game frames: **1.595x the previous checkpoint speed**.
+The ordinary controller-driven benchmark independently completes with 242 frames
+(previous checkpoint: 388). These two measurements use different sampling/input
+methods and must not be mixed when claiming pixel identity.
 
+Five render-aligned replay captures match exactly (286,720 pixels). There are
+75 passing unit tests, 1,130 independent CPU/PPU records with zero differences,
+and 160 verified animated sprite frames. See [new measured results and limits](performance-pipeline-2026-09-25.md)
+and [machine-readable evidence](pipeline-verification.json).
+
+The prototype remains about two SNES frames per game update in the walking
+sample. Audio, complete-game coverage and physical-console validation remain
+outstanding. The older [fast-path checkpoint](performance-2026-09-25.md) is retained
+for history; the sections below describe earlier milestones.
 
 **Update:** the new [native bridge](native-bridge.md) now executes original gameplay in an experimental, slow, silent build. The viewer/frozen-scene findings below remain valid, but the earlier "Not implemented" section describes the pre-bridge checkpoint.
 

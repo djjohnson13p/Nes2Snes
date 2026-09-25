@@ -51,7 +51,7 @@ def classify_patch(prg:bytes, counts:list[int]):
         'classified_code_bytes':sum(covered),'trap_sites':sites,'reset_txs_nop_offsets':skipped,
         'unclassified_execution':'BRK fail-closed trap; raw data remains intact'}
 
-def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True):
+def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True,quick_ppu:bool=True,object_cache:bool=True,pipelined_video:bool=True,replay_input:Path|None=None):
     rom=Rom.read(rom_path)
     if rom.mapper!=5 or len(rom.prg)!=0x40000 or len(rom.chr)!=0x20000:
         raise ValueError('Current bridge requires mapper 5, 256 KiB PRG, 128 KiB CHR.')
@@ -67,8 +67,12 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     out.mkdir(parents=True,exist_ok=True)
     (out/"cfg-inference.json").write_text(json.dumps(cfg,indent=2)+"\n")
     assets=out/'native-assets';assets.mkdir(exist_ok=True)
+    replay=replay_input.read_bytes() if replay_input else b''
+    if replay_input and not 1<=len(replay)<=8192:
+        raise ValueError('Input replay must contain 1 to 8192 per-guest-frame NES joypad bytes.')
+    (assets/'input-replay.bin').write_bytes(replay)
     nmi,reset,irq=struct.unpack_from('<HHH',rom.prg,0x3fffa)
-    (assets/'config.inc').write_text(f'GUEST_NMI=${nmi:04X}\nGUEST_RESET=${reset:04X}\nGUEST_IRQ=${irq:04X}\nUSE_FASTROM={int(fastrom)}\nUSE_QUICK_DISPATCH={int(quick_zp or quick_indirect or quick_io)}\n')
+    (assets/'config.inc').write_text(f'GUEST_NMI=${nmi:04X}\nGUEST_RESET=${reset:04X}\nGUEST_IRQ=${irq:04X}\nUSE_FASTROM={int(fastrom)}\nUSE_PIPELINED_VIDEO={int(pipelined_video)}\nUSE_OBJECT_CACHE={int(object_cache)}\nTEST_INPUT_REPLAY={int(replay_input is not None)}\nREPLAY_LENGTH={len(replay)}\nUSE_QUICK_PPU={int(quick_ppu and quick_io)}\nUSE_QUICK_DISPATCH={int(quick_zp or quick_indirect or quick_io)}\n')
     for name,data in [('operation.bin',bytes(OPERATIONS.get(OPS.get(o,('',))[0],0) for o in range(256))),
                       ('mode.bin',bytes(MODES.get(OPS.get(o,('', ''))[1],255) for o in range(256))),
                       ('length.bin',bytes(OPS.get(o,('', '',0))[2] for o in range(256)))]:
@@ -112,7 +116,7 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     info.update(validate_sfc(raw));info.update({'rom_sha256':rom.metadata()['sha256'],
        'renderer':'experimental live PPU bridge','audio_implemented':False,
        'complete_game_port':False,'prg_mode':2,'supported_c000_banks':[30,7],
-       'native_execution_banks':32,'fastrom':fastrom,'quick_zero_page':quick_zp,'quick_indirect_reads':quick_indirect,'quick_io':quick_io,'notes':'Unclassified code traps; compatibility and timing require validation.'})
+       'native_execution_banks':32,'fastrom':fastrom,'quick_zero_page':quick_zp,'quick_indirect_reads':quick_indirect,'quick_io':quick_io,'quick_ppu_writes':quick_ppu and quick_io,'object_cache':object_cache,'pipelined_video':pipelined_video,'test_input_replay_sha256':hashlib.sha256(replay).hexdigest() if replay_input else None,'notes':'Unclassified code traps; compatibility and timing require validation.'})
     (out/'native-build.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
 
@@ -123,4 +127,11 @@ if __name__=='__main__':
     p.add_argument('--no-quick-zp',action='store_true',help='Disable verified indexed-zero-page COP fast path')
     p.add_argument('--no-quick-indirect',action='store_true',help='Disable range-checked indirect-read fast path')
     p.add_argument('--no-quick-io',action='store_true',help='Disable explicit joypad-read and mapper-write fast paths')
-    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))
+    p.add_argument('--no-quick-ppu',action='store_true',help='Use generic COP context for PPU writes')
+    p.add_argument('--input-replay',type=Path,help='TEST ONLY: per-guest-frame NES button bytes instead of live controller input')
+    p.add_argument('--no-object-cache',action='store_true',help='Rebuild every native sprite for controlled comparison')
+    video=p.add_mutually_exclusive_group()
+    video.add_argument('--pipelined-video',dest='pipelined_video',action='store_true',help='Queue prepared frames for the following host NMI (default)')
+    video.add_argument('--synchronous-video',dest='pipelined_video',action='store_false',help='Retain the previous blocking upload for regression comparisons')
+    p.set_defaults(pipelined_video=True)
+    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io,quick_ppu=not a.no_quick_ppu,object_cache=not a.no_object_cache,pipelined_video=a.pipelined_video,replay_input=a.input_replay);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))

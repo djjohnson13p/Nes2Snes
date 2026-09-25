@@ -31,6 +31,8 @@ DIRTY_ANY=$0D63
 PALETTE_READY=$0D64
 PALETTE_UPLOAD=$0D65
 UPLOAD_ANY=$0D66
+OBJECTS_READY=$0D67
+OBJECTS_CTRL=$0D68
 OLDMIRROR=$0D70
 OLDTOP=$0D71
 BG_CACHE=$0D80
@@ -40,6 +42,11 @@ UPLOAD=$0E00
 VIDEO_MULTISPLIT=$0CE0
 BOTTOMEN=$0CE2
 TOPEN=$0CE3
+FRAME_TEMP=$0CF0
+FRAME_FINE=$0CF2
+FRAME_MASK=$0CF3
+FRAME_ID=$0CF4
+FRAME_SPR_CHR=$0CF8
 
 CaptureTop:
 .a8
@@ -294,8 +301,36 @@ RenderFrame:
 .a16
     jsr ConvertObjects
     jsr ConvertPalette
+    ; Snapshot every live guest field read by presentation. Main-loop PPU and
+    ; mapper writes must not alter a frame that is already queued for upload.
+    lda TEMPV
+    sta FRAME_TEMP
+    lda GFRAMES
+    sta FRAME_ID
+    ldx #$0006
+@snapshotobjects:
+    lda f:$7E5120,x
+    sta FRAME_SPR_CHR,x
+    dex
+    dex
+    bpl @snapshotobjects
     sep #$20
 .a8
+    lda FINEX
+    sta FRAME_FINE
+    lda MASK
+    sta FRAME_MASK
+.if USE_PIPELINED_VIDEO
+    lda #$01
+    sta FRAME_READY
+    rep #$20
+.a16
+    lda #$0000
+    tcd
+    sep #$20
+.a8
+    rts
+.endif
     ; Start from a known vblank boundary. No VRAM writes during active display.
 @outblank:
     lda $4212
@@ -303,6 +338,32 @@ RenderFrame:
 @inblank:
     lda $4212
     bpl @inblank
+    jmp UploadPreparedFrame
+
+.if USE_PIPELINED_VIDEO
+; The next host NMI presents a completed immutable frame before starting any
+; new guest NMI. Conversion and main-loop work no longer wait for an upload.
+PresentPendingFrame:
+.a8
+.i16
+    lda FRAME_READY
+    beq @done
+    stz FRAME_READY
+    rep #$30
+.a16
+.i16
+    lda #$0C00
+    tcd
+    sep #$20
+.a8
+    jsr UploadPreparedFrame
+@done:
+    rts
+.endif
+
+UploadPreparedFrame:
+.a8
+.i16
     lda #$80
     sta $2100
     stz $420C
@@ -321,7 +382,7 @@ RenderFrame:
 @finishblank:
     lda $4212
     bpl @finishblank
-    lda MASK
+    lda FRAME_MASK
     and #$18
     beq @remainblank
     lda #$0F
@@ -329,6 +390,8 @@ RenderFrame:
 @remainblank:
     rep #$20
 .a16
+    lda FRAME_ID
+    sta $0974             ; completed render ID for phase-aligned regression
     lda #$0000
     tcd
     sep #$20
@@ -543,6 +606,31 @@ FillRow:
 ConvertObjects:
 .a16
 .i16
+.if USE_OBJECT_CACHE
+    ; Only size/pattern selection changes native OAM encoding. CHR bank changes
+    ; affect uploaded textures, not the object attributes cached here.
+    lda CTRL
+    and #$0028
+    cmp OBJECTS_CTRL
+    bne @forceobjects
+    lda OBJECTS_READY
+    and #$00FF
+    beq @forceobjects
+    stz VFORCE
+    bra @objectsready
+@forceobjects:
+    lda CTRL
+    and #$0028
+    sta OBJECTS_CTRL
+    lda #$0001
+    sta VFORCE
+    sep #$20
+.a8
+    sta OBJECTS_READY
+    rep #$20
+.a16
+@objectsready:
+.endif
     lda #$2000
     sta $0C84
     sep #$20
@@ -554,6 +642,34 @@ ConvertObjects:
     ldx #$0000
     ldy #$0000
 @object:
+.if USE_OBJECT_CACHE
+    lda VFORCE
+    bne @objectchanged
+    lda f:$7E3800,x
+    cmp f:$7F2700,x
+    bne @objectchanged
+    lda f:$7E3802,x
+    cmp f:$7F2702,x
+    bne @objectchanged
+    inc $097A
+    bne :+
+    inc $097C
+:
+    tya
+    clc
+    adc #$0008
+    tay
+    jmp @next
+@objectchanged:
+    lda f:$7E3800,x
+    sta f:$7F2700,x
+    lda f:$7E3802,x
+    sta f:$7F2702,x
+    inc $0976
+    bne :+
+    inc $0978
+:
+.endif
     lda f:$7E3800,x
     and #$00FF
     cmp #$00EF
@@ -802,7 +918,7 @@ UploadCharacters:
     bne @top
     ldx #$0000
 @sprite:
-    lda f:$7E5120,x
+    lda FRAME_SPR_CHR,x
     and #$7F
     cmp SPR_CACHE,x
     beq @sprskip
@@ -992,17 +1108,17 @@ SetVideoRegisters:
     sta $2101
     rep #$20
 .a16
-    lda TEMPV
+    lda FRAME_TEMP
     and #$001F
     asl a
     asl a
     asl a
     sta VFLAGS
-    lda FINEX
+    lda FRAME_FINE
     and #$0007
     ora VFLAGS
     sta VFLAGS
-    lda TEMPV
+    lda FRAME_TEMP
     and #$0400
     lsr a
     lsr a
@@ -1014,7 +1130,7 @@ SetVideoRegisters:
     sta $210D
     rep #$20
 .a16
-    lda TEMPV
+    lda FRAME_TEMP
     jsr VerticalOffset
     sep #$20
 .a8
@@ -1049,7 +1165,7 @@ SetVideoRegisters:
     sta $2110
     stz BOTTOMEN
     stz TOPEN
-    lda MASK
+    lda FRAME_MASK
     and #$08
     beq @nobg
     lda #$01
@@ -1057,11 +1173,11 @@ SetVideoRegisters:
     lda #$02
     sta TOPEN
 @nobg:
-    lda MASK
+    lda FRAME_MASK
     and #$10
     ora BOTTOMEN
     sta BOTTOMEN
-    lda MASK
+    lda FRAME_MASK
     and #$10
     ora TOPEN
     sta TOPEN

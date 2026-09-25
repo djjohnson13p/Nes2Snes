@@ -741,7 +741,15 @@ QuickLDA_ABS:
     tax
     lda a:$0000,x
     cmp #$4016
-    bne @fallback
+    beq @joy
+    cmp #$4017
+    beq @joy2
+    cmp #$2002
+    beq @status
+    cmp #$5204
+    beq @irq
+    jmp CopGeneric
+@joy:
     jsr CountQuickIo
     sep #$20
 .a8
@@ -756,12 +764,63 @@ QuickLDA_ABS:
     ora #$80
     sta JOYSHIFT
 @read:
+    lda 3,s
+    bra QuickReadResult
+@joy2:
+.a16
+    jsr CountQuickIo
+    sep #$20
+.a8
+    lda #$40
+    bra QuickReadResult
+@status:
+.a16
+    jsr CountQuickIo
+    sep #$20
+.a8
+    lda STATUS
+    and #$E0
+    sta TMP
+    lda PPUBUS
+    and #$1F
+    ora TMP
+    sta 3,s
+    lda STATUS
+    and #$7F
+    sta STATUS
+    stz LATCH
+    lda 3,s
+    sta PPUBUS
+    bra QuickReadResult
+@irq:
+.a16
+    jsr CountQuickIo
+    sep #$20
+.a8
+    lda f:$004212
+    and #$80
+    beq @inframe
+    lda #$00
+    bra @pending
+@inframe:
+    lda #$40
+@pending:
+    ora IRQPENDING
+    stz IRQPENDING
+QuickReadResult:
+.a8
+.i16
+    sta 3,s
+    cmp #$00
+    php
+    pla
+    and #$82
+    sta TMP
     lda 5,s
-    and #$7D              ; $40/$41 always gives N=0,Z=0; preserve C/V
+    and #$7D
+    ora TMP
     sta 5,s
     jmp QuickAbsReturn
-@fallback:
-    jmp CopGeneric
 
 QuickSTA_ABS:
 .a16
@@ -776,6 +835,17 @@ QuickSTA_ABS:
     beq @cbank
     cmp #$5117
     beq @fixed
+.if USE_QUICK_PPU
+    cmp #$2000
+    bcc @fallback
+    cmp #$4000
+    jcc QuickPpuStore
+.endif
+    cmp #$5100
+    bcc @fallback
+    cmp #$512C
+    jcc QuickMapperRegister
+@fallback:
     jmp CopGeneric
 @primary:
     jsr CountQuickIo
@@ -821,7 +891,7 @@ QuickSTA_ABS:
     lda RAWBANK
     pha
     plb
-    bra QuickAbsReturn
+    jmp QuickAbsReturn
 @fixed:
 .a16
     sep #$20
@@ -835,12 +905,76 @@ QuickSTA_ABS:
     rep #$20
 .a16
     jsr CountQuickIo
-    bra QuickAbsReturn
+    jmp QuickAbsReturn
 @unsupported:
     rep #$30
 .a16
 .i16
     jmp CopGeneric
+
+; Ordinary mapper register backing, excluding the three live bank selectors
+; already dispatched above. Preserve the last CHR-register set side effect.
+QuickMapperRegister:
+.a16
+.i16
+    tax
+    cmp #$5120
+    bcc @value
+    and #$0008
+    sep #$20
+.a8
+    sta LASTCHR
+@value:
+    sep #$20
+.a8
+    lda 3,s
+    sta f:$7E0000,x
+    rep #$20
+.a16
+    jsr CountQuickIo
+    jmp QuickAbsReturn
+
+.if USE_QUICK_PPU
+; A holds the original CPU address. Reuse the existing PPU write semantics
+; without materializing/interpreting a complete generic COP context. The
+; original register saves and hardware COP return frame remain on the stack.
+QuickPpuStore:
+.a16
+.i16
+    and #$0007
+    asl a
+    tax
+    inc $0970
+    bne :+
+    inc $0972
+:
+    jsr CountQuickIo
+    phy
+    phd
+    phb
+    lda #$0800
+    tcd
+    sep #$20
+.a8
+    lda #$00
+    pha
+    plb
+    lda #$01
+    sta COPBUSY
+    lda 8,s               ; saved guest A after Y, D and DBR saves
+    sta VAL
+    sta PPUBUS
+    jsr (PpuWriters,x)
+    sep #$20
+.a8
+    stz COPBUSY
+    plb
+    pld
+    rep #$10
+.i16
+    ply
+    jmp QuickAbsReturn
+.endif
 
 CountQuickIo:
 .a16
@@ -1145,6 +1279,28 @@ WriteJoy:
     and #$01
     sta STROBE
     jeq @done
+.if TEST_INPUT_REPLAY
+    ; Test-only input is indexed by logical guest frame, not host timing.
+    ; This block is absent from ordinary interactive builds.
+    rep #$20
+.a16
+    lda GFRAMES
+    cmp #REPLAY_LENGTH
+    bcs @replayend
+    tax
+    sep #$20
+.a8
+    lda f:$800000+InputReplay,x
+    bra @replayvalue
+@replayend:
+    sep #$20
+.a8
+    lda #$00
+@replayvalue:
+    sta JOYLATCH
+    sta JOYSHIFT
+    rts
+.endif
     rep #$20
 .a16
     lda $4218
@@ -1599,6 +1755,9 @@ NmiFull:
     jcs NmiRestore
     lda #$01
     sta RUNNING
+.if USE_PIPELINED_VIDEO
+    jsr PresentPendingFrame
+.endif
     rep #$20
 .a16
     inc GFRAMES
@@ -1830,6 +1989,9 @@ OperationTable: .incbin "operation.bin"
 ModeTable: .incbin "mode.bin"
 LengthTable: .incbin "length.bin"
 RgbPalette: .incbin "palette.bin"
+.if TEST_INPUT_REPLAY
+InputReplay: .incbin "input-replay.bin"
+.endif
 .segment "HEADER"
     .byte "NES2SNES NATIVE TEST "
     .byte ($20+$10*USE_FASTROM),$00,$0C,$00,$01,$00,$00
