@@ -15,14 +15,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build pinned assembler
         run: |
-          git clone https://github.com/vhelin/wla-dx.git build/wla
-          git -C build/wla checkout 91c52b1f4ef3cc8ba3c0638f7536539579af6a9f
+          git clone --no-checkout https://github.com/vhelin/wla-dx.git build/wla
+          git -C build/wla -c core.autocrlf=false checkout --force 91c52b1f4ef3cc8ba3c0638f7536539579af6a9f
           cmake -S build/wla -B build/wla/build -DCMAKE_BUILD_TYPE=Release
           cmake --build build/wla/build --target wla-6502 wlalink -j2
       - name: Assemble credited external reference without CHR
         run: |
-          git clone https://github.com/vinheim3/castlevania3-disasm.git build/reference
-          git -C build/reference checkout 3272648f2bbf95f6cb11d947feca73b852a99f10
+          git clone --no-checkout https://github.com/vinheim3/castlevania3-disasm.git build/reference
+          git -C build/reference -c core.autocrlf=false checkout --force 3272648f2bbf95f6cb11d947feca73b852a99f10
           export PATH="$GITHUB_WORKSPACE/build/wla/build/binaries:$PATH"
           cd build/reference
           wla-6502 -i -o game.o game.s
