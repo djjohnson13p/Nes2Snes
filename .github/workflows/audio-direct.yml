@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '.github/workflows/audio-direct.yml'
       - 'snes/src/native*.inc'
       - 'snes/src/native.s'
       - 'snes/linker/native.cfg'
