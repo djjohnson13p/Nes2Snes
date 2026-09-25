@@ -1,6 +1,7 @@
 name: Build and emulator verification
 on:
   push:
+    paths-ignore: ['maintenance/checkpoint/**']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -51,12 +52,29 @@ jobs:
       - name: Fast-path regression, live bank changes and OAM copies
         run: |
           if [ -f tools/fastpath_fixture.py ]; then
-            for seed in 0 7; do
+            for seed in 0 1 2 3 4 5 6 7; do
               out="build/fastpath-seed${seed}"
               /usr/bin/python3 tools/fastpath_fixture.py --out "$out" --seed "$seed"
               /usr/bin/python3 tools/build_native.py --rom "$out/fixture.nes" --trace "$out" --out "$out/snes"
               /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture "$out" --out "$out/verification"
             done
+          fi
+      - name: Buffered PPU, aliases, palette and store-flag oracle
+        run: |
+          if [ -f tools/ppu_fixture.py ]; then
+            for seed in 0 7; do
+              out="build/ppu-seed${seed}"
+              /usr/bin/python3 tools/ppu_fixture.py --out "$out" --seed "$seed"
+              /usr/bin/python3 tools/build_native.py --rom "$out/fixture.nes" --trace "$out" --out "$out/snes"
+              /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture "$out" --out "$out/verification"
+            done
+          fi
+      - name: Animated objects and cache invalidation
+        run: |
+          if [ -f tools/video_fixture.py ]; then
+            /usr/bin/python3 tools/video_fixture.py --out build/video-fixture
+            /usr/bin/python3 tools/build_native.py --rom build/video-fixture/fixture.nes --trace build/video-fixture --out build/video-fixture/snes
+            /usr/bin/python3 tools/verify_object_cache.py --core build/snes9x/libretro/snes9x_libretro.so --rom build/video-fixture/snes/native-prototype.sfc --out build/video-fixture/verification
           fi
       - name: Archive the tested source revision
         run: git archive --format=zip --output=build/tested-source.zip HEAD
@@ -66,6 +84,8 @@ jobs:
           path: |
             build/native-fixture/verification/
             build/fastpath-seed*/verification/
+            build/ppu-seed*/verification/
+            build/video-fixture/verification/
             build/tested-source.zip
             build/synthetic/chr-viewer.sfc
             build/synthetic/viewer-build.json
