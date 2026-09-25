@@ -17,6 +17,8 @@ OPERATIONS = {'LDA':1,'LDX':2,'LDY':3,'STA':4,'STX':5,'STY':6,
               'AND':7,'ORA':8,'EOR':9,'ADC':10,'SBC':11,'CMP':12,
               'CPX':13,'CPY':14,'BIT':15,'ASL':16,'LSR':17,'ROL':18,
               'ROR':19,'INC':20,'DEC':21}
+QUICK_ZPX = frozenset(('LDA','LDY','STA','AND','ORA','EOR','ADC','SBC','CMP','ASL','LSR','ROL','ROR','INC','DEC'))
+
 MODES={'zp':0,'zpx':1,'zpy':2,'abs':3,'absx':4,'absy':5,'ix':6,'iy':7}
 
 def classify_patch(prg:bytes, counts:list[int]):
@@ -31,7 +33,7 @@ def classify_patch(prg:bytes, counts:list[int]):
         addr=int.from_bytes(prg[i+1:i+n],'little')
         intercept=(name in OPERATIONS and (mode in ('zpx','zpy','ix','iy') or
                     (mode in ('abs','absx','absy') and (0x0800<=addr<0x8000 or
-                     (mode!='abs' and addr>=0xFF01)))))
+                     (mode!='abs' and (0x0701<=addr<0x0800 or addr>=0xFF01))))))
         if name=='TXS':
             # The traced reset sets X=$FF. Bootstrap already established $01FF.
             # Other stack replacements need a separate, explicit translation.
@@ -49,7 +51,7 @@ def classify_patch(prg:bytes, counts:list[int]):
         'classified_code_bytes':sum(covered),'trap_sites':sites,'reset_txs_nop_offsets':skipped,
         'unclassified_execution':'BRK fail-closed trap; raw data remains intact'}
 
-def build(rom_path:Path,trace:Path,out:Path):
+def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True):
     rom=Rom.read(rom_path)
     if rom.mapper!=5 or len(rom.prg)!=0x40000 or len(rom.chr)!=0x20000:
         raise ValueError('Current bridge requires mapper 5, 256 KiB PRG, 128 KiB CHR.')
@@ -66,11 +68,23 @@ def build(rom_path:Path,trace:Path,out:Path):
     (out/"cfg-inference.json").write_text(json.dumps(cfg,indent=2)+"\n")
     assets=out/'native-assets';assets.mkdir(exist_ok=True)
     nmi,reset,irq=struct.unpack_from('<HHH',rom.prg,0x3fffa)
-    (assets/'config.inc').write_text(f'GUEST_NMI=${nmi:04X}\nGUEST_RESET=${reset:04X}\nGUEST_IRQ=${irq:04X}\n')
+    (assets/'config.inc').write_text(f'GUEST_NMI=${nmi:04X}\nGUEST_RESET=${reset:04X}\nGUEST_IRQ=${irq:04X}\nUSE_FASTROM={int(fastrom)}\nUSE_QUICK_DISPATCH={int(quick_zp or quick_indirect or quick_io)}\n')
     for name,data in [('operation.bin',bytes(OPERATIONS.get(OPS.get(o,('',))[0],0) for o in range(256))),
                       ('mode.bin',bytes(MODES.get(OPS.get(o,('', ''))[1],255) for o in range(256))),
                       ('length.bin',bytes(OPS.get(o,('', '',0))[2] for o in range(256)))]:
         (assets/name).write_bytes(data)
+    quick=[]
+    for opcode in range(256):
+        name, mode, _ = OPS.get(opcode, ('','',0))
+        if quick_zp and mode=='zpx' and name in QUICK_ZPX:
+            quick.append('Quick'+name)
+        elif quick_indirect and mode=='iy' and name in ('LDA','CMP','SBC','ADC','AND','ORA','EOR'):
+            quick.append('Quick'+name+'_IY')
+        elif quick_io and mode=='abs' and name in ('LDA','STA'):
+            quick.append('Quick'+name+'_ABS')
+        else:
+            quick.append('CopGeneric')
+    (assets/'quick-zp-table.inc').write_text('\n'.join('.word '+label for label in quick)+'\n')
     # All 16 main 16 KiB banks x the two observed C000 banks (30 and 7).
     # Raw data banks $81-$A0; independently patched executable banks $A1-$C0.
     images=[]
@@ -98,11 +112,15 @@ def build(rom_path:Path,trace:Path,out:Path):
     info.update(validate_sfc(raw));info.update({'rom_sha256':rom.metadata()['sha256'],
        'renderer':'experimental live PPU bridge','audio_implemented':False,
        'complete_game_port':False,'prg_mode':2,'supported_c000_banks':[30,7],
-       'native_execution_banks':32,'notes':'Unclassified code traps; compatibility and timing require validation.'})
+       'native_execution_banks':32,'fastrom':fastrom,'quick_zero_page':quick_zp,'quick_indirect_reads':quick_indirect,'quick_io':quick_io,'notes':'Unclassified code traps; compatibility and timing require validation.'})
     (out/'native-build.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--rom',type=Path,required=True)
     p.add_argument('--trace',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
-    a=p.parse_args();s=build(a.rom,a.trace,a.out);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))
+    p.add_argument('--slowrom',action='store_true',help='Use the previous slow-ROM timing for controlled comparison')
+    p.add_argument('--no-quick-zp',action='store_true',help='Disable verified indexed-zero-page COP fast path')
+    p.add_argument('--no-quick-indirect',action='store_true',help='Disable range-checked indirect-read fast path')
+    p.add_argument('--no-quick-io',action='store_true',help='Disable explicit joypad-read and mapper-write fast paths')
+    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))

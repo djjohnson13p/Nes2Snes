@@ -94,17 +94,33 @@ def create(out:Path)->dict:
     p.op('LDA','imm',0x5A);p.op('STA','zp',0x7E)
     p.label('done');p.op('JMP','abs','done')
     p.label('nmi');p.op('RTI')
+    return write_program(out, p)
+
+def write_program(out:Path, p:Program, extra_programs:dict[int,Program]|None=None)->dict:
+    """Serialize original procedural programs and their known instruction sites.
+
+    extra_programs maps physical PRG byte offsets to programs with explicit CPU
+    origins, allowing tests that switch the currently executing ROM bank.
+    """
+    out.mkdir(parents=True,exist_ok=True)
     program=p.finish()
     if len(program)>0x1FFA:raise ValueError(f'Fixture exceeds fixed bank: {len(program)}')
     prg=bytearray(0x40000)
     for bank in range(32):prg[bank*8192]=bank
     prg[0x3E000:0x3E000+len(program)]=program
+    for offset,sub in (extra_programs or {}).items():
+        data=sub.finish()
+        if not 0<=offset<=0x3E000-len(data):raise ValueError('Extra program overlaps fixed bank')
+        prg[offset:offset+len(data)]=data
     struct.pack_into('<HHH',prg,0x3FFFA,p.labels['nmi'],p.origin,p.labels['nmi'])
     chr=bytes(((i//16)^i)&255 for i in range(0x20000))
     data=b'NES\x1a'+bytes([16,16,0x50,0])+bytes(8)+prg+chr
     (out/'fixture.nes').write_bytes(data)
     counts=[0]*0x40000;pcs=[0]*0x40000
     for pc in p.starts:counts[0x3E000+pc-0xE000]=1;pcs[0x3E000+pc-0xE000]=pc
+    for offset,sub in (extra_programs or {}).items():
+        for pc in sub.starts:
+            counts[offset+pc-sub.origin]=1;pcs[offset+pc-sub.origin]=pc
     (out/'counts.u32').write_bytes(struct.pack('<262144I',*counts))
     (out/'cpu-address.u16').write_bytes(struct.pack('<262144H',*pcs))
     (out/'rgb-palette.bin').write_bytes(bytes(c for i in range(64) for c in (i*4,i*4,i*4)))

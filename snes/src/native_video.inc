@@ -27,6 +27,10 @@ VSPT=$0CA4
 VSPF=$0CA6
 VSPATTR=$0CA8
 DIRTY=$0D00
+DIRTY_ANY=$0D63
+PALETTE_READY=$0D64
+PALETTE_UPLOAD=$0D65
+UPLOAD_ANY=$0D66
 OLDMIRROR=$0D70
 OLDTOP=$0D71
 BG_CACHE=$0D80
@@ -159,6 +163,7 @@ MarkPhysicalRow:
 .a8
     lda #$01
     sta DIRTY,x
+    sta DIRTY_ANY
     rep #$20
 .a16
     rts
@@ -173,6 +178,11 @@ MarkPhysicalRow:
     lda #$0101
     sta DIRTY,x
     sta DIRTY+2,x
+    sep #$20
+.a8
+    sta DIRTY_ANY
+    rep #$20
+.a16
     rts
 
 RenderFrame:
@@ -277,6 +287,11 @@ RenderFrame:
     dex
     dex
     bpl @cleardirty
+    sep #$20
+.a8
+    stz DIRTY_ANY
+    rep #$20
+.a16
     jsr ConvertObjects
     jsr ConvertPalette
     sep #$20
@@ -324,6 +339,15 @@ RenderFrame:
 ConvertNametable:
 .a16
 .i16
+    ; No physical nametable writes and no routing change means no row work.
+    lda VFORCE
+    and #$00FF
+    bne @needed
+    lda DIRTY_ANY
+    and #$00FF
+    bne @needed
+    rts
+@needed:
     stz VROW
     lda VROUTE
     cmp #$0003
@@ -372,6 +396,7 @@ ConvertNametable:
 .a8
     lda #$01
     sta UPLOAD,x
+    sta UPLOAD_ANY
 @next8:
     rep #$20
 .a16
@@ -650,6 +675,35 @@ ConvertObjects:
 ConvertPalette:
 .a16
 .i16
+    lda PALETTE_READY
+    and #$00FF
+    beq @changed
+    ldx #$0000
+@compare:
+    lda f:$7E3F00,x
+    cmp f:$7F2600,x
+    bne @changed
+    inx
+    inx
+    cpx #$0020
+    bne @compare
+    rts
+@changed:
+    ldx #$0000
+@remember:
+    lda f:$7E3F00,x
+    sta f:$7F2600,x
+    inx
+    inx
+    cpx #$0020
+    bne @remember
+    sep #$20
+.a8
+    lda #$01
+    sta PALETTE_READY
+    sta PALETTE_UPLOAD
+    rep #$20
+.a16
     ldy #$0000
 @entry:
     tya
@@ -816,6 +870,11 @@ BgDmaSource:
 UploadNametables:
 .a8
 .i16
+    lda UPLOAD_ANY
+    bne @needed
+    rts
+@needed:
+    stz UPLOAD_ANY
     lda #$7F
     sta $4304
     ldx #$0000
@@ -888,6 +947,8 @@ UploadNametables:
 UploadObjectsPalette:
 .a8
 .i16
+    lda #$7F
+    sta $4304
     stz $4300
     lda #$04
     sta $4301
@@ -899,6 +960,11 @@ UploadObjectsPalette:
     stz $2103
     lda #$01
     sta $420B
+    lda PALETTE_UPLOAD
+    bne @palette
+    rts
+@palette:
+    stz PALETTE_UPLOAD
     lda #$22
     sta $4301
     ldx #$2300

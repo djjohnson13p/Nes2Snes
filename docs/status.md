@@ -1,5 +1,15 @@
 # Verified status — 2026-09-25
 
+## Latest measured update
+
+The native bridge now has verified CPU/I/O fast paths and reduced rendering work.
+The walking sample improved from 608 to 388 SNES frames for 120 guest frames
+(1.567x the previous prototype speed), with five selected frames matching exactly.
+58 unit tests and eight seeded independent-emulator regression sets pass.
+See [measured results and limits](performance-2026-09-25.md).
+The build is still slow, silent, and not full-game validated.
+
+
 **Update:** the new [native bridge](native-bridge.md) now executes original gameplay in an experimental, slow, silent build. The viewer/frozen-scene findings below remain valid, but the earlier "Not implemented" section describes the pre-bridge checkpoint.
 
 ## Working
@@ -24,8 +34,8 @@ The observed instructions occupy 10,933 PRG bytes. The other 251,211 PRG bytes r
 
 Each of the 32 disassembled PRG banks was assembled and linked, then compared against the original bank. All matched. The reconstructed full NES file also matches the original SHA-256. Unclassified bytes are preserved verbatim, so this is a **partially classified, byte-exact reconstruction**, not complete recovered source.
 
-## Not implemented
+## Historical pre-bridge limitations (superseded)
 
-No original game logic executes in the SNES build. Game-state scheduling, NES PPU command translation, MMC5 bank/IRQ behavior, dynamic sprite updates, collision, enemies, music and sound effects are not ported. No full-game speedup or reduced gameplay flicker has been measured. No physical SNES or flash-cartridge test has been performed.
+At the earlier graphics-only checkpoint, no original game logic executes in the SNES build. Game-state scheduling, NES PPU command translation, MMC5 bank/IRQ behavior, dynamic sprite updates, collision, enemies, music and sound effects are not ported. No full-game speedup or reduced gameplay flicker has been measured. No physical SNES or flash-cartridge test has been performed.
 
 The next milestone is IRQ-aware scrolling/HUD rendering and a validated original gameplay path, not cosmetic polishing of the viewer.

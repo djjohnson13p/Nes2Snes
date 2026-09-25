@@ -1,0 +1,50 @@
+{
+  "before_sfc_sha256": "f5ddc429ff54aaf0a2864efc8c9d0bf8197628ded00f03af10bf3b6b4b0df0da",
+  "after_sfc_sha256": "f9aff7ed84aa4377272addefbeb8fb1fdb1c9b46115198795cf9f4f345140a5c",
+  "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+  "samples": [
+    {
+      "label": "stage-idle",
+      "guest_frames": 60,
+      "before_snes_frames": 303,
+      "after_snes_frames": 190,
+      "speed_multiplier": 1.5947368421052632,
+      "pixel_mismatches": 0
+    },
+    {
+      "label": "walk-right",
+      "guest_frames": 120,
+      "before_snes_frames": 608,
+      "after_snes_frames": 388,
+      "speed_multiplier": 1.5670103092783505,
+      "pixel_mismatches": 0
+    },
+    {
+      "label": "jump-right",
+      "guest_frames": 25,
+      "before_snes_frames": 132,
+      "after_snes_frames": 87,
+      "speed_multiplier": 1.5172413793103448,
+      "pixel_mismatches": 0
+    },
+    {
+      "label": "attack",
+      "guest_frames": 25,
+      "before_snes_frames": 130,
+      "after_snes_frames": 88,
+      "speed_multiplier": 1.4772727272727273,
+      "pixel_mismatches": 0
+    },
+    {
+      "label": "settle",
+      "guest_frames": 60,
+      "before_snes_frames": 302,
+      "after_snes_frames": 191,
+      "speed_multiplier": 1.581151832460733,
+      "pixel_mismatches": 0
+    }
+  ],
+  "total_pixels_compared": 286720,
+  "total_pixel_mismatches": 0,
+  "scope": "Five selected early-game frames, not complete gameplay or raster equivalence; speed measured in emulated SNES frames, not host wall time."
+}

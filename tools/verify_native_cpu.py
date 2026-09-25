@@ -15,7 +15,16 @@ def capture(core:Path,rom:Path,out:Path,limit:int):
         for _ in range(limit):
             r.run(1);m=r.memory()
             if len(m)>=0x800 and m[0x7E]==0x5A:
-                out.write_bytes(m[:0x800]);return
+                out.write_bytes(m[:0x800])
+                diagnostics={}
+                if len(m)>=0x3900:
+                    out.with_suffix('.oam.bin').write_bytes(m[0x3800:0x3900])
+                if len(m)>=0x970:
+                    diagnostics={name:int.from_bytes(m[a:a+4],'little') for name,a in
+                                 (('cop_calls',0x960),('quick_zp_calls',0x964),
+                                  ('quick_indirect_calls',0x968),('quick_io_calls',0x96c))}
+                out.with_suffix('.diagnostics.json').write_text(json.dumps(diagnostics,indent=2)+'\n')
+                return
         raise RuntimeError(f'CPU fixture did not complete in {limit} frames; diagnostic RAM={m[0x90c:0x910].hex() if len(m)>0x910 else "NES"}')
     finally:r.close()
 
@@ -31,9 +40,25 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
     for item in source['records']:
         a=item['address'];n=nes[a:a+4];s=snes[a:a+4]
         if n!=s:mismatches.append({'test':item['name'],'nes':n.hex(),'snes':s.hex()})
+    diagnostics=json.loads((out/'snes.diagnostics.json').read_text())
+    build_meta=json.loads((fixture/'snes/native-build.json').read_text())
+    if 'fastpath_stress_seed' in source:
+        for flag,counter in [('quick_zero_page','quick_zp_calls'),
+                             ('quick_indirect_reads','quick_indirect_calls'),
+                             ('quick_io','quick_io_calls')]:
+            if build_meta.get(flag) and not diagnostics.get(counter):
+                raise RuntimeError(f'Enabled path {flag} was not exercised')
+    oam_check=None
+    if 'expected_oam_source_page' in source:
+        address=source['expected_oam_source_page']*256
+        expected=nes[address:address+256]
+        actual=(out/'snes.oam.bin').read_bytes()
+        oam_check={'bytes_checked':256,'mismatch_count':sum(a!=b for a,b in zip(expected,actual))}
+        if len(actual)!=256 or actual!=expected:raise RuntimeError('Native OAM page copy mismatch')
     result={'records_checked':len(source['records']),'bytes_checked':len(source['records'])*4,
             'mismatch_count':len(mismatches),'mismatches':mismatches,
-            'scope':'Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation.'}
+            'native_execution_counters':diagnostics,'oam_copy':oam_check,
+            'scope':('Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation.' if 'fastpath_stress_seed' in source else 'Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation.')}
     (out/'cpu-verification.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result,indent=2))
     if mismatches:raise RuntimeError('Independent CPU comparison failed.')

@@ -1,5 +1,7 @@
 # Nes2Snes
 
+**Latest update:** native-bridge walking benchmark improved from 608 to 388 SNES frames for 120 guest frames (1.567x prototype speed). The build remains slow, silent and not full-game validated. [Measured results and regression tests](docs/performance-2026-09-25.md).
+
 A source-only NES-to-SNES reverse-engineering and porting workspace, initially targeting the supplied MMC5 version of CV3.
 
 **An experimental native-execution build now reaches CV3 stage one with live walking, jumping, attacking and horizontal scrolling. It is slow, silent and trace-bounded—not a complete game port or universal converter.** See [native bridge](docs/native-bridge.md).

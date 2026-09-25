@@ -1,4 +1,9 @@
-# Native execution bridge — first playable checkpoint
+# Native execution bridge — experimental playable prototype
+
+**Performance update:** see [the measured optimization checkpoint](performance-2026-09-25.md).
+The results below describe the initial playable checkpoint; the newer walking
+sample is 1.567x faster but still not full speed.
+
 
 This checkpoint executes original CV3 instructions on the SNES 65C816, handles selected NES hardware operations in a new host layer, and renders live game state using SNES BG/OBJ/CGRAM/DMA/HDMA. It is not a recorded animation or a screenshot viewer. **It is not yet a complete or full-speed game port.**
 

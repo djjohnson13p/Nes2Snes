@@ -5,6 +5,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from build_native import classify_patch
 from native_cfg import expand
 from native_fixture import create
+from fastpath_fixture import create as create_fastpath
 from rom import Rom
 
 class NativeTests(unittest.TestCase):
@@ -28,6 +29,26 @@ class NativeTests(unittest.TestCase):
     def test_indirect_and_zero_page_wrapping_intercepted(self):
         code,_=self.patch([0xB1,0xFF,0xB5,0xFF],{0,2})
         self.assertEqual(code,b'\x02\xB1\x02\xB5')
+    def test_indexed_ram_boundary_is_intercepted(self):
+        for op in (0xBD,0xB9,0x9D,0x99):
+            code,_=self.patch([op,0xFF,0x07],{0})
+            self.assertEqual(code[:2],bytes([0x02,op]))
+    def test_indexed_ram_safe_maximum_is_not_intercepted(self):
+        code,_=self.patch([0xBD,0x00,0x07],{0})
+        self.assertEqual(code,bytes([0xBD,0x00,0x07]))
+    def test_fastpath_fixture_has_bank_transitions_and_is_reproducible(self):
+        with tempfile.TemporaryDirectory() as d:
+            a=Path(d)/'a';b=Path(d)/'b'
+            meta=create_fastpath(a,3);create_fastpath(b,3)
+            self.assertEqual((a/'fixture.nes').read_bytes(),(b/'fixture.nes').read_bytes())
+            names={r['name'] for r in meta['records']}
+            self.assertIn('switch_primary_while_executing_it',names)
+            self.assertIn('switch_c000_while_executing_it',names)
+            self.assertIn('indirect_hardware_fallback',names)
+    def test_fastpath_fixture_rejects_invalid_size(self):
+        with tempfile.TemporaryDirectory() as d:
+            for n in (0,91):
+                with self.assertRaises(ValueError):create_fastpath(Path(d),cases=n)
     def test_operand_bytes_cannot_be_instruction_starts(self):
         with self.assertRaises(ValueError):self.patch([0xA9,0xEA],{0,1})
     def test_nonreset_stack_replacement_rejected(self):

@@ -99,7 +99,8 @@ Reset:
     stz $4200
     stz $420B
     stz $420C
-    stz $420D
+    lda #USE_FASTROM
+    sta $420D
     ; Clear all WRAM before allocating stack frames.
     stz $2181
     stz $2182
@@ -173,6 +174,32 @@ Reset:
 ; COP is used only at safely identified, replaceable instruction boundaries.
 ; A raw ROM mapping remains independent of the executable mapping.
 CopHandler:
+.if USE_FASTROM
+    jml $800000+CopFast
+CopFast:
+.endif
+.if USE_QUICK_DISPATCH
+    ; Guest DBR always selects the unmodified ROM mapping, including low WRAM.
+    ; Preserve full A and X before inspecting the original instruction. Y/D/DB
+    ; stay untouched. The original COP frame is below these two 16-bit saves.
+    rep #$30
+.a16
+.i16
+    pha
+    phx
+    lda 6,s
+    sec
+    sbc #$0002
+    tax
+    lda a:$0000,x
+    and #$00FF
+    asl a
+    tax
+    jmp (QuickZpTable,x)
+CopGeneric:
+    plx
+    pla
+.endif
     rep #$30
 .a16
 .i16
@@ -564,6 +591,305 @@ CopReturn:
     pld
     rti
 
+; Indexed-zero-page operands are provably ordinary RAM after 8-bit wrapping.
+; Execute the actual arithmetic/logical instruction instead of interpreting its
+; flags. This fast path never bypasses a hardware access or a mapper operation.
+.if USE_QUICK_DISPATCH
+PrepareQuickZpx:
+.a16
+.i16
+    inc $0964
+    bne :+
+    inc $0966
+:
+    inc $0960
+    bne :+
+    inc $0962
+:
+    ; JSR adds two bytes: +3 is saved X, +5 saved A, +7 guest P, +8 guest PC.
+    lda 8,s
+    dec a
+    tax
+    lda a:$0000,x
+    and #$00FF
+    clc
+    adc 3,s
+    and #$00FF
+    tax
+    sep #$20
+.a8
+    lda 7,s
+    pha
+    rep #$20
+.a16
+    lda 6,s               ; saved full A, including the hidden high byte
+    plp                   ; restore guest carry/overflow and 8-bit M/X
+.a8
+.i8
+    rts
+
+.macro QuickZpxHandler name, operation
+name:
+.a16
+.i16
+    jsr PrepareQuickZpx
+.a8
+.i8
+    operation a:$0000,x
+    jmp QuickZpxDone
+.endmacro
+QuickZpxHandler QuickLDA, lda
+QuickZpxHandler QuickLDY, ldy
+QuickZpxHandler QuickSTA, sta
+QuickZpxHandler QuickAND, and
+QuickZpxHandler QuickORA, ora
+QuickZpxHandler QuickEOR, eor
+QuickZpxHandler QuickADC, adc
+QuickZpxHandler QuickSBC, sbc
+QuickZpxHandler QuickCMP, cmp
+QuickZpxHandler QuickASL, asl
+QuickZpxHandler QuickLSR, lsr
+QuickZpxHandler QuickROL, rol
+QuickZpxHandler QuickROR, ror
+QuickZpxHandler QuickINC, inc
+QuickZpxHandler QuickDEC, dec
+
+; Pure RAM / original-ROM indirect reads can execute directly too. All
+; hardware and cartridge-RAM addresses fall back to the existing I/O handler.
+PrepareQuickIndirect:
+.a16
+.i16
+    lda 8,s               ; PC with the helper JSR frame on the stack
+    dec a
+    tax
+    lda a:$0000,x         ; MUST be absolute: direct-page would ignore DBR
+    and #$00FF
+    tax
+    cpx #$00FF
+    beq @wrap
+    lda a:$0000,x
+    bra @pointer
+@wrap:
+    sep #$20
+.a8
+    lda a:$0000
+    xba
+    lda a:$00FF
+    rep #$20
+.a16
+@pointer:
+    sta EA
+    tya
+    clc
+    adc EA
+    cmp #$2000
+    bcc @ram
+    cmp #$8000
+    bcs @safe
+    ; Remove this helper's JSR return before the generic entry pops A/X.
+    pla
+    jmp CopGeneric
+@ram:
+    and #$07FF
+@safe:
+    tax
+    inc $0968
+    bne :+
+    inc $096A
+:
+    inc $0960
+    bne :+
+    inc $0962
+:
+    sep #$20
+.a8
+    lda 7,s
+    and #$EF              ; retain 16-bit address X during the native load
+    pha
+    rep #$20
+.a16
+    lda 6,s
+    plp
+.a8
+.i16
+    rts
+.macro QuickIndirectHandler name, operation
+name:
+.a16
+.i16
+    jsr PrepareQuickIndirect
+.a8
+.i16
+    operation a:$0000,x
+    jmp QuickZpxDone
+.endmacro
+QuickIndirectHandler QuickLDA_IY, lda
+QuickIndirectHandler QuickCMP_IY, cmp
+QuickIndirectHandler QuickSBC_IY, sbc
+QuickIndirectHandler QuickADC_IY, adc
+QuickIndirectHandler QuickAND_IY, and
+QuickIndirectHandler QuickORA_IY, ora
+QuickIndirectHandler QuickEOR_IY, eor
+
+; Narrow I/O fast paths implement exactly the existing supported semantics.
+; Any other absolute address returns to the generic compatibility handler.
+QuickLDA_ABS:
+.a16
+.i16
+    lda 6,s
+    dec a
+    tax
+    lda a:$0000,x
+    cmp #$4016
+    bne @fallback
+    jsr CountQuickIo
+    sep #$20
+.a8
+    lda JOYSHIFT
+    and #$01
+    ora #$40
+    sta 3,s
+    lda STROBE
+    bne @read
+    lda JOYSHIFT
+    lsr a
+    ora #$80
+    sta JOYSHIFT
+@read:
+    lda 5,s
+    and #$7D              ; $40/$41 always gives N=0,Z=0; preserve C/V
+    sta 5,s
+    jmp QuickAbsReturn
+@fallback:
+    jmp CopGeneric
+
+QuickSTA_ABS:
+.a16
+.i16
+    lda 6,s
+    dec a
+    tax
+    lda a:$0000,x
+    cmp #$5115
+    beq @primary
+    cmp #$5116
+    beq @cbank
+    cmp #$5117
+    beq @fixed
+    jmp CopGeneric
+@primary:
+    jsr CountQuickIo
+    sep #$20
+.a8
+    lda 3,s
+    sta f:$7E5115
+    and #$1E
+    lsr a
+    sta TMP
+    lda SLOT
+    and #$10
+    ora TMP
+    sta SLOT
+    bra @update
+@cbank:
+    sep #$20
+.a8
+    lda 3,s
+    and #$1F
+    cmp #$1E
+    beq @thirty
+    cmp #$07
+    bne @unsupported
+    lda SLOT
+    ora #$10
+    sta SLOT
+    bra @storec
+@thirty:
+    lda SLOT
+    and #$0F
+    sta SLOT
+@storec:
+    lda 3,s
+    sta f:$7E5116
+    rep #$20
+.a16
+    jsr CountQuickIo
+    sep #$20
+.a8
+@update:
+    jsr UpdateBanks
+    lda RAWBANK
+    pha
+    plb
+    bra QuickAbsReturn
+@fixed:
+.a16
+    sep #$20
+.a8
+    lda 3,s
+    and #$1F
+    cmp #$1F
+    bne @unsupported
+    lda 3,s
+    sta f:$7E5117
+    rep #$20
+.a16
+    jsr CountQuickIo
+    bra QuickAbsReturn
+@unsupported:
+    rep #$30
+.a16
+.i16
+    jmp CopGeneric
+
+CountQuickIo:
+.a16
+.i16
+    inc $096C
+    bne :+
+    inc $096E
+:
+    inc $0960
+    bne :+
+    inc $0962
+:
+    rts
+QuickAbsReturn:
+    sep #$20
+.a8
+    lda CODEBANK
+    sta 8,s               ; bank writes must also change the saved return PBR
+    rep #$30
+.a16
+.i16
+    lda 6,s
+    inc a                 ; COP consumed 2 bytes; original absolute op used 3
+    sta 6,s
+    plx
+    pla
+    rti
+
+QuickZpxDone:
+.a8
+.i8
+    php
+    rep #$30
+.a16
+.i16
+    sta 4,s               ; return the resulting full accumulator
+    sep #$20
+.a8
+    pla
+    ora #$30              ; guest always returns to 8-bit M/X
+    sta 5,s               ; let RTI restore the operation's actual result flags
+    rep #$30
+.a16
+.i16
+    plx
+    pla
+    rti
+.endif
+
 ; Read a guest address, with no read of real SNES registers by guest code.
 ReadValue:
     rep #$20
@@ -763,6 +1089,28 @@ WriteIrqEnable:
 WriteOamDma:
     sep #$20
 .a8
+    lda VAL
+    cmp #$20
+    bcs @genericcopy
+    ; MVN safely copies WRAM to WRAM; SNES DMA cannot do that transfer.
+    ; Mirror NES RAM pages before selecting the 256-byte source block.
+    rep #$30
+.a16
+.i16
+    lda VAL
+    and #$0007
+    xba
+    tax
+    ldy #$3800
+    lda #$00FF
+    mvn #$7E,#$7E
+    sep #$20
+.a8
+    lda #$00
+    pha
+    plb                    ; MVN changed DBR to its destination bank
+    rts
+@genericcopy:
     lda VAL
     sta $0821
     stz $0820
@@ -1176,6 +1524,10 @@ ReadChr:
 ; Host NMI runs a complete original NMI and then bounded virtual scanline IRQs.
 ; This first bridge is frame-scheduled, not cycle/scanline-exact emulation.
 Nmi:
+.if USE_FASTROM
+    jml $800000+NmiFast
+NmiFast:
+.endif
     php
     rep #$20
 .a16
@@ -1256,7 +1608,7 @@ NmiFull:
     tcs
     sep #$20
 .a8
-    lda #$00
+    lda #($80*USE_FASTROM)
     pha
     rep #$20
 .a16
@@ -1325,7 +1677,7 @@ NextGuestIrq:
     tcs
     sep #$20
 .a8
-    lda #$00
+    lda #($80*USE_FASTROM)
     pha
     rep #$20
 .a16
@@ -1470,13 +1822,17 @@ Irq:
     rti
 .segment "RODATA"
 Zero: .byte 0
+.if USE_QUICK_DISPATCH
+QuickZpTable:
+.include "quick-zp-table.inc"
+.endif
 OperationTable: .incbin "operation.bin"
 ModeTable: .incbin "mode.bin"
 LengthTable: .incbin "length.bin"
 RgbPalette: .incbin "palette.bin"
 .segment "HEADER"
     .byte "NES2SNES NATIVE TEST "
-    .byte $20,$00,$0C,$00,$01,$00,$00
+    .byte ($20+$10*USE_FASTROM),$00,$0C,$00,$01,$00,$00
     .word $FFFF,$0000
 .segment "VECTOR"
     .word $0000,$0000,CopHandler,Fault,Fault,Nmi,$0000,Irq
