@@ -1,0 +1,42 @@
+name: Toolchain bootstrap
+on:
+  push:
+    paths:
+      - '.github/workflows/toolchain.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tools:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - name: Install assembler
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65
+          mkdir -p bundle/bin bundle/cores
+          cp /usr/bin/ca65 /usr/bin/ld65 /usr/bin/da65 bundle/bin/
+          ca65 --version
+      - name: Build emulator cores from upstream source
+        run: |
+          git clone --depth 1 https://github.com/libretro/snes9x.git
+          git -C snes9x rev-parse HEAD | tee bundle/snes9x-revision.txt
+          make -C snes9x/libretro -j2
+          cp snes9x/libretro/snes9x_libretro.so bundle/cores/
+          git clone --depth 1 https://github.com/libretro/libretro-fceumm.git
+          git -C libretro-fceumm rev-parse HEAD | tee bundle/fceumm-revision.txt
+          make -C libretro-fceumm -f Makefile.libretro -j2
+          cp libretro-fceumm/fceumm_libretro.so bundle/cores/
+          cp snes9x/LICENSE bundle/SNES9X-LICENSE.txt || true
+          cp libretro-fceumm/COPYING bundle/FCEUMM-COPYING.txt || true
+      - name: Package source alongside compiled tools
+        run: |
+          tar -czf bundle/snes9x-source.tar.gz --exclude=.git snes9x
+          tar -czf bundle/fceumm-source.tar.gz --exclude=.git libretro-fceumm
+          sha256sum bundle/bin/* bundle/cores/* | tee bundle/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-x86_64-development-tools
+          path: bundle/
+          retention-days: 7
