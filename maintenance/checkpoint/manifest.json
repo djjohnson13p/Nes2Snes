@@ -1,0 +1,42 @@
+{
+  "format": 1,
+  "reference_revision": "1067962023cfac22f1112a4cbc14de84bfa9fb89",
+  "before": {
+    "README.md": "bff458bc1a58ab68d44817c282ce4e960a2eaf21680293098ae40fdf99a2b16c",
+    "docs/performance-pipeline-2026-09-25.md": null,
+    "docs/pipeline-verification.json": null,
+    "docs/status.md": "f6d47c2b35fabc29f003bd99da3921c4cc0df64febce74e09d52ed5587780d82",
+    "snes/src/native.s": "feb5b4d4689d6a1edd8645e33d7566af8bd3e7f774d87a39bc086f8528fb01de",
+    "snes/src/native_video.inc": "0421475e24cf6d905bb0ddf867374117b7e25e183e422c54e72eb86e23601484",
+    "tests/test_replay_comparison.py": null,
+    "tests/test_video_paths.py": null,
+    "tools/build_native.py": "add441248e87fd706c8520683504750a40d3929e597be162b0cdc2e54905f24a",
+    "tools/build_replay_baseline.py": null,
+    "tools/compare_replays.py": null,
+    "tools/ppu_fixture.py": null,
+    "tools/replay_native.py": null,
+    "tools/verify_native_cpu.py": "7f9225cca17447674eff537a802d9bb38c3524e80cb597b2233ee1888676d931",
+    "tools/verify_object_cache.py": null,
+    "tools/video_fixture.py": null
+  },
+  "after": {
+    "README.md": "8a6195faece1265cf725ca0fe36c271beecda255ed90199d825f8353de71713f",
+    "docs/performance-pipeline-2026-09-25.md": "9895f6152b8849cc71a04ef9d2d1701ef8a16b3932cba1e2b174b2c690831138",
+    "docs/pipeline-verification.json": "472837ac2aec7fbb9d4a8d29698a5a928721f787df2102116363601d4d0026a3",
+    "docs/status.md": "6cb699a1f815794cfd7db628ce4131f1a44d0f44637d515fc07572e56575bf60",
+    "snes/src/native.s": "e3b99181c3f24df761f265a93d4427b724295650332b3f0efe34e98dfda82156",
+    "snes/src/native_video.inc": "ce2e779907eeeca2a2c3e0bfa950e5b350b60544f96539d0d538ad74768dfeaa",
+    "tests/test_replay_comparison.py": "9485baf75e6500d4954709e77004ce081224f9f54c8821c1467caa8bd97798e3",
+    "tests/test_video_paths.py": "427fd06e35f2f3454fbbccac453cc921440cbc910c4384e560f47f2c7da2552f",
+    "tools/build_native.py": "d62a62f3a7751e0b32ec56bb846e9d1c9d470e41767a093b22d3ddf3e4c3bb84",
+    "tools/build_replay_baseline.py": "5ef3ebca53714d4a4df58e6a047593ee137bcb5f81633584c1791c9c7a16b629",
+    "tools/compare_replays.py": "6e63c0353a70b8d77a85c7ab01710d43b4ed07df148af8e342222e237b9cbb02",
+    "tools/ppu_fixture.py": "f904cbbce3b85d255b91bd8dacfab240ad3cb64ea5069aa1db9cafc2d29d6abd",
+    "tools/replay_native.py": "29d71cfdd3cb69b0fc6bee2601aae24c3ca574a3b27e749f9578d07cc6d0243c",
+    "tools/verify_native_cpu.py": "55c440ba71f84beb705c11c40bf981db2f4583e654a9bea7957aa1f4dda44b6a",
+    "tools/verify_object_cache.py": "146bb028986ec3b26e48fb2f39ef9ae3ff89c56615bbae19e55b93e988b1edc6",
+    "tools/video_fixture.py": "62cf4135b4b4fc7f7bbe2f3d23db8a5e63792e344af85b4eccffa3db8d111f78"
+  },
+  "patch_sha256": "c22a6f3ef68b0460802cf4327661229e6f437432abb1c7bf00ae82f6c8eab44e",
+  "message": "Pipeline native video uploads and verify PPU, sprite cache and deterministic replay"
+}
