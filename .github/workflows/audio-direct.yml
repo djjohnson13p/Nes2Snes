@@ -1,0 +1,56 @@
+name: Native audio and direct-access verification
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'snes/src/native*.inc'
+      - 'snes/src/native.s'
+      - 'snes/linker/native.cfg'
+      - 'tools/audio*.py'
+      - 'tools/direct*.py'
+      - 'tools/verify_audio*.py'
+      - 'tools/build_native.py'
+      - 'tests/test_direct_audio.py'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Unit tests
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: Build pinned independent emulators
+        run: |
+          mkdir -p build
+          git clone https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2
+          git clone https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2
+      - name: All-bank direct writes and C0 fallback
+        run: |
+          /usr/bin/python3 tools/direct_fixture.py --out build/direct-fixture
+          /usr/bin/python3 tools/build_native.py --rom build/direct-fixture/fixture.nes --trace build/direct-fixture --out build/direct-fixture/snes
+          /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture build/direct-fixture --out build/direct-fixture/verification
+      - name: Four-voice PCM, mute, legacy path and nested-NMI stress
+        run: |
+          /usr/bin/python3 tools/verify_audio_matrix.py --core build/snes9x/libretro/snes9x_libretro.so --out build/audio-matrix
+      - name: Archive tested source
+        run: git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-audio-and-direct-verification
+          path: |
+            build/direct-fixture/verification/
+            build/audio-matrix/*/verification/
+            build/audio-matrix/matrix-verification.json
+            build/tested-source.zip
+          retention-days: 14
