@@ -1,0 +1,31 @@
+name: Repair staged source transfer
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/repair-transfer.yml']
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact tested patch bytes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          p = Path('maintenance/checkpoint/part1.b64')
+          raw = p.read_bytes()
+          assert hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest() == 'b199a16c74e796d0c30b15c6b42be5bc97524406'
+          text = raw.decode().replace('F7lifxfxf6GSor', 'F7lifxf6GSor').replace('CQLYqUB5M0zlK7', 'CQLYqUBzlK7')
+          assert hashlib.sha256(text.encode()).hexdigest() == '1068c8cc72d65924d5620e93e33d0c194302a595cd15fa983668c411ae8f2fc1'
+          p.write_text(text)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add maintenance/checkpoint/part1.b64
+          git rm .github/workflows/repair-transfer.yml
+          git commit -m 'Restore checksum-verified source transfer and remove one-use repair'
+          git push origin HEAD:main
