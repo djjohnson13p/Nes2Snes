@@ -1,0 +1,36 @@
+name: Reference address-map verification
+on:
+  push:
+    paths:
+      - .github/workflows/reference-map.yml
+      - tools/reference_map.py
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reference:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build pinned assembler
+        run: |
+          git clone https://github.com/vhelin/wla-dx.git build/wla
+          git -C build/wla checkout 91c52b1f4ef3cc8ba3c0638f7536539579af6a9f
+          cmake -S build/wla -B build/wla/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build/wla/build --target wla-6502 wlalink -j2
+      - name: Assemble credited external reference without CHR
+        run: |
+          git clone https://github.com/vinheim3/castlevania3-disasm.git build/reference
+          git -C build/reference checkout 3272648f2bbf95f6cb11d947feca73b852a99f10
+          export PATH="$GITHUB_WORKSPACE/build/wla/build/binaries:$PATH"
+          cd build/reference
+          wla-6502 -i -o game.o game.s
+          wlalink -i -S linkfile castlevania3.bin
+      - name: Export address metadata only
+        run: python3 tools/reference_map.py --reference build/reference --out build/reference-metadata
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reference-address-metadata
+          path: build/reference-metadata/
+          retention-days: 14
