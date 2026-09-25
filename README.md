@@ -1,10 +1,10 @@
 # Nes2Snes
 
-**Latest update:** queued video presentation and guarded PPU/sprite fast paths reduce the fixed-input walking sample from 386 to 242 SNES frames per 120 game updates (1.595x the previous checkpoint speed). The interactive build also passes its controller-driven benchmark. **Still slow, silent and not full-game validated.** [Results, replay methodology and limitations](docs/performance-pipeline-2026-09-25.md).
+**Latest update:** optional native SPC700 audio preview (two pulse voices, triangle and noise), direct hardware-access veneers, and an interrupt-context corruption fix. The normal-controller and fixed-input first-stage tests pass. Walking takes 240 SNES frames per 120 game updates, compared with 242 in the previous fixed-input checkpoint; jumping takes 50 instead of 56 frames. **Still about half speed on this route, trace-bounded and not full-game validated. Audio is approximate and opt-in.** [Results and limitations](docs/direct-audio-2026-09-25.md).
 
 A source-only NES-to-SNES reverse-engineering and porting workspace, initially targeting the supplied MMC5 version of CV3.
 
-**An experimental native-execution build now reaches CV3 stage one with live walking, jumping, attacking and horizontal scrolling. It is slow, silent and trace-bounded—not a complete game port or universal converter.** See [native bridge](docs/native-bridge.md).
+**An experimental native-execution build now reaches CV3 stage one with live walking, jumping, attacking and horizontal scrolling. It is slow and trace-bounded, with an optional approximate sound preview—not a complete game port or universal converter.** See [native bridge](docs/native-bridge.md).
 
 The independently tested graphics viewer and frozen title renderer remain available.
 
@@ -15,7 +15,7 @@ The independently tested graphics viewer and frozen title renderer remain availa
 - A headless libretro test frontend and optional FCEUmm execution/I/O probe.
 - A repeatable input script that reaches the original NES game's early first stage.
 - Trace-guided disassembly of all 32 PRG banks. Only observed instructions are marked as code; other bytes remain unclassified byte tables. All banks reassemble exactly, and the resulting NES file matches the input SHA-256.
-- 75 unit tests plus independent Snes9x checks of all 8,192 converted tiles: 524,288 pixel indices checked with zero mismatches. Controller next/previous, wraparound, held-button behavior and palette switching also passed.
+- 90 unit tests plus independent Snes9x checks of all 8,192 converted tiles: 524,288 pixel indices checked with zero mismatches. Controller next/previous, wraparound, held-button behavior and palette switching also passed.
 
 - A native frozen title-screen renderer using BG1, OBJ and CGRAM, matching 57,344 pixels after color-precision conversion. An independent procedural sprite/attribute scene also matches. This does not execute original gameplay.
 

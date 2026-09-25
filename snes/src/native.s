@@ -117,6 +117,12 @@ Reset:
     lda #$01
     sta $420B
     sta $420B
+    .if USE_DIRECT_CALLS
+    jsr InitializeDirectStubs
+    .endif
+    .if USE_EXPERIMENTAL_AUDIO
+    jsr AudioInitialize
+    .endif
     ; Initialize known PPU state.
     ldx #$0033
 @clearppu:
@@ -1700,6 +1706,14 @@ NmiFast:
     lda f:RUNNING
     ora f:COPBUSY
     bne @quick
+    ; Reject interrupts in host code BEFORE touching NCTX. In particular,
+    ; RUNNING has cleared during NmiRestore but the guest context is still live.
+    ; Saved PBR is 7,S after PHP + the full accumulator push above.
+    lda 7,s
+    cmp #$A1
+    bcc @quick
+    cmp #$C1
+    bcs @quick
     rep #$20
 .a16
     pla
@@ -1753,6 +1767,20 @@ NmiFull:
     jcc NmiRestore
     cmp #$C1
     jcs NmiRestore
+    .if USE_DIRECT_CALLS
+    ; A guest NMI must not split a multi-instruction WRAM veneer or change
+    ; its return bank while it is running. Resume it after this host NMI.
+    rep #$20
+.a16
+    lda NCTX+10
+    bmi :+
+    sep #$20
+.a8
+    jmp NmiRestore
+:
+    sep #$20
+.a8
+    .endif
     lda #$01
     sta RUNNING
 .if USE_PIPELINED_VIDEO
@@ -1877,8 +1905,21 @@ GuestIrqReturn:
     jsr CaptureSplit
     jmp NextGuestIrq
 AfterGuestIrqs:
+    .if USE_EXPERIMENTAL_AUDIO
+    jsr AudioFrame
+    .endif
     jsr RenderFrame
     stz RUNNING
+.if TEST_NMI_RESTORE_STRESS
+    ; TEST ONLY: force multiple host NMIs in the context-restoration window.
+    ; Ordinary builds contain none of this deliberate delay.
+    rep #$10
+.i16
+    ldx #$FFFF
+@restore_delay:
+    dex
+    bne @restore_delay
+.endif
 NmiRestore:
     rep #$30
 .a16
@@ -1918,6 +1959,8 @@ NmiRestore:
     lda f:NCTX
     rti
 
+.include "native_audio.inc"
+.include "native_direct.inc"
 .include "native_video.inc"
 
 BadOperation:

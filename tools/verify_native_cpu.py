@@ -22,7 +22,7 @@ def capture(core:Path,rom:Path,out:Path,limit:int):
                 if len(m)>=0x974:
                     diagnostics={name:int.from_bytes(m[a:a+4],'little') for name,a in
                                  (('cop_calls',0x960),('quick_zp_calls',0x964),
-                                  ('quick_indirect_calls',0x968),('quick_io_calls',0x96c),('quick_ppu_calls',0x970))}
+                                  ('quick_indirect_calls',0x968),('quick_io_calls',0x96c),('quick_ppu_calls',0x970),('direct_write_calls',0x980))}
                 out.with_suffix('.diagnostics.json').write_text(json.dumps(diagnostics,indent=2)+'\n')
                 return
         raise RuntimeError(f'CPU fixture did not complete in {limit} frames; diagnostic RAM={m[0x90c:0x910].hex() if len(m)>0x910 else "NES"}')
@@ -48,8 +48,13 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
                              ('quick_io','quick_io_calls')]:
             if build_meta.get(flag) and not diagnostics.get(counter):
                 raise RuntimeError(f'Enabled path {flag} was not exercised')
-    if 'ppu_fixture_seed' in source and build_meta.get('quick_ppu_writes') and not diagnostics.get('quick_ppu_calls'):
-        raise RuntimeError('PPU quick path was enabled but not exercised')
+    if source.get('direct_fixture') and build_meta.get('direct_calls'):
+        if not diagnostics.get('direct_write_calls') or not diagnostics.get('quick_ppu_calls'):
+            raise RuntimeError('Must exercise both direct writes and the C0 COP fallback')
+    if 'ppu_fixture_seed' in source:
+        counter = 'direct_write_calls' if build_meta.get('direct_calls') else 'quick_ppu_calls'
+        if (build_meta.get('direct_calls') or build_meta.get('quick_ppu_writes')) and not diagnostics.get(counter):
+            raise RuntimeError(f'Enabled PPU write path was not exercised: {counter}')
     oam_check=None
     if 'expected_oam_source_page' in source:
         address=source['expected_oam_source_page']*256
@@ -60,7 +65,7 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
     result={'records_checked':len(source['records']),'bytes_checked':len(source['records'])*4,
             'mismatch_count':len(mismatches),'mismatches':mismatches,
             'native_execution_counters':diagnostics,'oam_copy':oam_check,
-            'scope':('Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy.' if 'ppu_fixture_seed' in source else 'Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation.' if 'fastpath_stress_seed' in source else 'Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation.')}
+            'scope':('Original STA/STX/STY stores and flags in all 32 mapped execution combinations, including C0 fallback.' if source.get('direct_fixture') else 'Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy.' if 'ppu_fixture_seed' in source else 'Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation.' if 'fastpath_stress_seed' in source else 'Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation.')}
     (out/'cpu-verification.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result,indent=2))
     if mismatches:raise RuntimeError('Independent CPU comparison failed.')

@@ -1,6 +1,25 @@
 # Verified status — 2026-09-25
 
-## Latest measured update: pipelined video
+## Latest measured update: direct accesses, interrupt safety and audio preview
+
+The opt-in SPC700 preview now produces two pulse voices, triangle and noise from
+the running game's APU register state. It is **not a faithful NES APU port**:
+envelopes, length/linear-counter timing, sweep, DMC and expansion audio remain
+unimplemented. Sound tempo follows the slowed game logic.
+
+The ordinary-controller build passes startup, walking, jumping and attacking.
+An interrupt-context corruption bug exposed by changed timing is fixed, with a
+forced nested-NMI regression and a failing negative control. 90 unit tests,
+1,322 independent CPU/PPU records (5,288 bytes), 160 animated sprite frames and
+four procedural audio/mute/fallback/stress cases pass. Five selected game images
+still match the prior checkpoint (286,720 pixels, zero differences).
+
+The fixed-input walking interval is 240 SNES frames per 120 game updates;
+jumping is 50 per 25. This remains approximately half speed on the tested route.
+See [new results and limitations](direct-audio-2026-09-25.md) and
+[machine-readable evidence](direct-audio-verification.json).
+
+## Previous measured update: pipelined video
 
 The controlled fixed-input walking comparison improves from 386 to 242 SNES
 frames for 120 logical game frames: **1.595x the previous checkpoint speed**.

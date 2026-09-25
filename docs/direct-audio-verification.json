@@ -1,0 +1,616 @@
+{
+  "base_revision": "5645950a620da85464c1e37c3d50342500aa439e",
+  "complete_game_port": false,
+  "unit_tests_passed": 90,
+  "independent_cpu": {
+    "records_checked": 1322,
+    "bytes_checked": 5288,
+    "mismatch_count": 0
+  },
+  "cpu_cases": [
+    {
+      "name": "native",
+      "records_checked": 180,
+      "bytes_checked": 720,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 123,
+        "quick_zp_calls": 15,
+        "quick_indirect_calls": 7,
+        "quick_io_calls": 36,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0
+      }
+    },
+    {
+      "name": "direct",
+      "records_checked": 192,
+      "bytes_checked": 768,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 40,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 36,
+        "quick_ppu_calls": 1,
+        "direct_write_calls": 95
+      }
+    },
+    {
+      "name": "fast-0",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "fast-1",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "fast-2",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "fast-3",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "fast-4",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "fast-5",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "fast-6",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "fast-7",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3
+      }
+    },
+    {
+      "name": "ppu-0",
+      "records_checked": 47,
+      "bytes_checked": 188,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 52,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 2,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 176
+      }
+    },
+    {
+      "name": "ppu-7",
+      "records_checked": 47,
+      "bytes_checked": 188,
+      "mismatch_count": 0,
+      "native_execution_counters": {
+        "cop_calls": 52,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 2,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 176
+      }
+    }
+  ],
+  "render_comparison": {
+    "baseline_rom_sha256": "eb2485c49e4bb76c4890ab81ff656298e33806bb4a79026b36929306e7cb8fcd",
+    "candidate_rom_sha256": "f9e39c37b0cee829266bba3485c126d78f2d42774b986eaf070e7a00d5be20b2",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 242,
+        "candidate_snes_frames": 240,
+        "speed_ratio": 1.0083333333333333,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 56,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.12,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 120,
+        "candidate_snes_frames": 120,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "animated_objects": {
+    "frames_checked": 160,
+    "oam_bytes_checked": 81920,
+    "mismatch_count": 0,
+    "sprite_modes": [
+      0,
+      8,
+      32,
+      40
+    ],
+    "converted_objects": 2624,
+    "cached_objects": 7616,
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "rom_sha256": "3077d3f25e701451e70b8b4b347088d4bf37a30b1be7cb3ad444eeaa31ad1df4",
+    "scope": "Original procedural dynamic OAM encoding and cache invalidation; not full PPU accuracy."
+  },
+  "audio_matrix": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "audio",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "ee44c1f5e8f63f8fc523811645bc4bae7a363095e330f788ae88dd5380fb84c2",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 249,
+        "spc_ready": 1,
+        "spc_fault": 0,
+        "dsp_commands": 34,
+        "expect_silent": false,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 15461,
+            "rms": 3757.35439562603,
+            "peak": 3911,
+            "frequency_hz": 441.40223788888176,
+            "expected_hz": 440.4296875
+          },
+          {
+            "name": "pulse2",
+            "samples": 15461,
+            "rms": 3758.396651019097,
+            "peak": 3911,
+            "frequency_hz": 882.8044757777635,
+            "expected_hz": 880.859375
+          },
+          {
+            "name": "triangle",
+            "samples": 15461,
+            "rms": 1882.895938767708,
+            "peak": 3255,
+            "frequency_hz": 219.66496345643878,
+            "expected_hz": 220.21484375
+          },
+          {
+            "name": "noise",
+            "samples": 15460,
+            "rms": 6890.712325198438,
+            "peak": 11904,
+            "zero_crossings": 7765
+          },
+          {
+            "name": "silence",
+            "samples": 5865,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      },
+      {
+        "name": "silent",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "e623ad13869fe144cc6aa1fbae49bc62cdb0355bff1f8cce7b932b12763b04a3",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 247,
+        "spc_ready": 0,
+        "spc_fault": 0,
+        "dsp_commands": 0,
+        "expect_silent": true,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 15460,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "pulse2",
+            "samples": 15461,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "triangle",
+            "samples": 15461,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "noise",
+            "samples": 15461,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "silence",
+            "samples": 5864,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      },
+      {
+        "name": "legacy",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "a66f272c3299070b53da42eb43fae410bab47abdb4ade4b87dcdc68716f4c268",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 249,
+        "spc_ready": 1,
+        "spc_fault": 0,
+        "dsp_commands": 34,
+        "expect_silent": false,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 15461,
+            "rms": 3757.520973037425,
+            "peak": 3911,
+            "frequency_hz": 441.40223788888176,
+            "expected_hz": 440.4296875
+          },
+          {
+            "name": "pulse2",
+            "samples": 15461,
+            "rms": 3758.4866121363843,
+            "peak": 3911,
+            "frequency_hz": 882.8044757777635,
+            "expected_hz": 880.859375
+          },
+          {
+            "name": "triangle",
+            "samples": 15461,
+            "rms": 1882.3604324067321,
+            "peak": 3255,
+            "frequency_hz": 219.66496345643878,
+            "expected_hz": 220.21484375
+          },
+          {
+            "name": "noise",
+            "samples": 15460,
+            "rms": 6890.056628653667,
+            "peak": 11904,
+            "zero_crossings": 7764
+          },
+          {
+            "name": "silence",
+            "samples": 5865,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      },
+      {
+        "name": "nested-nmi",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "965059924ae185094c439cb0e4e5733ea9436774ba50424b794911b059683f84",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 1430,
+        "spc_ready": 1,
+        "spc_fault": 0,
+        "dsp_commands": 34,
+        "expect_silent": false,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 92763,
+            "rms": 3757.281090335115,
+            "peak": 3911,
+            "frequency_hz": 441.07111671679445,
+            "expected_hz": 440.4296875
+          },
+          {
+            "name": "pulse2",
+            "samples": 92764,
+            "rms": 3758.334733895349,
+            "peak": 3911,
+            "frequency_hz": 882.1327239015136,
+            "expected_hz": 880.859375
+          },
+          {
+            "name": "triangle",
+            "samples": 92763,
+            "rms": 1882.8171558044055,
+            "peak": 3255,
+            "frequency_hz": 220.36286019210246,
+            "expected_hz": 220.21484375
+          },
+          {
+            "name": "noise",
+            "samples": 92763,
+            "rms": 6875.306090526222,
+            "peak": 11907,
+            "zero_crossings": 46403
+          },
+          {
+            "name": "silence",
+            "samples": 35186,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      }
+    ],
+    "scope": "Original procedural input only; not full NES APU fidelity."
+  },
+  "audio_live_capture": {
+    "seconds": 15.890511860174781,
+    "sample_rate": 32040.0,
+    "peak": 14129,
+    "rms": 2865.7841771211865,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2088,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "live_benchmark": {
+    "sfc_sha256": "a1a90e3a24a81f8cb3e019df21b6766451d7e33f33ebbc54fc818d9b1578417c",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "records": [
+      {
+        "label": "stage-idle",
+        "guest_frames": 60,
+        "snes_frames": 120,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 7803,
+        "game_state": 4,
+        "guest_frame": 916,
+        "fault": 0
+      },
+      {
+        "label": "walk-right",
+        "guest_frames": 120,
+        "snes_frames": 240,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 15604,
+        "game_state": 4,
+        "guest_frame": 1036,
+        "fault": 0
+      },
+      {
+        "label": "jump-right",
+        "guest_frames": 25,
+        "snes_frames": 50,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 3375,
+        "game_state": 4,
+        "guest_frame": 1061,
+        "fault": 0
+      },
+      {
+        "label": "attack",
+        "guest_frames": 25,
+        "snes_frames": 50,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 3887,
+        "game_state": 4,
+        "guest_frame": 1086,
+        "fault": 0
+      },
+      {
+        "label": "settle",
+        "guest_frames": 60,
+        "snes_frames": 120,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 8050,
+        "game_state": 4,
+        "guest_frame": 1146,
+        "fault": 0
+      }
+    ],
+    "total_snes_frames": 2051,
+    "definition": "SNES video frames divided by guest NMI count; not wall time, full-game coverage or gameplay equivalence proof."
+  },
+  "nmi_negative_control": {
+    "change": "Removed the early interrupted-PBR gate only; retained deliberate restoration-window delay",
+    "expected_failure": true,
+    "observed_failure": "Audio fixture did not progress within 1800 host frames",
+    "production_delay_enabled": false
+  },
+  "release_roms": {
+    "audio": "a1a90e3a24a81f8cb3e019df21b6766451d7e33f33ebbc54fc818d9b1578417c",
+    "silent": "70d41a88cd329930d7283cf70a95b5dd38a44f156d6506a7a76d4a139708c971"
+  },
+  "scope": "One early-game route, selected images, original procedural CPU/PPU/audio fixtures. No full-game, physical-console or accurate NES APU claim.",
+  "silent_live_benchmark": {
+    "sfc_sha256": "70d41a88cd329930d7283cf70a95b5dd38a44f156d6506a7a76d4a139708c971",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "records": [
+      {
+        "label": "stage-idle",
+        "guest_frames": 60,
+        "snes_frames": 120,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 7803,
+        "game_state": 4,
+        "guest_frame": 916,
+        "fault": 0
+      },
+      {
+        "label": "walk-right",
+        "guest_frames": 120,
+        "snes_frames": 240,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 15604,
+        "game_state": 4,
+        "guest_frame": 1036,
+        "fault": 0
+      },
+      {
+        "label": "jump-right",
+        "guest_frames": 25,
+        "snes_frames": 50,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 3375,
+        "game_state": 4,
+        "guest_frame": 1061,
+        "fault": 0
+      },
+      {
+        "label": "attack",
+        "guest_frames": 25,
+        "snes_frames": 50,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 3887,
+        "game_state": 4,
+        "guest_frame": 1086,
+        "fault": 0
+      },
+      {
+        "label": "settle",
+        "guest_frames": 60,
+        "snes_frames": 120,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 8050,
+        "game_state": 4,
+        "guest_frame": 1146,
+        "fault": 0
+      }
+    ],
+    "total_snes_frames": 2043,
+    "definition": "SNES video frames divided by guest NMI count; not wall time, full-game coverage or gameplay equivalence proof."
+  }
+}

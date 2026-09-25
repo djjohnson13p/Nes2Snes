@@ -639,6 +639,69 @@ ConvertObjects:
     sta $0C86
     rep #$20
 .a16
+    .if USE_UNROLLED_OBJECTS
+    ; The common case is unchanged hidden objects. Avoid indexed loop and
+    ; destination-pointer arithmetic on all 64 entries just to skip them.
+    stz $0CB0             ; number of converted entries this frame
+    lda VFORCE
+    jne @forceall
+    .repeat 64, object_index
+        lda f:$7E3800+object_index*4
+        cmp f:$7F2700+object_index*4
+        bne :+
+        lda f:$7E3802+object_index*4
+        cmp f:$7F2702+object_index*4
+        beq :++
+    :
+        ldx #object_index*4
+        ldy #object_index*8
+        jsr ConvertSingleObject
+    :
+    .endrepeat
+    ; Update diagnostic totals once, not for each unchanged object.
+    lda $0CB0
+    clc
+    adc $0976
+    sta $0976
+    bcc :+
+    inc $0978
+:
+    lda #$0040
+    sec
+    sbc $0CB0
+    clc
+    adc $097A
+    sta $097A
+    bcc :+
+    inc $097C
+:
+    rts
+@forceall:
+    ldx #$0000
+    ldy #$0000
+@forceone:
+    jsr ConvertSingleObject
+    inx
+    inx
+    inx
+    inx
+    cpx #$0100
+    bne @forceone
+    lda #$0040
+    clc
+    adc $0976
+    sta $0976
+    bcc :+
+    inc $0978
+:
+    rts
+ConvertSingleObject:
+    inc $0CB0
+    lda f:$7E3800,x
+    sta f:$7F2700,x
+    lda f:$7E3802,x
+    sta f:$7F2702,x
+    .else
     ldx #$0000
     ldy #$0000
 @object:
@@ -670,6 +733,7 @@ ConvertObjects:
     inc $0978
 :
 .endif
+    .endif
     lda f:$7E3800,x
     and #$00FF
     cmp #$00EF
@@ -780,12 +844,14 @@ ConvertObjects:
     iny
     iny
 @next:
+    .if !USE_UNROLLED_OBJECTS
     inx
     inx
     inx
     inx
     cpx #$0100
     jne @object
+    .endif
     rts
 
 ConvertPalette:
