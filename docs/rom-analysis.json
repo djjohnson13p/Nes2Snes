@@ -1,0 +1,40 @@
+{
+  "format": "NES 2.0",
+  "file_bytes": 393232,
+  "header_hex": "4e45531a101050080000000000000001",
+  "sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+  "crc32": "7cf70cde",
+  "prg_sha256": "e2851967c3dff2b2a516b86d4952d3be6f0aeb926835d189b57f7845301fce47",
+  "chr_sha256": "6645fa515b120b4d0d421b0b0c14e0d0fb78fd4ae35e7807a7b3f23f3da1e2c3",
+  "payload_sha256": "6e8d289635ac39479ff1d36733aa3f8b9650593ab972cedb8e2cdbfc03aaa739",
+  "mapper": 5,
+  "submapper": 0,
+  "trainer_bytes": 0,
+  "prg_offset": 16,
+  "prg_bytes": 262144,
+  "chr_offset": 262160,
+  "chr_bytes": 131072,
+  "trailing_bytes": 0,
+  "prg_8k_banks": 32,
+  "chr_1k_banks": 128,
+  "chr_tiles": 8192,
+  "battery_flag": false,
+  "warnings": [
+    "MMC5 controls nametable mapping at runtime; the header mirroring bit is not authoritative."
+  ],
+  "timing": "NTSC",
+  "prg_ram_bytes": 0,
+  "prg_nvram_bytes": 0,
+  "chr_ram_bytes": 0,
+  "chr_nvram_bytes": 0,
+  "prg_tail_vector_words": {
+    "nmi": "$E053",
+    "reset": "$E00B",
+    "irq": "$E11A"
+  },
+  "vector_mapping_assumption": "MMC5 final 8 KiB PRG bank at $E000-$FFFF on reset; reassess after bank writes.",
+  "chr_conversion_roundtrip": {
+    "2bpp": true,
+    "4bpp": true
+  }
+}

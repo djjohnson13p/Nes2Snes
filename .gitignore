@@ -1,0 +1,17 @@
+# Commercial inputs and all derived outputs stay local.
+/original/*
+!/original/README.md
+/build/
+/.tools/
+*.nes
+*.sfc
+*.smc
+*.chr
+*.bin
+*.o
+*.so
+*.zip
+*.tar.gz
+*.pyc
+__pycache__/
+.venv/

@@ -1,0 +1,43 @@
+name: Build and emulator verification
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Unit tests
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: Build native SNES synthetic fixture
+        run: /usr/bin/python3 tools/build_viewer.py --synthetic --out build/synthetic
+      - name: Build pinned independent emulator
+        run: |
+          git clone https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2
+      - name: Verify every page and controller behavior
+        run: |
+          /usr/bin/python3 tools/verify_viewer.py \
+            --core build/snes9x/libretro/snes9x_libretro.so \
+            --sfc build/synthetic/chr-viewer.sfc \
+            --synthetic --out build/synthetic/verification
+      - name: Archive the tested source revision
+        run: git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synthetic-snes-viewer-and-verification
+          path: |
+            build/tested-source.zip
+            build/synthetic/chr-viewer.sfc
+            build/synthetic/viewer-build.json
+            build/synthetic/verification/
+          retention-days: 14

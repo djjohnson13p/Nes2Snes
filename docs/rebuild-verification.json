@@ -1,0 +1,12 @@
+{
+  "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+  "reassembled_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+  "byte_identical": true,
+  "prg_banks_verified": 32,
+  "observed_code_bytes": 10933,
+  "unclassified_bytes": 251211,
+  "unsupported_observed_opcodes": [],
+  "complete_semantic_disassembly": false,
+  "playable_snes_port": false,
+  "per_bank_report": "Generated privately at build/analysis/disassembly/rebuild-verification.json; regenerate with make disassemble."
+}

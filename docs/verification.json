@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "emulator": "Snes9x libretro",
+  "core_sha256": "954fa8e0f80dd65f8a511189e2c9190ebdb80de753fc6dd9c6407530d990728f",
+  "rom": {
+    "bytes": 262144,
+    "sha256": "f52945b5c12ee8213afdc5bd5c680187dcabebd5c73eac3a7b8d9f10bacf1411",
+    "map": "LoROM",
+    "checksum": "76B8",
+    "reset": "$8000"
+  },
+  "pages_verified": 32,
+  "pixels_checked": 524288,
+  "mismatched_pixels": 0,
+  "controller_next_previous_wrap_hold": true,
+  "palette_control": true,
+  "original_game_executed_on_snes": false,
+  "physical_snes_tested": false,
+  "unit_tests_passed": 35
+}
