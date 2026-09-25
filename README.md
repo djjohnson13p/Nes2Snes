@@ -2,7 +2,9 @@
 
 A source-only NES-to-SNES reverse-engineering and porting workspace, initially targeting the supplied MMC5 version of CV3.
 
-**There are working native SNES graphics-viewer and frozen title-scene builds. There is not yet a playable CV3 SNES port or a universal ROM converter.**
+**An experimental native-execution build now reaches CV3 stage one with live walking, jumping, attacking and horizontal scrolling. It is slow, silent and trace-bounded—not a complete game port or universal converter.** See [native bridge](docs/native-bridge.md).
+
+The independently tested graphics viewer and frozen title renderer remain available.
 
 ## Implemented and tested
 
@@ -11,7 +13,7 @@ A source-only NES-to-SNES reverse-engineering and porting workspace, initially t
 - A headless libretro test frontend and optional FCEUmm execution/I/O probe.
 - A repeatable input script that reaches the original NES game's early first stage.
 - Trace-guided disassembly of all 32 PRG banks. Only observed instructions are marked as code; other bytes remain unclassified byte tables. All banks reassemble exactly, and the resulting NES file matches the input SHA-256.
-- 43 unit tests plus independent Snes9x checks of all 8,192 converted tiles: 524,288 pixel indices checked with zero mismatches. Controller next/previous, wraparound, held-button behavior and palette switching also passed.
+- 54 unit tests plus independent Snes9x checks of all 8,192 converted tiles: 524,288 pixel indices checked with zero mismatches. Controller next/previous, wraparound, held-button behavior and palette switching also passed.
 
 - A native frozen title-screen renderer using BG1, OBJ and CGRAM, matching 57,344 pixels after color-precision conversion. An independent procedural sprite/attribute scene also matches. This does not execute original gameplay.
 

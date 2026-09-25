@@ -1,5 +1,7 @@
 # Verified status — 2026-09-25
 
+**Update:** the new [native bridge](native-bridge.md) now executes original gameplay in an experimental, slow, silent build. The viewer/frozen-scene findings below remain valid, but the earlier "Not implemented" section describes the pre-bridge checkpoint.
+
 ## Working
 
 The native SNES viewer assembles with ca65/ld65, has a valid LoROM header and checksum, boots in Snes9x, displays the uploaded ROM's converted CHR and responds to controller input. It executes new 65C816 viewer code, not the original CV3 game logic.

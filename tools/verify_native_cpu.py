@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+"""Differentially check the native bridge against an independent NES emulator.
+
+Run each libretro core in its own subprocess: libretro implementations maintain
+process-global state. The fixture is original procedural input, not game data.
+"""
+from __future__ import annotations
+import argparse, json, subprocess, sys
+from pathlib import Path
+from libretro_runner import Runner
+
+def capture(core:Path,rom:Path,out:Path,limit:int):
+    r=Runner(core,rom)
+    try:
+        for _ in range(limit):
+            r.run(1);m=r.memory()
+            if len(m)>=0x800 and m[0x7E]==0x5A:
+                out.write_bytes(m[:0x800]);return
+        raise RuntimeError(f'CPU fixture did not complete in {limit} frames; diagnostic RAM={m[0x90c:0x910].hex() if len(m)>0x910 else "NES"}')
+    finally:r.close()
+
+def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
+    out.mkdir(parents=True,exist_ok=True)
+    source=json.loads((fixture/'trace-summary.json').read_text())
+    if not source.get('procedural_fixture'):raise ValueError('Expected the original procedural CPU fixture.')
+    for name,core,rom in [('nes',nes_core,fixture/'fixture.nes'),('snes',snes_core,fixture/'snes/native-prototype.sfc')]:
+        subprocess.run([sys.executable,__file__,'--capture','--core',str(core),'--rom',str(rom),
+                        '--output',str(out/(name+'.ram'))],check=True)
+    nes=(out/'nes.ram').read_bytes();snes=(out/'snes.ram').read_bytes()
+    mismatches=[]
+    for item in source['records']:
+        a=item['address'];n=nes[a:a+4];s=snes[a:a+4]
+        if n!=s:mismatches.append({'test':item['name'],'nes':n.hex(),'snes':s.hex()})
+    result={'records_checked':len(source['records']),'bytes_checked':len(source['records'])*4,
+            'mismatch_count':len(mismatches),'mismatches':mismatches,
+            'scope':'Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation.'}
+    (out/'cpu-verification.json').write_text(json.dumps(result,indent=2)+'\n')
+    print(json.dumps(result,indent=2))
+    if mismatches:raise RuntimeError('Independent CPU comparison failed.')
+    return result
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--capture',action='store_true')
+    for arg in ('core','rom','output','nes-core','snes-core','fixture','out'):p.add_argument('--'+arg,type=Path)
+    a=p.parse_args()
+    if a.capture:
+        if not all((a.core,a.rom,a.output)):p.error('--capture requires --core, --rom, --output')
+        capture(a.core,a.rom,a.output,300)
+    else:
+        if not all((a.nes_core,a.snes_core,a.fixture,a.out)):p.error('Require --nes-core, --snes-core, --fixture, --out')
+        verify(a.nes_core,a.snes_core,a.fixture,a.out)

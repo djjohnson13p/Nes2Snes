@@ -38,12 +38,23 @@ jobs:
             --core build/snes9x/libretro/snes9x_libretro.so \
             --sfc build/synthetic-scene/frozen-scene.sfc \
             --snapshot build/synthetic-scene-capture --out build/synthetic-scene/verification
+      - name: Build pinned NES oracle
+        run: |
+          git clone https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2
+      - name: Differential native CPU and mapper verification
+        run: |
+          /usr/bin/python3 tools/native_fixture.py --out build/native-fixture
+          /usr/bin/python3 tools/build_native.py --rom build/native-fixture/fixture.nes --trace build/native-fixture --out build/native-fixture/snes
+          /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture build/native-fixture --out build/native-fixture/verification
       - name: Archive the tested source revision
         run: git archive --format=zip --output=build/tested-source.zip HEAD
       - uses: actions/upload-artifact@v4
         with:
           name: synthetic-snes-viewer-and-verification
           path: |
+            build/native-fixture/verification/
             build/tested-source.zip
             build/synthetic/chr-viewer.sfc
             build/synthetic/viewer-build.json
