@@ -1363,6 +1363,8 @@ WriteIrqEnable:
 WriteOamDma:
     sep #$20
 .a8
+    lda OADDR
+    jne OamDmaOffset
     lda VAL
     cmp #$20
     jcs @genericcopy
@@ -1429,6 +1431,8 @@ WriteOamDma:
     lda f:$7E38FF
     sta PPUBUS
     rts
+.include "native_oam_offset.inc"
+
 WriteJoy:
     sep #$20
 .a8

@@ -19,6 +19,8 @@ def capture(core:Path,rom:Path,out:Path,limit:int):
                 diagnostics={}
                 if len(m)>=0x3900:
                     out.with_suffix('.oam.bin').write_bytes(m[0x3800:0x3900])
+                    out.with_suffix('.ppu.json').write_text(json.dumps(
+                        {'oam_address': m[0x913], 'ppu_io_latch': m[0x91b]})+'\n')
                 if len(m)>=0x974:
                     diagnostics={name:int.from_bytes(m[a:a+4],'little') for name,a in
                                  (('cop_calls',0x960),('quick_zp_calls',0x964),
@@ -88,7 +90,7 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
     if source.get('zero_page_store_fixture'):
         result['scope']='Explicit STY zero-page indexed wraparound, stored values and register/flag preservation; not full-game coverage.'
     elif source.get('oam_copy_fixture'):
-        result['scope']='Zero-offset OAM DMA register preservation and last-byte PPU latch readback; not OAM rendering or cycle timing.'
+        result['scope']='OAM DMA register preservation, last-byte latch and optional post-DMA write; OAM contents need the separate state oracle; no rendering/cycle-timing claim.'
     elif source.get('indirect_load_fixture'):
         result['scope']='Indirect LDA zero-page-pointer wrap, 16-bit address wrap, RAM/ROM reads and joypad fallback; not full-game coverage.'
     (out/'cpu-verification.json').write_text(json.dumps(result,indent=2)+'\n')

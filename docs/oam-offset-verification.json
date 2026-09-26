@@ -1,0 +1,216 @@
+{
+  "integration_baseline": "086efb94182f6dd28be01acb699e1993c6112462",
+  "initial_baseline": "a19a87c328e47e3603e3f049b605a85693e230c9",
+  "unit_tests": {
+    "passed": 216,
+    "failed": 0
+  },
+  "oam": {
+    "passed": true,
+    "configurations": 531,
+    "exhaustive_offsets": true,
+    "counter_free_offsets_checked": 256,
+    "oam_bytes_checked": 135936,
+    "records_checked": 1601,
+    "record_bytes_checked": 6404,
+    "mismatch_count": 0,
+    "nes_core_sha256": "1522b3a14ac49f48481c7f71f5b92f5d2b376fa6c181016f132d9b14c89287f2",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Forced-blanking OAM destination wrapping, compared with absent attribute bits masked. RAM source final bytes neutralize disputed DMA-latch bits; eager copies from selected RAM/ROM; no active-rendering, stack-page, I/O-source, cycle-accurate or whole-game claim."
+  },
+  "negative_control": {
+    "source_revision": "a19a87c328e47e3603e3f049b605a85693e230c9",
+    "offset": 1,
+    "oam": {
+      "bytes_checked": 256,
+      "meaningful_bits_checked": 1856,
+      "mismatch_count": 256,
+      "raw_mismatch_count": 256,
+      "ignored_bits": "Only absent OAM attribute bits 2/3/4",
+      "first_mismatch": 0,
+      "nes_sha256": "59795c5945e6db2e3477fd1841453d83f25b2284ec84a74a858b52a71aac5430",
+      "snes_sha256": "2eeb58046ce4935aa4eb2bccbdc2dd7811d746713466d6a26265e018807ed89e"
+    },
+    "cpu_record_mismatches": 0
+  },
+  "reference_disagreements": {
+    "core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "disagreement_count": 248,
+    "acceptance_oracle": false,
+    "explanation": "Retained legacy FCEUmm disagreement; it redirects certain nonzero-offset OAM writes. Primary acceptance uses Nestopia plus documented OAM destination wrapping, not this behavior."
+  },
+  "unrestricted_latch_disagreement": {
+    "status": "unresolved_reference_disagreement",
+    "included_in_pass_totals": false,
+    "fixture": {
+      "offset": 127,
+      "seed": 7,
+      "neutral_latch": false
+    },
+    "latch_values": {
+      "nestopia": 99,
+      "fceumm": 111,
+      "snes": 111
+    },
+    "nes_references_agree": false,
+    "nestopia_vs_snes_oam": {
+      "bytes_checked": 256,
+      "meaningful_bits_checked": 1856,
+      "mismatch_count": 0,
+      "raw_mismatch_count": 56,
+      "ignored_bits": "Only absent OAM attribute bits 2/3/4",
+      "first_mismatch": null,
+      "nes_sha256": "832204c47b58ea24d6134b403ca1f7eab159745bcd61513d94e950f9001b33c5",
+      "snes_sha256": "f0f23ce62b35e99de75c062301b13357a336bdc32eca46ac57e4d278dfa35927"
+    },
+    "nestopia_vs_fceumm_oam": {
+      "bytes_checked": 256,
+      "meaningful_bits_checked": 1856,
+      "mismatch_count": 16,
+      "raw_mismatch_count": 68,
+      "ignored_bits": "Only absent OAM attribute bits 2/3/4",
+      "first_mismatch": 0,
+      "nes_sha256": "832204c47b58ea24d6134b403ca1f7eab159745bcd61513d94e950f9001b33c5",
+      "snes_sha256": "222624772799f8209fa73c6a29c0e94c2ed4cd918138f4f27bba7cc3f0d6d472"
+    },
+    "limitation": "No claim of unrestricted nonzero-offset DMA latch equivalence. The acceptance fixture clears disputed bits only in its final RAM-source byte; all destination offsets and other source bytes remain independently checked."
+  },
+  "runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Counted and counter-free variants: explicit CPU/PPU/APU events, mapper returns, interrupt stress and zero-offset OAM contents; not cycle accuracy or full-game coverage."
+  },
+  "replay": {
+    "baseline_rom_sha256": "619e6e1bf5da8c72a3ee95437d723d8b86530243e039b4edb006a9f5093e3832",
+    "candidate_rom_sha256": "3736f08108c655c2757082f7a02545361f293caa5403616d86c2264d8a6fffe3",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 191,
+        "candidate_snes_frames": 191,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 1.5916666666666666
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 42,
+        "candidate_snes_frames": 42,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 1.68
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 106,
+        "candidate_snes_frames": 106,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 1.7666666666666666
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "staircase_route": {
+    "baseline_status": "completed_budget",
+    "candidate_status": "completed_budget",
+    "endpoints_checked": 57,
+    "same_count": true,
+    "mismatches": [],
+    "scope": "31-step approach plus 57 named staircase actions; no all-route or whole-game claim"
+  },
+  "interactive_build": {
+    "observed_instruction_sites": 10763,
+    "classified_code_bytes": 35225,
+    "unclassified_execution": "BRK fail-closed trap; raw data remains intact",
+    "safe_addresses": true,
+    "statically_inferred_instruction_sites": 5829,
+    "unresolved_direct_edges": 114,
+    "bytes": 4194304,
+    "sha256": "5350a5e2518d6e719eae9d092f99d1f8b0dc419f8338f3c351165d227982ac95",
+    "map": "LoROM",
+    "checksum": "961D",
+    "reset": "$8000",
+    "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "specialized_indirect_lda": true,
+    "direct_bank_switches": true,
+    "test_bank_switch_stress": false,
+    "direct_calls": true,
+    "direct_call_sites": 180,
+    "direct_call_banks": "$A1-$BF; $C0 retains COP",
+    "renderer": "experimental live PPU bridge",
+    "experimental_raster_scroll": true,
+    "layer_masks": true,
+    "audio_counters": true,
+    "audio_sweep": true,
+    "audio_timing": "four quarter-clock opportunities per guest frame",
+    "audio_implemented": true,
+    "test_nmi_restore_stress": false,
+    "runtime_counters": false,
+    "complete_game_port": false,
+    "prg_mode": 2,
+    "native_execution_banks": 32,
+    "fastrom": true,
+    "word_oam_copy": true,
+    "quick_indexed_memory": true,
+    "quick_zero_page": true,
+    "quick_indirect_reads": true,
+    "quick_io": true,
+    "quick_ppu_writes": true,
+    "object_cache": true,
+    "unrolled_objects": true,
+    "simple_direct_writes": true,
+    "pipelined_video": true,
+    "notes": "Unclassified code traps; compatibility and timing require validation."
+  }
+}

@@ -1,6 +1,12 @@
 # Nes2Snes
 
-Latest tested implementation: [optional runtime profiling counters](docs/runtime-counters.md).
+Latest compatibility work: **[nonzero sprite-DMA destinations](docs/oam-offsets.md)**.
+Every OAM destination offset is checked against unmodified Nestopia, with known
+reference disagreements retained rather than hidden. This integrates with the
+counter-free performance option below, not a replacement of that optimization.
+The port remains incomplete and below full speed.
+
+Previous performance checkpoint: [optional runtime profiling counters](docs/runtime-counters.md).
 The counter-free preview removes debug bookkeeping without removing fault checks.
 Controlled walking uses 191 display frames per 120 game updates, versus 225 in
 the counted build (17.80% higher throughput). This short sample does not imply

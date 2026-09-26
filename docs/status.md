@@ -1,6 +1,16 @@
 # Verified status — 2026-09-26
 
-## Current: profiling overhead separated from gameplay
+## Current: OAM destination wrapping integrated with counter-free execution
+
+See [sprite-DMA correction and scoped independent tests](oam-offsets.md).
+216 unit tests and 531 scoped OAM configurations pass. All 256 offsets are
+checked in counted and counter-free modes. The 32-configuration runtime safety
+matrix also passes. The combined preview retains 191 display frames per 120
+walking updates. The counter-free optimization below is retained. This correction does not
+establish full-game coverage, perfect rendering/audio or physical-console success.
+
+
+## Previous: profiling overhead separated from gameplay
 
 The explicit `--no-runtime-counters` build removes per-access debug increments,
 not safety traps or actual game/audio counters. Fixed-input walking takes 191
