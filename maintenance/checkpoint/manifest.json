@@ -21,7 +21,7 @@
     "docs/status.md": "f7dd68369b572435a8accfd5de1953c4d183c4ede5a6e8e7a411e5b399ebbb1a",
     "snes/src/native_masks.inc": "e36915b9e63dc08097a331c709beff39fe9fff763d19813c20b6cefafa749dd4",
     "snes/src/native_video.inc": "81c3172114e395cf47bc5dfaefa39c8d97358c8bff5b84031d9bf7fbe4a46d09",
-    "tests/test_mask_fixture.py": "627fecc4bb21b5e27c01f3aa6f240aa807227227a344d1e5c4da0586c55a32410e0",
+    "tests/test_mask_fixture.py": "627fecc4bb21b5e27c01f3aa6f240aa807227a344d1e5c4da0586c55a32410e0",
     "tools/build_native.py": "7fa2026bb292a6856d4615bee85475afb0e398e6b3cbc01cc9910d20e0fdd56b",
     "tools/mask_fixture.py": "ec83a67e7a144c91f4253051a53fe441dfc6489238ef4b04100621ec728f37d7",
     "tools/probe_mask_oracles.py": "482cfa49e448293071f946f58fa1ca246957db5981a3ef03f93138f2701712ca",
