@@ -1,0 +1,33 @@
+{
+  "format": 1,
+  "part_count": 3,
+  "reference_revision": "086efb94182f6dd28be01acb699e1993c6112462",
+  "before": {
+    "README.md": "e3d4e4404d6124d0440918e0e181a97477c3edb34da28cd5a3833662180b34d5",
+    "docs/status.md": "39ff51781c0f4622d5f1ed92bb6cc6f519c3bdddf51fb8b2915d211e0f3e922f",
+    "docs/oam-offsets.md": null,
+    "docs/oam-offset-verification.json": null,
+    "snes/src/native.s": "e77ada52522d2827a84c12c605af5b1d54eabaf39640e2502d88a2e1be7405a7",
+    "snes/src/native_oam_offset.inc": null,
+    "tests/test_oam_offsets.py": null,
+    "tools/oam_copy_fixture.py": "189e592ae7ad87b5070421fdc45a4608cf35d80730712d5d655699dc3c2b8e8b",
+    "tools/oam_state.py": null,
+    "tools/verify_oam_offsets.py": null,
+    "tools/verify_native_cpu.py": "d65595fd19493cfddb04226bfe423dad17e36c86d479706fd427cc7bde2d3ccb"
+  },
+  "after": {
+    "README.md": "90fb936bad6b8511b66e1f7e54952fbf1529b879a2ba6439fd8aa6d0c2560eb4",
+    "docs/status.md": "ec85dcc40e9b2ef4cbc86e20334c57a7f0bcbc67c2d8bd4e02a3337a6cdc965f",
+    "docs/oam-offsets.md": "af0dd47edf594183f51af4726b0085c9140481591f522beb5ef1f27fd0f5175e",
+    "docs/oam-offset-verification.json": "7f8743b29655cfabf4561cc87fdbccafd951c08faccc34925f77f48d21638533",
+    "snes/src/native.s": "20baece6b9826280db3389c30dc6353e1355fc8c35a3a65e65e0593abba16d72",
+    "snes/src/native_oam_offset.inc": "f38b368a1602fc25305fba668020ed4aff251d526e1af1b4aee3c699dbf884a0",
+    "tests/test_oam_offsets.py": "2cfe9e052973d7261302bdcbc49ce4a831609935cd51470f8a047e4c27f1ddf0",
+    "tools/oam_copy_fixture.py": "7239207cbc5721abd333a9c64c5913e939a0907873c82a7889f146d5878e99b0",
+    "tools/oam_state.py": "1c997c9d8e2b1098fc18e9b0a21ad6f7583cfff818d93bba7b7500b7f1f6540a",
+    "tools/verify_oam_offsets.py": "a05fd04de3c89c7f2409511b45fb88532bcae3b71d61199126415c38493cf0b9",
+    "tools/verify_native_cpu.py": "89c9e49c491e0fe6d0c6f673543134163df30363a1e6626e32bf6a4cb4b022e7"
+  },
+  "patch_sha256": "c7916ffd845770e6f7ed8f310e7e444744d1812c9f144c9254ba31434094ee24",
+  "message": "Honor sprite-DMA destinations while preserving counter-free performance and explicit oracle disagreements"
+}
