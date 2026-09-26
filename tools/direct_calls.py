@@ -2,7 +2,8 @@
 
 Veneers run in reserved WRAM $1000-$17FF, mirrored in execution banks $A1-$BF.
 Execution bank $C0 deliberately retains COP: that bank has no low WRAM mirror.
-No original game code is included in this module; generated veneers are private.
+Live selectors optionally extend the JSR frame and return with RTL into the new
+mapping. No game code is included; generated veneers remain private.
 """
 from __future__ import annotations
 from typing import Iterable
@@ -37,7 +38,7 @@ def label(opcode: int, address: int) -> str:
     return f'Direct_{opcode:02X}_{address:04X}'
 
 
-def plan(prg: bytes, sites: Iterable[dict], simple: bool = False) -> tuple[list[dict], str]:
+def plan(prg: bytes, sites: Iterable[dict], simple: bool = False, bank_switches: bool = False, stress_banks: bool = False) -> tuple[list[dict], str]:
     selected = []
     entries = {}
     for site in sites:
@@ -47,6 +48,8 @@ def plan(prg: bytes, sites: Iterable[dict], simple: bool = False) -> tuple[list[
         opcode = prg[offset]
         address = int.from_bytes(prg[offset + 1:offset + 3], 'little')
         kind = handler_kind(opcode, address)
+        if bank_switches and opcode in STORE_OPS and address in (0x5115, 0x5116, 0x5117):
+            kind = ("bank", address)
         if kind is not None:
             selected.append(dict(prg_offset=offset, opcode=opcode, address=address,
                                  label=label(opcode, address), kind=kind[0]))
@@ -55,7 +58,9 @@ def plan(prg: bytes, sites: Iterable[dict], simple: bool = False) -> tuple[list[
              '.segment "STUBS"', '.a8', '.i8']
     for (opcode, address), (kind, value) in sorted(entries.items()):
         lines.append(label(opcode, address) + ':')
-        if kind == 'write':
+        if kind == 'bank':
+            lines += bank_veneer(opcode, address, stress_banks)
+        elif kind == 'write':
             target = 'DirectSimpleWrite' if simple and value in (0, 1, 2, 3, 5, 6, 10, 11) else 'DirectWrite'
             lines += ['    php', '    phx', f'    ldx #${value * 2:02X}',
                       f'    jsl $800000+{target}{STORE_OPS[opcode]}',
@@ -92,3 +97,48 @@ def apply(code: bytes, sites: list[dict], symbols: dict[str, int]) -> bytes:
             raise ValueError('Direct-call replacement must start at a classified COP instruction')
         result[pos:pos + 3] = bytes((0x20, address & 255, address >> 8))
     return bytes(result)
+
+
+def bank_veneer(opcode: int, address: int, stress: bool = False) -> list[str]:
+    """A same-bank JSR enters WRAM; RTL leaves into the *new* ROM mapping.
+
+    Preserve full A (including B), all guest P flags, X/Y/D and stack balance.
+    DBR intentionally changes with the mapper. Host NMI must defer while the
+    saved guest PC is inside a WRAM veneer, even after CODEBANK has changed.
+    """
+    if opcode not in STORE_OPS or address not in (0x5115, 0x5116, 0x5117):
+        raise ValueError('Unsupported direct bank store')
+    body = ['    php', '    rep #$20', '.a16', '    pha',
+            '    inc $0988', '    bne :+', '    inc $098A', ':',
+            '    sep #$20', '.a8']
+    if opcode != 0x8D:
+        body.append('    txa' if opcode == 0x8E else '    tya')
+    if address == 0x5115:
+        body += ['    sta f:$7E5115', '    and #$1E', '    lsr a',
+                 '    sta TMP', '    lda SLOT', '    and #$10',
+                 '    ora TMP', '    sta SLOT']
+    elif address == 0x5116:
+        body += ['    sta VAL', '    and #$1F', '    cmp #$1E',
+                 '    beq @thirty', '    cmp #$07', '    beq @seven',
+                 '    jml $800000+DirectBankFault', '@seven:',
+                 '    lda SLOT', '    ora #$10', '    bra @slot',
+                 '@thirty:', '    lda SLOT', '    and #$0F', '@slot:',
+                 '    sta SLOT', '    lda VAL', '    sta f:$7E5116']
+    else:
+        body += ['    sta VAL', '    and #$1F', '    cmp #$1F',
+                 '    beq @fixed', '    jml $800000+DirectBankFault',
+                 '@fixed:', '    lda VAL', '    sta f:$7E5117']
+    body += ['    lda SLOT', '    clc', '    adc #$81', '    sta RAWBANK',
+             '    clc', '    adc #$20', '    sta CODEBANK']
+    if stress:
+        body += ['    phx', '    rep #$10', '.i16', '    ldx #$FFFF',
+                 '@nmi_window:', '    dex', '    bne @nmi_window',
+                 '    sep #$10', '.i8', '    plx']
+    body += ['    lda RAWBANK', '    pha', '    plb',
+             '; Insert new PBR above JSR return, keeping full A and P intact.',
+             '; Stack after dummy push: dummy,Alo,Ahi,P,retlo,rethi.',
+             '    pha', '    rep #$20', '.a16', '    lda 2,s', '    sta 1,s',
+             '    lda 4,s', '    sta 3,s', '    sep #$20', '.a8',
+             '    lda 6,s', '    sta 5,s', '    lda CODEBANK', '    sta 6,s',
+             '    rep #$20', '.a16', '    pla', '    plp', '.a8', '.i8', '    rtl']
+    return body

@@ -54,7 +54,7 @@ def classify_patch(prg:bytes, counts:list[int]):
         'classified_code_bytes':sum(covered),'trap_sites':sites,'reset_txs_nop_offsets':skipped,
         'unclassified_execution':'BRK fail-closed trap; raw data remains intact'}
 
-def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True,quick_ppu:bool=True,object_cache:bool=True,pipelined_video:bool=True,replay_input:Path|None=None,direct:bool=True,unrolled_objects:bool=True,experimental_audio:bool=False,stress_nmi_restore:bool=False,safe_addresses:bool=True,simple_direct:bool=True):
+def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True,quick_ppu:bool=True,object_cache:bool=True,pipelined_video:bool=True,replay_input:Path|None=None,direct:bool=True,unrolled_objects:bool=True,experimental_audio:bool=False,stress_nmi_restore:bool=False,safe_addresses:bool=True,simple_direct:bool=True,bank_direct:bool=True,stress_bank_switch:bool=False,specialized_indirect:bool=True):
     rom=Rom.read(rom_path)
     if rom.mapper!=5 or len(rom.prg)!=0x40000 or len(rom.chr)!=0x20000:
         raise ValueError('Current bridge requires mapper 5, 256 KiB PRG, 128 KiB CHR.')
@@ -80,11 +80,11 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     if replay_input and not 1<=len(replay)<=8192:
         raise ValueError('Input replay must contain 1 to 8192 per-guest-frame NES joypad bytes.')
     (assets/'input-replay.bin').write_bytes(replay)
-    direct_sites, direct_source = direct_calls.plan(rom.prg, info['trap_sites'] if direct else [], simple=simple_direct)
+    direct_sites, direct_source = direct_calls.plan(rom.prg, info['trap_sites'] if direct else [], simple=simple_direct, bank_switches=bank_direct, stress_banks=stress_bank_switch)
     (assets/'direct-stubs.inc').write_text(direct_source)
     audio_info=audio_program.write_assets(assets) if experimental_audio else None
     nmi,reset,irq=struct.unpack_from('<HHH',rom.prg,0x3fffa)
-    (assets/'config.inc').write_text(f'TEST_NMI_RESTORE_STRESS={int(stress_nmi_restore)}\nUSE_EXPERIMENTAL_AUDIO={int(experimental_audio)}\nGUEST_NMI=${nmi:04X}\nGUEST_RESET=${reset:04X}\nGUEST_IRQ=${irq:04X}\nUSE_FASTROM={int(fastrom)}\nUSE_DIRECT_CALLS={int(direct)}\nUSE_PIPELINED_VIDEO={int(pipelined_video)}\nUSE_OBJECT_CACHE={int(object_cache)}\nUSE_UNROLLED_OBJECTS={int(unrolled_objects and object_cache)}\nTEST_INPUT_REPLAY={int(replay_input is not None)}\nREPLAY_LENGTH={len(replay)}\nUSE_QUICK_PPU={int(quick_ppu and quick_io)}\nUSE_QUICK_DISPATCH={int(quick_zp or quick_indirect or quick_io)}\n')
+    (assets/'config.inc').write_text(f'USE_SPECIALIZED_INDIRECT_LDA={int(specialized_indirect)}\nTEST_NMI_RESTORE_STRESS={int(stress_nmi_restore)}\nUSE_EXPERIMENTAL_AUDIO={int(experimental_audio)}\nGUEST_NMI=${nmi:04X}\nGUEST_RESET=${reset:04X}\nGUEST_IRQ=${irq:04X}\nUSE_FASTROM={int(fastrom)}\nUSE_DIRECT_CALLS={int(direct)}\nUSE_PIPELINED_VIDEO={int(pipelined_video)}\nUSE_OBJECT_CACHE={int(object_cache)}\nUSE_UNROLLED_OBJECTS={int(unrolled_objects and object_cache)}\nTEST_INPUT_REPLAY={int(replay_input is not None)}\nREPLAY_LENGTH={len(replay)}\nUSE_QUICK_PPU={int(quick_ppu and quick_io)}\nUSE_QUICK_DISPATCH={int(quick_zp or quick_indirect or quick_io)}\n')
     for name,data in [('operation.bin',bytes(OPERATIONS.get(OPS.get(o,('',))[0],0) for o in range(256))),
                       ('mode.bin',bytes(MODES.get(OPS.get(o,('', ''))[1],255) for o in range(256))),
                       ('length.bin',bytes(OPS.get(o,('', '',0))[2] for o in range(256)))]:
@@ -133,7 +133,7 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     raw=finalize_rom((out/'native-core.bin').read_bytes(),payload)
     (out/'native-prototype.sfc').write_bytes(raw)
     info.update(validate_sfc(raw));info.update({'rom_sha256':rom.metadata()['sha256'],
-       'direct_calls':direct,'direct_call_sites':len(direct_sites),'direct_call_banks':'$A1-$BF; $C0 retains COP','renderer':'experimental live PPU bridge','audio_implemented':experimental_audio,'audio_preview':audio_info,'test_nmi_restore_stress':stress_nmi_restore,
+       'specialized_indirect_lda':specialized_indirect and quick_indirect,'direct_bank_switches':bank_direct and direct,'test_bank_switch_stress':stress_bank_switch,'direct_calls':direct,'direct_call_sites':len(direct_sites),'direct_call_banks':'$A1-$BF; $C0 retains COP','renderer':'experimental live PPU bridge','audio_implemented':experimental_audio,'audio_preview':audio_info,'test_nmi_restore_stress':stress_nmi_restore,
        'complete_game_port':False,'prg_mode':2,'supported_c000_banks':[30,7],
        'native_execution_banks':32,'fastrom':fastrom,'quick_zero_page':quick_zp,'quick_indirect_reads':quick_indirect,'quick_io':quick_io,'quick_ppu_writes':quick_ppu and quick_io,'object_cache':object_cache,'unrolled_objects':unrolled_objects and object_cache,'simple_direct_writes':simple_direct and direct,'pipelined_video':pipelined_video,'test_input_replay_sha256':hashlib.sha256(replay).hexdigest() if replay_input else None,'notes':'Unclassified code traps; compatibility and timing require validation.'})
     (out/'native-build.json').write_text(json.dumps(info,indent=2)+'\n')
@@ -142,6 +142,9 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--rom',type=Path,required=True)
     p.add_argument('--trace',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--no-specialized-indirect',action='store_true',help='Use shared load/arithmetic indirect context path')
+    p.add_argument('--no-bank-direct',action='store_true',help='Use COP instead of WRAM bank-changing return veneers')
+    p.add_argument('--stress-bank-switch',action='store_true',help='TEST ONLY: delay between bank change and long return')
     p.add_argument('--no-simple-direct',action='store_true',help='Use full context for all direct I/O writes')
     p.add_argument('--no-safe-addresses',action='store_true',help='Disable static zero-base and RAM-mirror native substitutions')
     p.add_argument('--stress-nmi-restore',action='store_true',help='TEST ONLY: force nested host NMIs while restoring guest context')
@@ -159,4 +162,4 @@ if __name__=='__main__':
     video.add_argument('--pipelined-video',dest='pipelined_video',action='store_true',help='Queue prepared frames for the following host NMI (default)')
     video.add_argument('--synchronous-video',dest='pipelined_video',action='store_false',help='Retain the previous blocking upload for regression comparisons')
     p.set_defaults(pipelined_video=True)
-    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io,quick_ppu=not a.no_quick_ppu,object_cache=not a.no_object_cache,pipelined_video=a.pipelined_video,replay_input=a.input_replay,direct=not a.no_direct_calls,unrolled_objects=not a.no_unrolled_objects,experimental_audio=a.experimental_audio,stress_nmi_restore=a.stress_nmi_restore,safe_addresses=not a.no_safe_addresses,simple_direct=not a.no_simple_direct);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))
+    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io,quick_ppu=not a.no_quick_ppu,object_cache=not a.no_object_cache,pipelined_video=a.pipelined_video,replay_input=a.input_replay,direct=not a.no_direct_calls,unrolled_objects=not a.no_unrolled_objects,experimental_audio=a.experimental_audio,stress_nmi_restore=a.stress_nmi_restore,safe_addresses=not a.no_safe_addresses,simple_direct=not a.no_simple_direct,bank_direct=not a.no_bank_direct,stress_bank_switch=a.stress_bank_switch,specialized_indirect=not a.no_specialized_indirect);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))

@@ -22,7 +22,7 @@ def capture(core:Path,rom:Path,out:Path,limit:int):
                 if len(m)>=0x974:
                     diagnostics={name:int.from_bytes(m[a:a+4],'little') for name,a in
                                  (('cop_calls',0x960),('quick_zp_calls',0x964),
-                                  ('quick_indirect_calls',0x968),('quick_io_calls',0x96c),('quick_ppu_calls',0x970),('direct_write_calls',0x980),('simple_direct_write_calls',0x984))}
+                                  ('quick_indirect_calls',0x968),('quick_io_calls',0x96c),('quick_ppu_calls',0x970),('direct_write_calls',0x980),('simple_direct_write_calls',0x984),('direct_bank_calls',0x988))}
                 out.with_suffix('.diagnostics.json').write_text(json.dumps(diagnostics,indent=2)+'\n')
                 return
         raise RuntimeError(f'CPU fixture did not complete in {limit} frames; diagnostic RAM={m[0x90c:0x910].hex() if len(m)>0x910 else "NES"}')
@@ -32,9 +32,11 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
     out.mkdir(parents=True,exist_ok=True)
     source=json.loads((fixture/'trace-summary.json').read_text())
     if not source.get('procedural_fixture'):raise ValueError('Expected the original procedural CPU fixture.')
+    build_meta=json.loads((fixture/'snes/native-build.json').read_text())
+    limit=3000 if build_meta.get('test_bank_switch_stress') else 300
     for name,core,rom in [('nes',nes_core,fixture/'fixture.nes'),('snes',snes_core,fixture/'snes/native-prototype.sfc')]:
         subprocess.run([sys.executable,__file__,'--capture','--core',str(core),'--rom',str(rom),
-                        '--output',str(out/(name+'.ram'))],check=True)
+                        '--output',str(out/(name+'.ram')), '--limit',str(limit)],check=True)
     nes=(out/'nes.ram').read_bytes();snes=(out/'snes.ram').read_bytes()
     mismatches=[]
     for item in source['records']:
@@ -46,7 +48,10 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
         for flag,counter in [('quick_zero_page','quick_zp_calls'),
                              ('quick_indirect_reads','quick_indirect_calls'),
                              ('quick_io','quick_io_calls')]:
-            if build_meta.get(flag) and not diagnostics.get(counter):
+            exercised=diagnostics.get(counter,0)
+            if flag=='quick_io' and build_meta.get('direct_bank_switches'):
+                exercised += diagnostics.get('direct_bank_calls',0)
+            if build_meta.get(flag) and not exercised:
                 raise RuntimeError(f'Enabled path {flag} was not exercised')
     if source.get('direct_fixture') and build_meta.get('direct_calls'):
         counter = 'simple_direct_write_calls' if build_meta.get('simple_direct_writes') else 'direct_write_calls'
@@ -59,6 +64,9 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
     if source.get('safe_address_fixture') and build_meta.get('safe_addresses'):
         if not build_meta.get('safe_native_sites') or diagnostics.get('cop_calls') != 0:
             raise RuntimeError('Safe-address fixture must use native replacements without COP')
+    if source.get('bank_switch_fixture') and build_meta.get('direct_bank_switches'):
+        if diagnostics.get('direct_bank_calls', 0) < 90 or diagnostics.get('cop_calls', 0) == 0:
+            raise RuntimeError('Must exercise the direct mapper returns and C0 COP fallback')
     oam_check=None
     if 'expected_oam_source_page' in source:
         address=source['expected_oam_source_page']*256
@@ -78,10 +86,11 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--capture',action='store_true')
     for arg in ('core','rom','output','nes-core','snes-core','fixture','out'):p.add_argument('--'+arg,type=Path)
+    p.add_argument('--limit',type=int,default=300)
     a=p.parse_args()
     if a.capture:
         if not all((a.core,a.rom,a.output)):p.error('--capture requires --core, --rom, --output')
-        capture(a.core,a.rom,a.output,300)
+        capture(a.core,a.rom,a.output,a.limit)
     else:
         if not all((a.nes_core,a.snes_core,a.fixture,a.out)):p.error('Require --nes-core, --snes-core, --fixture, --out')
         verify(a.nes_core,a.snes_core,a.fixture,a.out)

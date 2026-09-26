@@ -1,5 +1,7 @@
 # Verified status — 2026-09-25
 
+Latest continuation: [bank-switch returns, indirect loads and the extended room-1-02 route](bank-returns-2026-09-25.md). Still not full speed or a complete port.
+
 ## Latest: conservative native RAM and shorter simple-I/O handlers
 
 The optional audio build passes the ordinary-controller early-stage route. Fresh

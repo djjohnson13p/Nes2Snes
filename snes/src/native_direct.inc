@@ -1,5 +1,6 @@
 ; Same-size absolute accesses enter a WRAM veneer via JSR. The veneer returns
-; to the original execution bank using RTS. Compound work is in bank $80; its
+; with RTS for ordinary I/O or RTL into a new bank for PRG selectors.
+; Compound work is in bank $80; its
 ; full context is restored before returning. Bank $C0 retains COP instructions.
 .if USE_DIRECT_CALLS
 .import __STUBS_LOAD__, __STUBS_RUN__, __STUBS_SIZE__
@@ -167,4 +168,22 @@ DirectReadIrq:
     stz IRQPENDING
     rtl
 .endif
+; A bank-store veneer reaches here only on unsupported selector values.
+; Its frame is: full A, P, near-JSR return. Do not use stale COP diagnostics.
+DirectBankFault:
+.a8
+.i8
+    rep #$20
+.a16
+    lda 4,s
+    sec
+    sbc #$0002
+    sta f:FAULTPC
+    sep #$20
+.a8
+    lda CODEBANK
+    sta f:FAULTBANK
+    lda #$03
+    sta f:FAULTCODE
+    jmp FaultDisplay
 .include "direct-stubs.inc"

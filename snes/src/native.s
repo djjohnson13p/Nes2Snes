@@ -729,7 +729,73 @@ name:
     operation a:$0000,x
     jmp QuickZpxDone
 .endmacro
+; LDA does not consume the old A/C/V. Avoid a restore/execute/save round trip
+; for this common read, but merge only N/Z into the real guest status frame.
+.if USE_SPECIALIZED_INDIRECT_LDA
+QuickLDA_IY:
+.a16
+.i16
+    lda 6,s
+    dec a
+    tax
+    lda a:$0000,x
+    and #$00FF
+    tax
+    cpx #$00FF
+    beq @wrap
+    lda a:$0000,x
+    bra @pointer
+@wrap:
+    sep #$20
+.a8
+    lda a:$0000
+    xba
+    lda a:$00FF
+    rep #$20
+.a16
+@pointer:
+    sta EA
+    tya
+    clc
+    adc EA
+    cmp #$2000
+    bcc @ram
+    cmp #$8000
+    bcs @safe
+    jmp CopGeneric
+@ram:
+    and #$07FF
+@safe:
+    tax
+    inc $0968
+    bne :+
+    inc $096A
+:
+    inc $0960
+    bne :+
+    inc $0962
+:
+    sep #$20
+.a8
+    lda a:$0000,x
+    sta 3,s                 ; preserve the original hidden high byte of A
+    php
+    pla
+    and #$82
+    sta TMP
+    lda 5,s
+    and #$7D
+    ora TMP
+    sta 5,s
+    rep #$30
+.a16
+.i16
+    plx
+    pla
+    rti
+.else
 QuickIndirectHandler QuickLDA_IY, lda
+.endif
 QuickIndirectHandler QuickCMP_IY, cmp
 QuickIndirectHandler QuickSBC_IY, sbc
 QuickIndirectHandler QuickADC_IY, adc
@@ -1714,8 +1780,13 @@ NmiFast:
     bcc @quick
     cmp #$C1
     bcs @quick
+    ; A WRAM veneer is an atomic guest operation. Never rewrite its saved
+    ; PBR from CODEBANK: a bank-switch veneer may already target $C0, where
+    ; that same WRAM PC is not mirrored. Preserve the real interrupt frame.
     rep #$20
 .a16
+    lda 5,s
+    bpl @quick
     pla
     plp
     jmp NmiFull

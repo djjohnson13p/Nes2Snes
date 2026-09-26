@@ -1,0 +1,1846 @@
+{
+  "baseline_revision": "21c62a3dd8ac1f26f85dc9b57664945cfe698e65",
+  "unit_tests_passed": 109,
+  "cpu_cases": [
+    {
+      "fixture": "fastpath-2",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 67,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "bank-7",
+      "records_checked": 197,
+      "bytes_checked": 788,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 7,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 3,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 3,
+        "direct_bank_calls": 98
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "fastpath-6",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 66,
+        "quick_zp_calls": 59,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "indirect-0",
+      "records_checked": 90,
+      "bytes_checked": 360,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 90,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 80,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 2,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 2
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "fastpath-1",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 66,
+        "quick_zp_calls": 59,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "bank-1",
+      "records_checked": 197,
+      "bytes_checked": 788,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 7,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 3,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 3,
+        "direct_bank_calls": 98
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "indirect-1",
+      "records_checked": 90,
+      "bytes_checked": 360,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 90,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 80,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 2,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 2
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "bank-0",
+      "records_checked": 197,
+      "bytes_checked": 788,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 7,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 3,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 3,
+        "direct_bank_calls": 98
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "fastpath-7",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 67,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "indirect-7",
+      "records_checked": 90,
+      "bytes_checked": 360,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 90,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 80,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 2,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 2
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "fastpath-0",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 66,
+        "quick_zp_calls": 59,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "fastpath-4",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 67,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "fastpath-5",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 67,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "fastpath-3",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 67,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 6
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "safe",
+      "records_checked": 116,
+      "bytes_checked": 464,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 0,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 2,
+        "direct_bank_calls": 0
+      },
+      "oam_copy": null,
+      "scope": "Original indexed zero-base and internal RAM-mirror boundary cases; not mapper or full-game coverage."
+    },
+    {
+      "fixture": "legacy",
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    {
+      "fixture": "cpu",
+      "records_checked": 180,
+      "bytes_checked": 720,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 36,
+        "quick_zp_calls": 15,
+        "quick_indirect_calls": 7,
+        "quick_io_calls": 1,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 0,
+        "direct_bank_calls": 35
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "ppu-0",
+      "records_checked": 47,
+      "bytes_checked": 188,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 50,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 33,
+        "simple_direct_write_calls": 143,
+        "direct_bank_calls": 2
+      },
+      "oam_copy": null,
+      "scope": "Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy."
+    },
+    {
+      "fixture": "ppu-7",
+      "records_checked": 47,
+      "bytes_checked": 188,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 50,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 33,
+        "simple_direct_write_calls": 143,
+        "direct_bank_calls": 2
+      },
+      "oam_copy": null,
+      "scope": "Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy."
+    },
+    {
+      "fixture": "stress",
+      "records_checked": 197,
+      "bytes_checked": 788,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 7,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 3,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 4,
+        "direct_bank_calls": 98
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    {
+      "fixture": "direct",
+      "records_checked": 192,
+      "bytes_checked": 768,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 7,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 3,
+        "quick_ppu_calls": 1,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 95,
+        "direct_bank_calls": 33
+      },
+      "oam_copy": null,
+      "scope": "Original STA/STX/STY stores and flags in all 32 mapped execution combinations, including C0 fallback."
+    }
+  ],
+  "cpu_records_checked": 2603,
+  "cpu_record_mismatches": 0,
+  "negative_control": {
+    "frames": 341,
+    "completion": 0,
+    "fault": 1,
+    "diagnostic": "f511c001",
+    "direct_banks": 50,
+    "reproduced_missing_gate_failure": true
+  },
+  "fixed_replay_comparison": {
+    "baseline_rom_sha256": "53cf2679dcf145233fc8c12a5aa1ebb16f0816e8f701a82d8b336fa8c605b1f3",
+    "candidate_rom_sha256": "74b8f4b6d47aadab606aaf23c72dea25a69c90c128ab81f0653d30be7d8bdbe1",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 237,
+        "candidate_snes_frames": 228,
+        "speed_ratio": 1.0394736842105263,
+        "candidate_snes_frames_per_logical_frame": 1.9
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 48,
+        "speed_ratio": 1.0416666666666667,
+        "candidate_snes_frames_per_logical_frame": 1.92
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 120,
+        "candidate_snes_frames": 118,
+        "speed_ratio": 1.0169491525423728,
+        "candidate_snes_frames_per_logical_frame": 1.9666666666666666
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "object_checks": {
+    "frames_checked": 160,
+    "oam_bytes_checked": 81920,
+    "mismatch_count": 0,
+    "sprite_modes": [
+      0,
+      8,
+      32,
+      40
+    ],
+    "converted_objects": 2624,
+    "cached_objects": 7616,
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "rom_sha256": "5220e8329a9de51e075405bae1ea80c5a927bfb79347f5814eacee7fb15001c2",
+    "scope": "Original procedural dynamic OAM encoding and cache invalidation; not full PPU accuracy."
+  },
+  "nes_route": {
+    "platform": "nes",
+    "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "steps_requested": 100,
+    "pattern": [
+      {
+        "updates": 40,
+        "buttons": [
+          "right"
+        ]
+      },
+      {
+        "updates": 25,
+        "buttons": [
+          "right",
+          "a"
+        ]
+      },
+      {
+        "updates": 25,
+        "buttons": [
+          "right",
+          "b"
+        ]
+      },
+      {
+        "updates": 10,
+        "buttons": []
+      }
+    ],
+    "scope": "Bounded live-controller early-game route; not all-level or NES/SNES equivalence proof",
+    "start_logical_frame": 851,
+    "status": "completed_budget",
+    "records": [
+      {
+        "step": 0,
+        "emulator_frames": 958,
+        "logical_frame": 951,
+        "game_state": 4
+      },
+      {
+        "step": 1,
+        "emulator_frames": 1058,
+        "logical_frame": 1051,
+        "game_state": 4
+      },
+      {
+        "step": 2,
+        "emulator_frames": 1158,
+        "logical_frame": 1151,
+        "game_state": 4
+      },
+      {
+        "step": 3,
+        "emulator_frames": 1258,
+        "logical_frame": 1251,
+        "game_state": 4
+      },
+      {
+        "step": 4,
+        "emulator_frames": 1358,
+        "logical_frame": 1351,
+        "game_state": 4
+      },
+      {
+        "step": 5,
+        "emulator_frames": 1458,
+        "logical_frame": 1451,
+        "game_state": 4
+      },
+      {
+        "step": 6,
+        "emulator_frames": 1558,
+        "logical_frame": 1551,
+        "game_state": 4
+      },
+      {
+        "step": 7,
+        "emulator_frames": 1658,
+        "logical_frame": 1651,
+        "game_state": 4
+      },
+      {
+        "step": 8,
+        "emulator_frames": 1758,
+        "logical_frame": 1751,
+        "game_state": 4
+      },
+      {
+        "step": 9,
+        "emulator_frames": 1858,
+        "logical_frame": 1851,
+        "game_state": 4
+      },
+      {
+        "step": 10,
+        "emulator_frames": 1958,
+        "logical_frame": 1951,
+        "game_state": 4
+      },
+      {
+        "step": 11,
+        "emulator_frames": 2058,
+        "logical_frame": 2051,
+        "game_state": 4
+      },
+      {
+        "step": 12,
+        "emulator_frames": 2158,
+        "logical_frame": 2151,
+        "game_state": 4
+      },
+      {
+        "step": 13,
+        "emulator_frames": 2258,
+        "logical_frame": 2251,
+        "game_state": 4
+      },
+      {
+        "step": 14,
+        "emulator_frames": 2358,
+        "logical_frame": 2351,
+        "game_state": 4
+      },
+      {
+        "step": 15,
+        "emulator_frames": 2458,
+        "logical_frame": 2451,
+        "game_state": 4
+      },
+      {
+        "step": 16,
+        "emulator_frames": 2558,
+        "logical_frame": 2551,
+        "game_state": 4
+      },
+      {
+        "step": 17,
+        "emulator_frames": 2658,
+        "logical_frame": 2651,
+        "game_state": 4
+      },
+      {
+        "step": 18,
+        "emulator_frames": 2758,
+        "logical_frame": 2751,
+        "game_state": 4
+      },
+      {
+        "step": 19,
+        "emulator_frames": 2858,
+        "logical_frame": 2851,
+        "game_state": 4
+      },
+      {
+        "step": 20,
+        "emulator_frames": 2958,
+        "logical_frame": 2951,
+        "game_state": 4
+      },
+      {
+        "step": 21,
+        "emulator_frames": 3058,
+        "logical_frame": 3051,
+        "game_state": 4
+      },
+      {
+        "step": 22,
+        "emulator_frames": 3158,
+        "logical_frame": 3151,
+        "game_state": 4
+      },
+      {
+        "step": 23,
+        "emulator_frames": 3258,
+        "logical_frame": 3251,
+        "game_state": 4
+      },
+      {
+        "step": 24,
+        "emulator_frames": 3358,
+        "logical_frame": 3351,
+        "game_state": 4
+      },
+      {
+        "step": 25,
+        "emulator_frames": 3458,
+        "logical_frame": 3451,
+        "game_state": 4
+      },
+      {
+        "step": 26,
+        "emulator_frames": 3558,
+        "logical_frame": 3551,
+        "game_state": 4
+      },
+      {
+        "step": 27,
+        "emulator_frames": 3658,
+        "logical_frame": 3651,
+        "game_state": 4
+      },
+      {
+        "step": 28,
+        "emulator_frames": 3758,
+        "logical_frame": 3751,
+        "game_state": 4
+      },
+      {
+        "step": 29,
+        "emulator_frames": 3858,
+        "logical_frame": 3851,
+        "game_state": 4
+      },
+      {
+        "step": 30,
+        "emulator_frames": 3958,
+        "logical_frame": 3951,
+        "game_state": 4
+      },
+      {
+        "step": 31,
+        "emulator_frames": 4058,
+        "logical_frame": 4051,
+        "game_state": 4
+      },
+      {
+        "step": 32,
+        "emulator_frames": 4158,
+        "logical_frame": 4151,
+        "game_state": 4
+      },
+      {
+        "step": 33,
+        "emulator_frames": 4258,
+        "logical_frame": 4251,
+        "game_state": 4
+      },
+      {
+        "step": 34,
+        "emulator_frames": 4358,
+        "logical_frame": 4351,
+        "game_state": 4
+      },
+      {
+        "step": 35,
+        "emulator_frames": 4458,
+        "logical_frame": 4451,
+        "game_state": 4
+      },
+      {
+        "step": 36,
+        "emulator_frames": 4558,
+        "logical_frame": 4551,
+        "game_state": 4
+      },
+      {
+        "step": 37,
+        "emulator_frames": 4658,
+        "logical_frame": 4651,
+        "game_state": 4
+      },
+      {
+        "step": 38,
+        "emulator_frames": 4758,
+        "logical_frame": 4751,
+        "game_state": 4
+      },
+      {
+        "step": 39,
+        "emulator_frames": 4858,
+        "logical_frame": 4851,
+        "game_state": 4
+      },
+      {
+        "step": 40,
+        "emulator_frames": 4958,
+        "logical_frame": 4951,
+        "game_state": 4
+      },
+      {
+        "step": 41,
+        "emulator_frames": 5058,
+        "logical_frame": 5051,
+        "game_state": 4
+      },
+      {
+        "step": 42,
+        "emulator_frames": 5158,
+        "logical_frame": 5151,
+        "game_state": 4
+      },
+      {
+        "step": 43,
+        "emulator_frames": 5258,
+        "logical_frame": 5251,
+        "game_state": 4
+      },
+      {
+        "step": 44,
+        "emulator_frames": 5358,
+        "logical_frame": 5351,
+        "game_state": 4
+      },
+      {
+        "step": 45,
+        "emulator_frames": 5458,
+        "logical_frame": 5451,
+        "game_state": 4
+      },
+      {
+        "step": 46,
+        "emulator_frames": 5558,
+        "logical_frame": 5551,
+        "game_state": 4
+      },
+      {
+        "step": 47,
+        "emulator_frames": 5658,
+        "logical_frame": 5651,
+        "game_state": 4
+      },
+      {
+        "step": 48,
+        "emulator_frames": 5758,
+        "logical_frame": 5751,
+        "game_state": 4
+      },
+      {
+        "step": 49,
+        "emulator_frames": 5858,
+        "logical_frame": 5851,
+        "game_state": 4
+      },
+      {
+        "step": 50,
+        "emulator_frames": 5958,
+        "logical_frame": 5951,
+        "game_state": 4
+      },
+      {
+        "step": 51,
+        "emulator_frames": 6058,
+        "logical_frame": 6051,
+        "game_state": 4
+      },
+      {
+        "step": 52,
+        "emulator_frames": 6158,
+        "logical_frame": 6151,
+        "game_state": 4
+      },
+      {
+        "step": 53,
+        "emulator_frames": 6258,
+        "logical_frame": 6251,
+        "game_state": 4
+      },
+      {
+        "step": 54,
+        "emulator_frames": 6358,
+        "logical_frame": 6351,
+        "game_state": 4
+      },
+      {
+        "step": 55,
+        "emulator_frames": 6458,
+        "logical_frame": 6451,
+        "game_state": 4
+      },
+      {
+        "step": 56,
+        "emulator_frames": 6558,
+        "logical_frame": 6551,
+        "game_state": 4
+      },
+      {
+        "step": 57,
+        "emulator_frames": 6658,
+        "logical_frame": 6651,
+        "game_state": 4
+      },
+      {
+        "step": 58,
+        "emulator_frames": 6758,
+        "logical_frame": 6751,
+        "game_state": 4
+      },
+      {
+        "step": 59,
+        "emulator_frames": 6858,
+        "logical_frame": 6851,
+        "game_state": 4
+      },
+      {
+        "step": 60,
+        "emulator_frames": 6958,
+        "logical_frame": 6951,
+        "game_state": 4
+      },
+      {
+        "step": 61,
+        "emulator_frames": 7058,
+        "logical_frame": 7051,
+        "game_state": 4
+      },
+      {
+        "step": 62,
+        "emulator_frames": 7158,
+        "logical_frame": 7151,
+        "game_state": 4
+      },
+      {
+        "step": 63,
+        "emulator_frames": 7258,
+        "logical_frame": 7251,
+        "game_state": 4
+      },
+      {
+        "step": 64,
+        "emulator_frames": 7358,
+        "logical_frame": 7351,
+        "game_state": 4
+      },
+      {
+        "step": 65,
+        "emulator_frames": 7458,
+        "logical_frame": 7451,
+        "game_state": 4
+      },
+      {
+        "step": 66,
+        "emulator_frames": 7558,
+        "logical_frame": 7551,
+        "game_state": 4
+      },
+      {
+        "step": 67,
+        "emulator_frames": 7658,
+        "logical_frame": 7651,
+        "game_state": 4
+      },
+      {
+        "step": 68,
+        "emulator_frames": 7758,
+        "logical_frame": 7751,
+        "game_state": 4
+      },
+      {
+        "step": 69,
+        "emulator_frames": 7858,
+        "logical_frame": 7851,
+        "game_state": 4
+      },
+      {
+        "step": 70,
+        "emulator_frames": 7958,
+        "logical_frame": 7951,
+        "game_state": 4
+      },
+      {
+        "step": 71,
+        "emulator_frames": 8058,
+        "logical_frame": 8051,
+        "game_state": 4
+      },
+      {
+        "step": 72,
+        "emulator_frames": 8158,
+        "logical_frame": 8151,
+        "game_state": 4
+      },
+      {
+        "step": 73,
+        "emulator_frames": 8258,
+        "logical_frame": 8251,
+        "game_state": 4
+      },
+      {
+        "step": 74,
+        "emulator_frames": 8358,
+        "logical_frame": 8351,
+        "game_state": 4
+      },
+      {
+        "step": 75,
+        "emulator_frames": 8458,
+        "logical_frame": 8451,
+        "game_state": 4
+      },
+      {
+        "step": 76,
+        "emulator_frames": 8558,
+        "logical_frame": 8551,
+        "game_state": 4
+      },
+      {
+        "step": 77,
+        "emulator_frames": 8658,
+        "logical_frame": 8651,
+        "game_state": 4
+      },
+      {
+        "step": 78,
+        "emulator_frames": 8758,
+        "logical_frame": 8751,
+        "game_state": 4
+      },
+      {
+        "step": 79,
+        "emulator_frames": 8858,
+        "logical_frame": 8851,
+        "game_state": 4
+      },
+      {
+        "step": 80,
+        "emulator_frames": 8958,
+        "logical_frame": 8951,
+        "game_state": 4
+      },
+      {
+        "step": 81,
+        "emulator_frames": 9058,
+        "logical_frame": 9051,
+        "game_state": 4
+      },
+      {
+        "step": 82,
+        "emulator_frames": 9158,
+        "logical_frame": 9151,
+        "game_state": 4
+      },
+      {
+        "step": 83,
+        "emulator_frames": 9258,
+        "logical_frame": 9251,
+        "game_state": 4
+      },
+      {
+        "step": 84,
+        "emulator_frames": 9358,
+        "logical_frame": 9351,
+        "game_state": 4
+      },
+      {
+        "step": 85,
+        "emulator_frames": 9458,
+        "logical_frame": 9451,
+        "game_state": 4
+      },
+      {
+        "step": 86,
+        "emulator_frames": 9558,
+        "logical_frame": 9551,
+        "game_state": 4
+      },
+      {
+        "step": 87,
+        "emulator_frames": 9658,
+        "logical_frame": 9651,
+        "game_state": 4
+      },
+      {
+        "step": 88,
+        "emulator_frames": 9758,
+        "logical_frame": 9751,
+        "game_state": 4
+      },
+      {
+        "step": 89,
+        "emulator_frames": 9858,
+        "logical_frame": 9851,
+        "game_state": 4
+      },
+      {
+        "step": 90,
+        "emulator_frames": 9958,
+        "logical_frame": 9951,
+        "game_state": 4
+      },
+      {
+        "step": 91,
+        "emulator_frames": 10058,
+        "logical_frame": 10051,
+        "game_state": 4
+      },
+      {
+        "step": 92,
+        "emulator_frames": 10158,
+        "logical_frame": 10151,
+        "game_state": 4
+      },
+      {
+        "step": 93,
+        "emulator_frames": 10258,
+        "logical_frame": 10251,
+        "game_state": 4
+      },
+      {
+        "step": 94,
+        "emulator_frames": 10358,
+        "logical_frame": 10351,
+        "game_state": 4
+      },
+      {
+        "step": 95,
+        "emulator_frames": 10458,
+        "logical_frame": 10451,
+        "game_state": 4
+      },
+      {
+        "step": 96,
+        "emulator_frames": 10558,
+        "logical_frame": 10551,
+        "game_state": 4
+      },
+      {
+        "step": 97,
+        "emulator_frames": 10658,
+        "logical_frame": 10651,
+        "game_state": 4
+      },
+      {
+        "step": 98,
+        "emulator_frames": 10758,
+        "logical_frame": 10751,
+        "game_state": 4
+      },
+      {
+        "step": 99,
+        "emulator_frames": 10858,
+        "logical_frame": 10851,
+        "game_state": 4
+      }
+    ],
+    "total_emulator_frames": 10858,
+    "trace_extension": {
+      "route": {
+        "steps": 100,
+        "pattern": [
+          {
+            "updates": 40,
+            "buttons": [
+              "right"
+            ]
+          },
+          {
+            "updates": 25,
+            "buttons": [
+              "right",
+              "a"
+            ]
+          },
+          {
+            "updates": 25,
+            "buttons": [
+              "right",
+              "b"
+            ]
+          },
+          {
+            "updates": 10,
+            "buttons": []
+          }
+        ],
+        "total_emulator_frames": 10858
+      },
+      "new_observed_sites": 217,
+      "observed_sites": 8928,
+      "coverage_complete": false
+    }
+  },
+  "snes_route": {
+    "platform": "snes",
+    "rom_sha256": "f23398ab0e076cf7991579b194444fe693d8488c4686d3e44783dbcc41e95501",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "steps_requested": 100,
+    "pattern": [
+      {
+        "updates": 40,
+        "buttons": [
+          "right"
+        ]
+      },
+      {
+        "updates": 25,
+        "buttons": [
+          "right",
+          "a"
+        ]
+      },
+      {
+        "updates": 25,
+        "buttons": [
+          "right",
+          "b"
+        ]
+      },
+      {
+        "updates": 10,
+        "buttons": []
+      }
+    ],
+    "scope": "Bounded live-controller early-game route; not all-level or NES/SNES equivalence proof",
+    "start_logical_frame": 856,
+    "status": "completed_budget",
+    "records": [
+      {
+        "step": 0,
+        "emulator_frames": 1598,
+        "logical_frame": 956,
+        "game_state": 4
+      },
+      {
+        "step": 1,
+        "emulator_frames": 1792,
+        "logical_frame": 1056,
+        "game_state": 4
+      },
+      {
+        "step": 2,
+        "emulator_frames": 1996,
+        "logical_frame": 1156,
+        "game_state": 4
+      },
+      {
+        "step": 3,
+        "emulator_frames": 2197,
+        "logical_frame": 1256,
+        "game_state": 4
+      },
+      {
+        "step": 4,
+        "emulator_frames": 2386,
+        "logical_frame": 1356,
+        "game_state": 4
+      },
+      {
+        "step": 5,
+        "emulator_frames": 2547,
+        "logical_frame": 1456,
+        "game_state": 4
+      },
+      {
+        "step": 6,
+        "emulator_frames": 2725,
+        "logical_frame": 1556,
+        "game_state": 4
+      },
+      {
+        "step": 7,
+        "emulator_frames": 2891,
+        "logical_frame": 1656,
+        "game_state": 4
+      },
+      {
+        "step": 8,
+        "emulator_frames": 3009,
+        "logical_frame": 1756,
+        "game_state": 4
+      },
+      {
+        "step": 9,
+        "emulator_frames": 3134,
+        "logical_frame": 1856,
+        "game_state": 4
+      },
+      {
+        "step": 10,
+        "emulator_frames": 3270,
+        "logical_frame": 1956,
+        "game_state": 4
+      },
+      {
+        "step": 11,
+        "emulator_frames": 3378,
+        "logical_frame": 2056,
+        "game_state": 4
+      },
+      {
+        "step": 12,
+        "emulator_frames": 3507,
+        "logical_frame": 2156,
+        "game_state": 4
+      },
+      {
+        "step": 13,
+        "emulator_frames": 3608,
+        "logical_frame": 2256,
+        "game_state": 4
+      },
+      {
+        "step": 14,
+        "emulator_frames": 3800,
+        "logical_frame": 2356,
+        "game_state": 4
+      },
+      {
+        "step": 15,
+        "emulator_frames": 4000,
+        "logical_frame": 2456,
+        "game_state": 4
+      },
+      {
+        "step": 16,
+        "emulator_frames": 4201,
+        "logical_frame": 2556,
+        "game_state": 4
+      },
+      {
+        "step": 17,
+        "emulator_frames": 4401,
+        "logical_frame": 2656,
+        "game_state": 4
+      },
+      {
+        "step": 18,
+        "emulator_frames": 4601,
+        "logical_frame": 2756,
+        "game_state": 4
+      },
+      {
+        "step": 19,
+        "emulator_frames": 4801,
+        "logical_frame": 2856,
+        "game_state": 4
+      },
+      {
+        "step": 20,
+        "emulator_frames": 5001,
+        "logical_frame": 2956,
+        "game_state": 4
+      },
+      {
+        "step": 21,
+        "emulator_frames": 5201,
+        "logical_frame": 3056,
+        "game_state": 4
+      },
+      {
+        "step": 22,
+        "emulator_frames": 5401,
+        "logical_frame": 3156,
+        "game_state": 4
+      },
+      {
+        "step": 23,
+        "emulator_frames": 5601,
+        "logical_frame": 3256,
+        "game_state": 4
+      },
+      {
+        "step": 24,
+        "emulator_frames": 5801,
+        "logical_frame": 3356,
+        "game_state": 4
+      },
+      {
+        "step": 25,
+        "emulator_frames": 6001,
+        "logical_frame": 3456,
+        "game_state": 4
+      },
+      {
+        "step": 26,
+        "emulator_frames": 6201,
+        "logical_frame": 3556,
+        "game_state": 4
+      },
+      {
+        "step": 27,
+        "emulator_frames": 6401,
+        "logical_frame": 3656,
+        "game_state": 4
+      },
+      {
+        "step": 28,
+        "emulator_frames": 6601,
+        "logical_frame": 3756,
+        "game_state": 4
+      },
+      {
+        "step": 29,
+        "emulator_frames": 6802,
+        "logical_frame": 3856,
+        "game_state": 4
+      },
+      {
+        "step": 30,
+        "emulator_frames": 7002,
+        "logical_frame": 3956,
+        "game_state": 4
+      },
+      {
+        "step": 31,
+        "emulator_frames": 7202,
+        "logical_frame": 4056,
+        "game_state": 4
+      },
+      {
+        "step": 32,
+        "emulator_frames": 7402,
+        "logical_frame": 4156,
+        "game_state": 4
+      },
+      {
+        "step": 33,
+        "emulator_frames": 7602,
+        "logical_frame": 4256,
+        "game_state": 4
+      },
+      {
+        "step": 34,
+        "emulator_frames": 7802,
+        "logical_frame": 4356,
+        "game_state": 4
+      },
+      {
+        "step": 35,
+        "emulator_frames": 8002,
+        "logical_frame": 4456,
+        "game_state": 4
+      },
+      {
+        "step": 36,
+        "emulator_frames": 8202,
+        "logical_frame": 4556,
+        "game_state": 4
+      },
+      {
+        "step": 37,
+        "emulator_frames": 8402,
+        "logical_frame": 4656,
+        "game_state": 4
+      },
+      {
+        "step": 38,
+        "emulator_frames": 8602,
+        "logical_frame": 4756,
+        "game_state": 4
+      },
+      {
+        "step": 39,
+        "emulator_frames": 8802,
+        "logical_frame": 4856,
+        "game_state": 4
+      },
+      {
+        "step": 40,
+        "emulator_frames": 9002,
+        "logical_frame": 4956,
+        "game_state": 4
+      },
+      {
+        "step": 41,
+        "emulator_frames": 9202,
+        "logical_frame": 5056,
+        "game_state": 4
+      },
+      {
+        "step": 42,
+        "emulator_frames": 9402,
+        "logical_frame": 5156,
+        "game_state": 4
+      },
+      {
+        "step": 43,
+        "emulator_frames": 9602,
+        "logical_frame": 5256,
+        "game_state": 4
+      },
+      {
+        "step": 44,
+        "emulator_frames": 9802,
+        "logical_frame": 5356,
+        "game_state": 4
+      },
+      {
+        "step": 45,
+        "emulator_frames": 10002,
+        "logical_frame": 5456,
+        "game_state": 4
+      },
+      {
+        "step": 46,
+        "emulator_frames": 10202,
+        "logical_frame": 5556,
+        "game_state": 4
+      },
+      {
+        "step": 47,
+        "emulator_frames": 10403,
+        "logical_frame": 5656,
+        "game_state": 4
+      },
+      {
+        "step": 48,
+        "emulator_frames": 10603,
+        "logical_frame": 5756,
+        "game_state": 4
+      },
+      {
+        "step": 49,
+        "emulator_frames": 10803,
+        "logical_frame": 5856,
+        "game_state": 4
+      },
+      {
+        "step": 50,
+        "emulator_frames": 11003,
+        "logical_frame": 5956,
+        "game_state": 4
+      },
+      {
+        "step": 51,
+        "emulator_frames": 11203,
+        "logical_frame": 6056,
+        "game_state": 4
+      },
+      {
+        "step": 52,
+        "emulator_frames": 11403,
+        "logical_frame": 6156,
+        "game_state": 4
+      },
+      {
+        "step": 53,
+        "emulator_frames": 11603,
+        "logical_frame": 6256,
+        "game_state": 4
+      },
+      {
+        "step": 54,
+        "emulator_frames": 11803,
+        "logical_frame": 6356,
+        "game_state": 4
+      },
+      {
+        "step": 55,
+        "emulator_frames": 12003,
+        "logical_frame": 6456,
+        "game_state": 4
+      },
+      {
+        "step": 56,
+        "emulator_frames": 12204,
+        "logical_frame": 6556,
+        "game_state": 4
+      },
+      {
+        "step": 57,
+        "emulator_frames": 12404,
+        "logical_frame": 6656,
+        "game_state": 4
+      },
+      {
+        "step": 58,
+        "emulator_frames": 12604,
+        "logical_frame": 6756,
+        "game_state": 4
+      },
+      {
+        "step": 59,
+        "emulator_frames": 12804,
+        "logical_frame": 6856,
+        "game_state": 4
+      },
+      {
+        "step": 60,
+        "emulator_frames": 13004,
+        "logical_frame": 6956,
+        "game_state": 4
+      },
+      {
+        "step": 61,
+        "emulator_frames": 13205,
+        "logical_frame": 7056,
+        "game_state": 4
+      },
+      {
+        "step": 62,
+        "emulator_frames": 13405,
+        "logical_frame": 7156,
+        "game_state": 4
+      },
+      {
+        "step": 63,
+        "emulator_frames": 13605,
+        "logical_frame": 7256,
+        "game_state": 4
+      },
+      {
+        "step": 64,
+        "emulator_frames": 13805,
+        "logical_frame": 7356,
+        "game_state": 4
+      },
+      {
+        "step": 65,
+        "emulator_frames": 14005,
+        "logical_frame": 7456,
+        "game_state": 4
+      },
+      {
+        "step": 66,
+        "emulator_frames": 14205,
+        "logical_frame": 7556,
+        "game_state": 4
+      },
+      {
+        "step": 67,
+        "emulator_frames": 14405,
+        "logical_frame": 7656,
+        "game_state": 4
+      },
+      {
+        "step": 68,
+        "emulator_frames": 14605,
+        "logical_frame": 7756,
+        "game_state": 4
+      },
+      {
+        "step": 69,
+        "emulator_frames": 14805,
+        "logical_frame": 7856,
+        "game_state": 4
+      },
+      {
+        "step": 70,
+        "emulator_frames": 15005,
+        "logical_frame": 7956,
+        "game_state": 4
+      },
+      {
+        "step": 71,
+        "emulator_frames": 15205,
+        "logical_frame": 8056,
+        "game_state": 4
+      },
+      {
+        "step": 72,
+        "emulator_frames": 15405,
+        "logical_frame": 8156,
+        "game_state": 4
+      },
+      {
+        "step": 73,
+        "emulator_frames": 15605,
+        "logical_frame": 8256,
+        "game_state": 4
+      },
+      {
+        "step": 74,
+        "emulator_frames": 15805,
+        "logical_frame": 8356,
+        "game_state": 4
+      },
+      {
+        "step": 75,
+        "emulator_frames": 16005,
+        "logical_frame": 8456,
+        "game_state": 4
+      },
+      {
+        "step": 76,
+        "emulator_frames": 16205,
+        "logical_frame": 8556,
+        "game_state": 4
+      },
+      {
+        "step": 77,
+        "emulator_frames": 16405,
+        "logical_frame": 8656,
+        "game_state": 4
+      },
+      {
+        "step": 78,
+        "emulator_frames": 16605,
+        "logical_frame": 8756,
+        "game_state": 4
+      },
+      {
+        "step": 79,
+        "emulator_frames": 16805,
+        "logical_frame": 8856,
+        "game_state": 4
+      },
+      {
+        "step": 80,
+        "emulator_frames": 17005,
+        "logical_frame": 8956,
+        "game_state": 4
+      },
+      {
+        "step": 81,
+        "emulator_frames": 17205,
+        "logical_frame": 9056,
+        "game_state": 4
+      },
+      {
+        "step": 82,
+        "emulator_frames": 17405,
+        "logical_frame": 9156,
+        "game_state": 4
+      },
+      {
+        "step": 83,
+        "emulator_frames": 17605,
+        "logical_frame": 9256,
+        "game_state": 4
+      },
+      {
+        "step": 84,
+        "emulator_frames": 17805,
+        "logical_frame": 9356,
+        "game_state": 4
+      },
+      {
+        "step": 85,
+        "emulator_frames": 18005,
+        "logical_frame": 9456,
+        "game_state": 4
+      },
+      {
+        "step": 86,
+        "emulator_frames": 18205,
+        "logical_frame": 9556,
+        "game_state": 4
+      },
+      {
+        "step": 87,
+        "emulator_frames": 18405,
+        "logical_frame": 9656,
+        "game_state": 4
+      },
+      {
+        "step": 88,
+        "emulator_frames": 18605,
+        "logical_frame": 9756,
+        "game_state": 4
+      },
+      {
+        "step": 89,
+        "emulator_frames": 18805,
+        "logical_frame": 9856,
+        "game_state": 4
+      },
+      {
+        "step": 90,
+        "emulator_frames": 19005,
+        "logical_frame": 9956,
+        "game_state": 4
+      },
+      {
+        "step": 91,
+        "emulator_frames": 19205,
+        "logical_frame": 10056,
+        "game_state": 4
+      },
+      {
+        "step": 92,
+        "emulator_frames": 19405,
+        "logical_frame": 10156,
+        "game_state": 4
+      },
+      {
+        "step": 93,
+        "emulator_frames": 19605,
+        "logical_frame": 10256,
+        "game_state": 4
+      },
+      {
+        "step": 94,
+        "emulator_frames": 19805,
+        "logical_frame": 10356,
+        "game_state": 4
+      },
+      {
+        "step": 95,
+        "emulator_frames": 20005,
+        "logical_frame": 10456,
+        "game_state": 4
+      },
+      {
+        "step": 96,
+        "emulator_frames": 20205,
+        "logical_frame": 10556,
+        "game_state": 4
+      },
+      {
+        "step": 97,
+        "emulator_frames": 20405,
+        "logical_frame": 10656,
+        "game_state": 4
+      },
+      {
+        "step": 98,
+        "emulator_frames": 20605,
+        "logical_frame": 10756,
+        "game_state": 4
+      },
+      {
+        "step": 99,
+        "emulator_frames": 20805,
+        "logical_frame": 10856,
+        "game_state": 4
+      }
+    ],
+    "total_emulator_frames": 20805
+  },
+  "interactive_audio_rom_sha256": "f23398ab0e076cf7991579b194444fe693d8488c4686d3e44783dbcc41e95501",
+  "scope": "Bounded CPU, mapper, audio and selected image tests. The long route is not a full level completion or full-game equivalence proof."
+}
