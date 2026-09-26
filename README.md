@@ -1,5 +1,7 @@
 # Nes2Snes
 
+**Latest verified checkpoint:** optional four-voice audio, interrupt-context protection and conservative native RAM/I/O paths. 102 unit tests and 1,438 CPU/PPU records pass; early gameplay remains about half speed and the whole game is not yet ported. See [current results and limits](docs/safe-addresses-2026-09-25.md).
+
 **Latest update:** optional native SPC700 audio preview (two pulse voices, triangle and noise), direct hardware-access veneers, and an interrupt-context corruption fix. The normal-controller and fixed-input first-stage tests pass. Walking takes 240 SNES frames per 120 game updates, compared with 242 in the previous fixed-input checkpoint; jumping takes 50 instead of 56 frames. **Still about half speed on this route, trace-bounded and not full-game validated. Audio is approximate and opt-in.** [Results and limitations](docs/direct-audio-2026-09-25.md).
 
 A source-only NES-to-SNES reverse-engineering and porting workspace, initially targeting the supplied MMC5 version of CV3.

@@ -74,6 +74,44 @@ name:
 DirectWriteHandler DirectWriteA, 6
 DirectWriteHandler DirectWriteX, 11
 DirectWriteHandler DirectWriteY, 4
+; These writers use only absolute low-WRAM state and preserve X/Y/D/DBR.
+; The raw-ROM DBR still mirrors that WRAM. Only full A must be saved here;
+; the veneer already saves guest P and X. Host-PBR/veneer-PC NMI gates protect
+; the sequence. OAM, data-port and joypad work retain the full-context path.
+.macro DirectSimpleHandler name, source
+name:
+.a8
+.i8
+    rep #$20
+.a16
+    pha
+    inc $0984
+    bne :+
+    inc $0986
+:
+    sep #$20
+.a8
+.if source = 1
+    lda 6,s              ; guest X beneath JSL and full-A save
+.elseif source = 2
+    tya
+.endif
+    sta VAL
+    cpx #$10
+    bcs :+
+    sta PPUBUS
+:
+    jsr (DirectWriters,x)
+    rep #$20
+.a16
+    pla
+    sep #$20
+.a8
+    rtl
+.endmacro
+DirectSimpleHandler DirectSimpleWriteA, 0
+DirectSimpleHandler DirectSimpleWriteX, 1
+DirectSimpleHandler DirectSimpleWriteY, 2
 DirectWriters:
     .word WriteCtrl,WriteMask,WriteIgnore,WriteOaddr,WriteOdata,WriteScroll,WriteAddr,WritePpuData
     .word WriteOamDma,WriteJoy,WriteIrqPos,WriteIrqEnable

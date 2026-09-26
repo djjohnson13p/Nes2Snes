@@ -1,6 +1,17 @@
 # Verified status — 2026-09-25
 
-## Latest measured update: direct accesses, interrupt safety and audio preview
+## Latest: conservative native RAM and shorter simple-I/O handlers
+
+The optional audio build passes the ordinary-controller early-stage route. Fresh
+checks pass 102 unit tests, 1,438 independent CPU/PPU records (5,752 bytes),
+160 animated object frames and all four audio/stress cases. Five selected replay
+images still match. Walking takes 237 display frames per 120 game updates, down
+from 240 in the first audio checkpoint and 242 in the prior silent pipeline.
+This remains roughly half speed; audio fidelity and whole-game coverage remain
+unfinished. See [current report](safe-addresses-2026-09-25.md) and
+[evidence](safe-address-verification.json).
+
+## Previous measured update: direct accesses, interrupt safety and audio preview
 
 The opt-in SPC700 preview now produces two pulse voices, triangle and noise from
 the running game's APU register state. It is **not a faithful NES APU port**:

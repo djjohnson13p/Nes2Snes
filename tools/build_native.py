@@ -14,6 +14,7 @@ from graphics import nes_to_snes
 from native_cfg import expand
 import direct_calls
 import audio_program
+import native_safe
 
 OPERATIONS = {'LDA':1,'LDX':2,'LDY':3,'STA':4,'STX':5,'STY':6,
               'AND':7,'ORA':8,'EOR':9,'ADC':10,'SBC':11,'CMP':12,
@@ -53,7 +54,7 @@ def classify_patch(prg:bytes, counts:list[int]):
         'classified_code_bytes':sum(covered),'trap_sites':sites,'reset_txs_nop_offsets':skipped,
         'unclassified_execution':'BRK fail-closed trap; raw data remains intact'}
 
-def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True,quick_ppu:bool=True,object_cache:bool=True,pipelined_video:bool=True,replay_input:Path|None=None,direct:bool=True,unrolled_objects:bool=True,experimental_audio:bool=False,stress_nmi_restore:bool=False):
+def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True,quick_ppu:bool=True,object_cache:bool=True,pipelined_video:bool=True,replay_input:Path|None=None,direct:bool=True,unrolled_objects:bool=True,experimental_audio:bool=False,stress_nmi_restore:bool=False,safe_addresses:bool=True,simple_direct:bool=True):
     rom=Rom.read(rom_path)
     if rom.mapper!=5 or len(rom.prg)!=0x40000 or len(rom.chr)!=0x20000:
         raise ValueError('Current bridge requires mapper 5, 256 KiB PRG, 128 KiB CHR.')
@@ -64,6 +65,12 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     observed_count=sum(c>0 for c in counts)
     counts,cfg=expand(rom.prg,counts,pcs)
     code,info=classify_patch(rom.prg,counts)
+    if safe_addresses:
+        code, proven, info["trap_sites"] = native_safe.apply(rom.prg, code, info["trap_sites"])
+    else:
+        proven = []
+    info["safe_native_sites"] = proven
+    info["safe_addresses"] = safe_addresses
     info["observed_instruction_sites"]=observed_count
     info.update({k:v for k,v in cfg.items() if k!="inferred_offsets"})
     out.mkdir(parents=True,exist_ok=True)
@@ -73,7 +80,7 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     if replay_input and not 1<=len(replay)<=8192:
         raise ValueError('Input replay must contain 1 to 8192 per-guest-frame NES joypad bytes.')
     (assets/'input-replay.bin').write_bytes(replay)
-    direct_sites, direct_source = direct_calls.plan(rom.prg, info['trap_sites'] if direct else [])
+    direct_sites, direct_source = direct_calls.plan(rom.prg, info['trap_sites'] if direct else [], simple=simple_direct)
     (assets/'direct-stubs.inc').write_text(direct_source)
     audio_info=audio_program.write_assets(assets) if experimental_audio else None
     nmi,reset,irq=struct.unpack_from('<HHH',rom.prg,0x3fffa)
@@ -128,13 +135,15 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     info.update(validate_sfc(raw));info.update({'rom_sha256':rom.metadata()['sha256'],
        'direct_calls':direct,'direct_call_sites':len(direct_sites),'direct_call_banks':'$A1-$BF; $C0 retains COP','renderer':'experimental live PPU bridge','audio_implemented':experimental_audio,'audio_preview':audio_info,'test_nmi_restore_stress':stress_nmi_restore,
        'complete_game_port':False,'prg_mode':2,'supported_c000_banks':[30,7],
-       'native_execution_banks':32,'fastrom':fastrom,'quick_zero_page':quick_zp,'quick_indirect_reads':quick_indirect,'quick_io':quick_io,'quick_ppu_writes':quick_ppu and quick_io,'object_cache':object_cache,'unrolled_objects':unrolled_objects and object_cache,'pipelined_video':pipelined_video,'test_input_replay_sha256':hashlib.sha256(replay).hexdigest() if replay_input else None,'notes':'Unclassified code traps; compatibility and timing require validation.'})
+       'native_execution_banks':32,'fastrom':fastrom,'quick_zero_page':quick_zp,'quick_indirect_reads':quick_indirect,'quick_io':quick_io,'quick_ppu_writes':quick_ppu and quick_io,'object_cache':object_cache,'unrolled_objects':unrolled_objects and object_cache,'simple_direct_writes':simple_direct and direct,'pipelined_video':pipelined_video,'test_input_replay_sha256':hashlib.sha256(replay).hexdigest() if replay_input else None,'notes':'Unclassified code traps; compatibility and timing require validation.'})
     (out/'native-build.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--rom',type=Path,required=True)
     p.add_argument('--trace',type=Path,required=True);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--no-simple-direct',action='store_true',help='Use full context for all direct I/O writes')
+    p.add_argument('--no-safe-addresses',action='store_true',help='Disable static zero-base and RAM-mirror native substitutions')
     p.add_argument('--stress-nmi-restore',action='store_true',help='TEST ONLY: force nested host NMIs while restoring guest context')
     p.add_argument('--experimental-audio',action='store_true',help='Opt-in approximate SPC pulse/triangle/noise preview; no DMC or APU envelopes')
     p.add_argument('--no-unrolled-objects',action='store_true',help='Use the previous indexed sprite-cache loop')
@@ -150,4 +159,4 @@ if __name__=='__main__':
     video.add_argument('--pipelined-video',dest='pipelined_video',action='store_true',help='Queue prepared frames for the following host NMI (default)')
     video.add_argument('--synchronous-video',dest='pipelined_video',action='store_false',help='Retain the previous blocking upload for regression comparisons')
     p.set_defaults(pipelined_video=True)
-    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io,quick_ppu=not a.no_quick_ppu,object_cache=not a.no_object_cache,pipelined_video=a.pipelined_video,replay_input=a.input_replay,direct=not a.no_direct_calls,unrolled_objects=not a.no_unrolled_objects,experimental_audio=a.experimental_audio,stress_nmi_restore=a.stress_nmi_restore);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))
+    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io,quick_ppu=not a.no_quick_ppu,object_cache=not a.no_object_cache,pipelined_video=a.pipelined_video,replay_input=a.input_replay,direct=not a.no_direct_calls,unrolled_objects=not a.no_unrolled_objects,experimental_audio=a.experimental_audio,stress_nmi_restore=a.stress_nmi_restore,safe_addresses=not a.no_safe_addresses,simple_direct=not a.no_simple_direct);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))

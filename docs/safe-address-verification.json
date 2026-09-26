@@ -1,0 +1,566 @@
+{
+  "source_base": "8a9a43bea0f5d19b3f4d6c294c8c376650184d62",
+  "unit_tests": 102,
+  "cpu_records": 1438,
+  "cpu_bytes": 5752,
+  "cpu_mismatches": 0,
+  "cpu_fixtures": {
+    "cpu": {
+      "records_checked": 180,
+      "bytes_checked": 720,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 71,
+        "quick_zp_calls": 15,
+        "quick_indirect_calls": 7,
+        "quick_io_calls": 36,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": null,
+      "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+    },
+    "direct": {
+      "records_checked": 192,
+      "bytes_checked": 768,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 40,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 36,
+        "quick_ppu_calls": 1,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 95
+      },
+      "oam_copy": null,
+      "scope": "Original STA/STX/STY stores and flags in all 32 mapped execution combinations, including C0 fallback."
+    },
+    "ppu0": {
+      "records_checked": 47,
+      "bytes_checked": 188,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 52,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 2,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 33,
+        "simple_direct_write_calls": 143
+      },
+      "oam_copy": null,
+      "scope": "Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy."
+    },
+    "ppu7": {
+      "records_checked": 47,
+      "bytes_checked": 188,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 52,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 2,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 33,
+        "simple_direct_write_calls": 143
+      },
+      "oam_copy": null,
+      "scope": "Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy."
+    },
+    "safe-fixture": {
+      "records_checked": 116,
+      "bytes_checked": 464,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 0,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 0,
+        "simple_direct_write_calls": 2
+      },
+      "oam_copy": null,
+      "scope": "Original indexed zero-base and internal RAM-mirror boundary cases; not mapper or full-game coverage."
+    },
+    "seed0": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 72,
+        "quick_zp_calls": 59,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    "seed1": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 72,
+        "quick_zp_calls": 59,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    "seed2": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    "seed3": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    "seed4": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    "seed5": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    "seed6": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 72,
+        "quick_zp_calls": 59,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    },
+    "seed7": {
+      "records_checked": 107,
+      "bytes_checked": 428,
+      "mismatch_count": 0,
+      "mismatches": [],
+      "native_execution_counters": {
+        "cop_calls": 73,
+        "quick_zp_calls": 60,
+        "quick_indirect_calls": 5,
+        "quick_io_calls": 6,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 3,
+        "simple_direct_write_calls": 0
+      },
+      "oam_copy": {
+        "bytes_checked": 256,
+        "mismatch_count": 0
+      },
+      "scope": "Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation."
+    }
+  },
+  "game_replay": {
+    "baseline_rom_sha256": "eb2485c49e4bb76c4890ab81ff656298e33806bb4a79026b36929306e7cb8fcd",
+    "candidate_rom_sha256": "53cf2679dcf145233fc8c12a5aa1ebb16f0816e8f701a82d8b336fa8c605b1f3",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 242,
+        "candidate_snes_frames": 237,
+        "speed_ratio": 1.021097046413502,
+        "candidate_snes_frames_per_logical_frame": 1.975
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 56,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.12,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 120,
+        "candidate_snes_frames": 120,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "sprite_verification": {
+    "frames_checked": 160,
+    "oam_bytes_checked": 81920,
+    "mismatch_count": 0,
+    "sprite_modes": [
+      0,
+      8,
+      32,
+      40
+    ],
+    "converted_objects": 2624,
+    "cached_objects": 7616,
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "rom_sha256": "dcf1e254a798d066ea751f39cd824e084586e3ceaae76f0615e7fbe6bb7839db",
+    "scope": "Original procedural dynamic OAM encoding and cache invalidation; not full PPU accuracy."
+  },
+  "audio_matrix": {
+    "passed": true,
+    "cases": [
+      {
+        "name": "audio",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "078ad6a01fd04f59adf040ebe19108c761d750b6a795a236dfe1cc0fbe343dd3",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 249,
+        "spc_ready": 1,
+        "spc_fault": 0,
+        "dsp_commands": 34,
+        "expect_silent": false,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 15461,
+            "rms": 3757.35439562603,
+            "peak": 3911,
+            "frequency_hz": 441.40223788888176,
+            "expected_hz": 440.4296875
+          },
+          {
+            "name": "pulse2",
+            "samples": 15461,
+            "rms": 3758.396651019097,
+            "peak": 3911,
+            "frequency_hz": 882.8044757777635,
+            "expected_hz": 880.859375
+          },
+          {
+            "name": "triangle",
+            "samples": 15461,
+            "rms": 1882.895938767708,
+            "peak": 3255,
+            "frequency_hz": 219.66496345643878,
+            "expected_hz": 220.21484375
+          },
+          {
+            "name": "noise",
+            "samples": 15460,
+            "rms": 6890.712325198438,
+            "peak": 11904,
+            "zero_crossings": 7765
+          },
+          {
+            "name": "silence",
+            "samples": 5865,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      },
+      {
+        "name": "silent",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "9fb7db576ddcdfbe1bb2fa4598a7425e8b473a40a91ed136757e702a14e9d363",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 247,
+        "spc_ready": 0,
+        "spc_fault": 0,
+        "dsp_commands": 0,
+        "expect_silent": true,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 15460,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "pulse2",
+            "samples": 15461,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "triangle",
+            "samples": 15461,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "noise",
+            "samples": 15461,
+            "rms": 0.0,
+            "peak": 0
+          },
+          {
+            "name": "silence",
+            "samples": 5864,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      },
+      {
+        "name": "legacy",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "a66f272c3299070b53da42eb43fae410bab47abdb4ade4b87dcdc68716f4c268",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 249,
+        "spc_ready": 1,
+        "spc_fault": 0,
+        "dsp_commands": 34,
+        "expect_silent": false,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 15461,
+            "rms": 3757.520973037425,
+            "peak": 3911,
+            "frequency_hz": 441.40223788888176,
+            "expected_hz": 440.4296875
+          },
+          {
+            "name": "pulse2",
+            "samples": 15461,
+            "rms": 3758.4866121363843,
+            "peak": 3911,
+            "frequency_hz": 882.8044757777635,
+            "expected_hz": 880.859375
+          },
+          {
+            "name": "triangle",
+            "samples": 15461,
+            "rms": 1882.3604324067321,
+            "peak": 3255,
+            "frequency_hz": 219.66496345643878,
+            "expected_hz": 220.21484375
+          },
+          {
+            "name": "noise",
+            "samples": 15460,
+            "rms": 6890.056628653667,
+            "peak": 11904,
+            "zero_crossings": 7764
+          },
+          {
+            "name": "silence",
+            "samples": 5865,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      },
+      {
+        "name": "nested-nmi",
+        "pass_": true,
+        "scope": "Four original procedural tones and mute; not full NES APU equivalence.",
+        "rom_sha256": "756a461504e4a0884e821f54a22e05da0989a1be94871817dbe75674aca41862",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "sample_rate": 32040.0,
+        "host_frames": 1430,
+        "spc_ready": 1,
+        "spc_fault": 0,
+        "dsp_commands": 34,
+        "expect_silent": false,
+        "segments": [
+          {
+            "name": "pulse1",
+            "samples": 92763,
+            "rms": 3757.281090335115,
+            "peak": 3911,
+            "frequency_hz": 441.07111671679445,
+            "expected_hz": 440.4296875
+          },
+          {
+            "name": "pulse2",
+            "samples": 92764,
+            "rms": 3758.334733895349,
+            "peak": 3911,
+            "frequency_hz": 882.1327239015136,
+            "expected_hz": 880.859375
+          },
+          {
+            "name": "triangle",
+            "samples": 92763,
+            "rms": 1882.8171558044055,
+            "peak": 3255,
+            "frequency_hz": 220.36286019210246,
+            "expected_hz": 220.21484375
+          },
+          {
+            "name": "noise",
+            "samples": 92763,
+            "rms": 6875.306090526222,
+            "peak": 11907,
+            "zero_crossings": 46403
+          },
+          {
+            "name": "silence",
+            "samples": 35186,
+            "rms": 0.0,
+            "peak": 0
+          }
+        ]
+      }
+    ],
+    "scope": "Original procedural input only; not full NES APU fidelity."
+  },
+  "audio_capture": {
+    "seconds": 15.624250936329588,
+    "sample_rate": 32040.0,
+    "peak": 13949,
+    "rms": 2944.7015792248612,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2088,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "interactive_audio_sha256": "795744bbf4eb4188c4fac430a4a07444998424bad9abb2b6a2590df999d7cf6d",
+  "interactive_silent_sha256": "8bd11b7d4ecdee95aa7ec51af930bf4b5081d6d0485b4049380907dc2988bf3e",
+  "scope": "Bounded procedural and early-stage comparisons; not a complete game or full-speed claim."
+}

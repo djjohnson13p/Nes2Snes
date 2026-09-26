@@ -37,7 +37,7 @@ def label(opcode: int, address: int) -> str:
     return f'Direct_{opcode:02X}_{address:04X}'
 
 
-def plan(prg: bytes, sites: Iterable[dict]) -> tuple[list[dict], str]:
+def plan(prg: bytes, sites: Iterable[dict], simple: bool = False) -> tuple[list[dict], str]:
     selected = []
     entries = {}
     for site in sites:
@@ -56,8 +56,9 @@ def plan(prg: bytes, sites: Iterable[dict]) -> tuple[list[dict], str]:
     for (opcode, address), (kind, value) in sorted(entries.items()):
         lines.append(label(opcode, address) + ':')
         if kind == 'write':
+            target = 'DirectSimpleWrite' if simple and value in (0, 1, 2, 3, 5, 6, 10, 11) else 'DirectWrite'
             lines += ['    php', '    phx', f'    ldx #${value * 2:02X}',
-                      f'    jsl $800000+DirectWrite{STORE_OPS[opcode]}',
+                      f'    jsl $800000+{target}{STORE_OPS[opcode]}',
                       '    plx', '    plp', '    rts']
         elif kind == 'read':
             target = ('DirectReadStatus', 'DirectReadJoy', 'DirectReadJoy2', 'DirectReadIrq')[value]
