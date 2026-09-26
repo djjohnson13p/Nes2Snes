@@ -100,7 +100,7 @@ jobs:
             build/indirect-x/indirect-x-verification.json
             build/indirect-x/*/verification/*.json
             build/runtime-counters/runtime-counter-verification.json
-            build/native-controller/native-controller-verification.json
+            build/native-controller/controller-verification.json
             build/tested-source.zip
           retention-days: 30
       - uses: actions/upload-artifact@v4
