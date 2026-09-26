@@ -1,0 +1,29 @@
+name: Secondary NES oracle toolchain
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/secondary-nes-oracle.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: Build pinned unmodified Nestopia libretro core
+        run: |
+          git clone https://github.com/libretro/nestopia.git nestopia
+          git -C nestopia checkout 8f00f500912a847062de432e38765c7285483e62
+          make -C nestopia -f libretro/Makefile -j2
+          mkdir -p oracle
+          cp nestopia/nestopia_libretro.so oracle/
+          git -C nestopia archive HEAD | gzip -n > oracle/nestopia-source.tar.gz
+          cp nestopia/COPYING oracle/
+          git -C nestopia rev-parse HEAD > oracle/source-revision.txt
+          (cd oracle && sha256sum nestopia_libretro.so nestopia-source.tar.gz > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pinned-secondary-nes-oracle
+          path: oracle/
+          retention-days: 30
