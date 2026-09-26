@@ -254,6 +254,8 @@ MarkPhysicalRow:
 .a16
     rts
 
+.include "native_fill_cache.inc"
+
 RenderFrame:
 .a8
 .i16
@@ -264,6 +266,9 @@ RenderFrame:
     sep #$20
 .a8
     jsr SelectBgBanks
+.if USE_FILL_CACHE_FIX
+    jsr UpdateFillCache
+.endif
     ; Dirty physical nametable rows are expanded only when changed.
     lda f:$7E5105
     cmp OLDMIRROR
@@ -436,7 +441,11 @@ UploadPreparedFrame:
     lda #$18
     sta $4301
     jsr UploadCharacters
+.if USE_COALESCED_NT_DMA
+    jsr UploadNametablesCoalesced
+.else
     jsr UploadNametables
+.endif
     jsr UploadObjectsPalette
     jsr SetVideoRegisters
 .if USE_LAYER_MASKS
@@ -481,6 +490,16 @@ UploadPreparedFrame:
 ConvertNametable:
 .a16
 .i16
+.if USE_FILL_CACHE_FIX
+    ; Fill registers can change without a routing or physical nametable write.
+    lda VROUTE
+    cmp #$0003
+    bne :+
+    lda FILL_CHANGED
+    and #$00FF
+    bne @needed
+:
+.endif
     ; No physical nametable writes and no routing change means no row work.
     lda VFORCE
     and #$00FF
@@ -508,7 +527,16 @@ ConvertNametable:
 .a16
     lda VROUTE
     cmp #$0003
+.if USE_FILL_CACHE_FIX
+    bne :+
+    lda FILL_CHANGED
+    and #$00FF
     beq @next
+    bra @convert
+:
+.else
+    beq @next
+.endif
     asl a
     asl a
     asl a
@@ -1127,6 +1155,8 @@ BgDmaSource:
     sep #$20
 .a8
     rts
+
+.include "native_nametable_dma.inc"
 
 UploadNametables:
 .a8
