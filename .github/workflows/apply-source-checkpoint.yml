@@ -29,6 +29,8 @@ jobs:
           folder = root / 'maintenance/checkpoint'
           spec = json.loads((folder / 'manifest.json').read_text())
           assert spec['format'] == 1
+          part_count = spec.get('part_count', 3)
+          assert type(part_count) is int and 1 <= part_count <= 200
           assert set(spec['before']) == set(spec['after'])
           subprocess.run(['git', 'merge-base', '--is-ancestor', spec['reference_revision'], 'HEAD'], check=True)
           for name, expected in spec['before'].items():
@@ -40,7 +42,7 @@ jobs:
               assert root in target.resolve().parents and not target.is_symlink()
               actual = hashlib.sha256(target.read_bytes()).hexdigest() if target.exists() else None
               assert actual == expected, f'Unexpected existing content: {name}'
-          encoded = ''.join((folder / f'part{i}.b64').read_text().strip() for i in range(3))
+          encoded = ''.join((folder / f'part{i}.b64').read_text().strip() for i in range(part_count))
           patch = gzip.decompress(base64.b64decode(encoded, validate=True))
           assert hashlib.sha256(patch).hexdigest() == spec['patch_sha256']
           patch_file = pathlib.Path('/tmp/verified-source.patch')
@@ -67,7 +69,7 @@ jobs:
           subprocess.run(['git', 'config', 'user.name', 'github-actions[bot]'], check=True)
           subprocess.run(['git', 'config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com'], check=True)
           subprocess.run(['git', 'add', '--', *sorted(spec['after'])], check=True)
-          subprocess.run(['git', 'rm', '--', 'maintenance/checkpoint/manifest.json', *[f'maintenance/checkpoint/part{i}.b64' for i in range(3)]], check=True)
+          subprocess.run(['git', 'rm', '--', 'maintenance/checkpoint/manifest.json', *[f'maintenance/checkpoint/part{i}.b64' for i in range(spec.get('part_count', 3))]], check=True)
           subprocess.run(['git', 'commit', '-m', spec['message']], check=True)
           subprocess.run(['git', 'push', 'origin', 'HEAD:main'], check=True)
           PY
