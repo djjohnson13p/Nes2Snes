@@ -1,0 +1,933 @@
+[
+  {
+    "name": "000-1-left56",
+    "updates": 56,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "001-1-up80",
+    "updates": 80,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "002-2-left30",
+    "updates": 30,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "003-2-up110",
+    "updates": 110,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "004-3-up50",
+    "updates": 50,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "005-3-left16",
+    "updates": 16,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "006-3-up120",
+    "updates": 120,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "007-engage-approach",
+    "updates": 20,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "008-engage-whip",
+    "updates": 12,
+    "buttons": [
+      "b",
+      "right"
+    ]
+  },
+  {
+    "name": "009-engage-settle",
+    "updates": 15,
+    "buttons": []
+  },
+  {
+    "name": "010-engage-whip2",
+    "updates": 12,
+    "buttons": [
+      "b",
+      "right"
+    ]
+  },
+  {
+    "name": "011-third-stair-endwhip",
+    "updates": 24,
+    "buttons": []
+  },
+  {
+    "name": "012-third-stair-align",
+    "updates": 45,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "013-third-stair-climb",
+    "updates": 150,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "014-upper1-climb100",
+    "updates": 100,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "015-upper1-climb180",
+    "updates": 80,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "016-upper2-align",
+    "updates": 30,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "017-upper2-climb",
+    "updates": 130,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "018-armor-top",
+    "updates": 20,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "019-armor-attack1",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "020-armor-release1",
+    "updates": 18,
+    "buttons": []
+  },
+  {
+    "name": "021-armor-attack2",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "022-armor-release2",
+    "updates": 18,
+    "buttons": []
+  },
+  {
+    "name": "023-armor-attack3",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "024-armor-release3",
+    "updates": 18,
+    "buttons": []
+  },
+  {
+    "name": "025-armor-attack4",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "026-upper-move-release",
+    "updates": 20,
+    "buttons": []
+  },
+  {
+    "name": "027-upper-move-middle",
+    "updates": 56,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "028-upper-move-tryup",
+    "updates": 80,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "029-upper-more-up160",
+    "updates": 160,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "030-upper-retry-align160",
+    "updates": 38,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "031-upper-retry-up180",
+    "updates": 180,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "032-upper-jump-jump25",
+    "updates": 25,
+    "buttons": [
+      "a",
+      "right"
+    ]
+  },
+  {
+    "name": "033-upper-jump-land",
+    "updates": 12,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "034-upper-return-settle",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "035-upper-return-jumpback",
+    "updates": 34,
+    "buttons": [
+      "a",
+      "left"
+    ]
+  },
+  {
+    "name": "036-upper-return-land",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "037-upper-leftledge-edge",
+    "updates": 42,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "038-upper-leftledge-jump",
+    "updates": 35,
+    "buttons": [
+      "left",
+      "a"
+    ]
+  },
+  {
+    "name": "039-upper-leftledge-land",
+    "updates": 5,
+    "buttons": []
+  },
+  {
+    "name": "040-upper-next-align",
+    "updates": 45,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "041-upper-next-climb",
+    "updates": 175,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "042-upper-cross-align",
+    "updates": 79,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "043-upper-cross-climb",
+    "updates": 175,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "044-upper-cross2-realign",
+    "updates": 64,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "045-upper-cross2-climb",
+    "updates": 175,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "046-upper-cross3-top",
+    "updates": 60,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "047-upper-cross3-align",
+    "updates": 28,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "048-upper-cross3-upper",
+    "updates": 140,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "049-roof-ledge-jump",
+    "updates": 34,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "050-roof-ledge-land",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "051-roof-stair-jump",
+    "updates": 35,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "052-roof-stair-land",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "053-roof-stair-align",
+    "updates": 14,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "054-roof-stair-climb",
+    "updates": 160,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "055-exit-stair-align",
+    "updates": 31,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "056-exit-stair-climb",
+    "updates": 180,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "outdoor-approach",
+    "updates": 80,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-whip1",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "outdoor-forward1",
+    "updates": 56,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-stair-approach",
+    "updates": 28,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-stair-up",
+    "updates": 100,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "outdoor-stair-top",
+    "updates": 64,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "outdoor-top-whip",
+    "updates": 24,
+    "buttons": [
+      "b",
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-top-forward",
+    "updates": 56,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-whip-approach2",
+    "updates": 16,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-whip2",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "outdoor-top-cross1",
+    "updates": 80,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-cross-00",
+    "updates": 32,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-cross-01",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-070-left-16",
+    "updates": 16,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "b103-071-down-120",
+    "updates": 120,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-072-down-100",
+    "updates": 100,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-073-right-23",
+    "updates": 23,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-074-right-35",
+    "updates": 35,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-075-right-a-15",
+    "updates": 15,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "b103-076-right-b-27",
+    "updates": 27,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-077-up-180",
+    "updates": 180,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "b103-078-right-a-40",
+    "updates": 40,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "b103-079-none-4",
+    "updates": 4,
+    "buttons": []
+  },
+  {
+    "name": "b103-080-right-16",
+    "updates": 16,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-081-right-9",
+    "updates": 9,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-082-down-200",
+    "updates": 200,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-083-none-60",
+    "updates": 60,
+    "buttons": []
+  },
+  {
+    "name": "b103-084-down-180",
+    "updates": 180,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-085-left-16",
+    "updates": 16,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "b103-086-down-190",
+    "updates": 190,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-087-left-9",
+    "updates": 9,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "b103-088-down-190",
+    "updates": 190,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-089-right-22",
+    "updates": 22,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-090-right-a-42",
+    "updates": 42,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "b103-091-right-b-24",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-092-right-28",
+    "updates": 28,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-093-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-094-down-12",
+    "updates": 12,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-095-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-096-down-12",
+    "updates": 12,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-097-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-098-right-45",
+    "updates": 45,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-099-up-190",
+    "updates": 190,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "b103-100-left-16",
+    "updates": 16,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "b103-101-up-190",
+    "updates": 190,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "b103-102-right-54",
+    "updates": 54,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-103-right-8",
+    "updates": 8,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-104-right-a-15",
+    "updates": 15,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "b103-105-right-b-27",
+    "updates": 27,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-106-down-1",
+    "updates": 1,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-107-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-108-down-12",
+    "updates": 12,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-109-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-110-down-12",
+    "updates": 12,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-111-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-112-right-22",
+    "updates": 22,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-113-right-a-15",
+    "updates": 15,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "b103-114-right-b-27",
+    "updates": 27,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-115-right-28",
+    "updates": 28,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-116-right-20",
+    "updates": 20,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-117-right-20",
+    "updates": 20,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-118-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-119-down-12",
+    "updates": 12,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-120-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-121-down-12",
+    "updates": 12,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-122-down-b-24",
+    "updates": 24,
+    "buttons": [
+      "down",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-123-right-72",
+    "updates": 72,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-124-right-b-24",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "b103-125-right-80",
+    "updates": 80,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-126-down-80",
+    "updates": 80,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "b103-127-right-100",
+    "updates": 100,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-128-right-120",
+    "updates": 120,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-129-none-60",
+    "updates": 60,
+    "buttons": []
+  },
+  {
+    "name": "b103-130-right-100",
+    "updates": 100,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-131-right-100",
+    "updates": 100,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "b103-entry-settled",
+    "updates": 30,
+    "buttons": []
+  }
+]
