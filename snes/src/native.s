@@ -1527,6 +1527,29 @@ WriteAddr:
 .a16
     lda TEMPV
     sta VRAMV
+.if USE_RASTER_SCROLL
+    pha
+    sep #$20
+.a8
+    lda RUNNING
+    beq @noraster
+    lda IRQCOUNT
+    beq @noraster
+    lda LASTIRQ
+    sta RASTER_LINE
+    lda #$01
+    sta RASTER_VALID
+    rep #$20
+.a16
+    pla
+    sta RASTER_V
+    bra @rasterdone
+@noraster:
+    rep #$20
+.a16
+    pla
+@rasterdone:
+.endif
     sep #$20
 .a8
     rts
@@ -2121,6 +2144,9 @@ OperationTable: .incbin "operation.bin"
 ModeTable: .incbin "mode.bin"
 LengthTable: .incbin "length.bin"
 RgbPalette: .incbin "palette.bin"
+.if USE_RASTER_SCROLL
+BlankChrBanks: .incbin "blank-chr.bin"
+.endif
 .if TEST_INPUT_REPLAY
 InputReplay: .incbin "input-replay.bin"
 .endif

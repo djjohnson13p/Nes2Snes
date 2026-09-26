@@ -1,0 +1,533 @@
+{
+  "reference_source_revision": "1919c0ece573e5c30cd0664a0badb45504c9b4e1",
+  "scope": "Optional frame-scheduled raster fix and bounded room-1-02 staircase route. Not a complete or pixel-perfect port.",
+  "unit_tests": {
+    "passed": 140,
+    "failed": 0
+  },
+  "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+  "interactive_rom_sha256": "b6895590ccd0ebf3d68139a31dc173127c624d5bcfc8343b7a04ce113bd9e029",
+  "ordinary_controller_early_route": {
+    "sfc_sha256": "b6895590ccd0ebf3d68139a31dc173127c624d5bcfc8343b7a04ce113bd9e029",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "records": [
+      {
+        "label": "stage-idle",
+        "guest_frames": 60,
+        "snes_frames": 117,
+        "snes_frames_per_guest_frame": 1.95,
+        "cop_calls": 5267,
+        "game_state": 4,
+        "guest_frame": 916,
+        "fault": 0
+      },
+      {
+        "label": "walk-right",
+        "guest_frames": 120,
+        "snes_frames": 237,
+        "snes_frames_per_guest_frame": 1.975,
+        "cop_calls": 10522,
+        "game_state": 4,
+        "guest_frame": 1036,
+        "fault": 0
+      },
+      {
+        "label": "jump-right",
+        "guest_frames": 25,
+        "snes_frames": 50,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 2361,
+        "game_state": 4,
+        "guest_frame": 1061,
+        "fault": 0
+      },
+      {
+        "label": "attack",
+        "guest_frames": 25,
+        "snes_frames": 50,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 2837,
+        "game_state": 4,
+        "guest_frame": 1086,
+        "fault": 0
+      },
+      {
+        "label": "settle",
+        "guest_frames": 60,
+        "snes_frames": 120,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 5630,
+        "game_state": 4,
+        "guest_frame": 1146,
+        "fault": 0
+      }
+    ],
+    "total_snes_frames": 2005,
+    "definition": "SNES video frames divided by guest NMI count; not wall time, full-game coverage or gameplay equivalence proof."
+  },
+  "audio_capture": {
+    "seconds": 15.424594257178526,
+    "sample_rate": 32040.0,
+    "peak": 14093,
+    "rms": 2762.560608305452,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2282,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "raster_procedural": {
+    "scope": "Black/white pattern geometry against independent NES core; transition rows are known inexact; fixed reload timing contract only",
+    "cases": [
+      {
+        "y": 0,
+        "rom_sha256": "50d84f452377f23f5e1d38e677899b0c109aa1c34d9dabaa9cfb7acfc1182c45",
+        "stable_pixels": 56832,
+        "stable_pixel_mismatches": 0,
+        "full_frame_pixels": 57344,
+        "full_frame_pixel_mismatches": 82,
+        "transition_rows": [
+          32,
+          48
+        ],
+        "transition_pixel_mismatches": 82,
+        "passed": true
+      },
+      {
+        "y": 1,
+        "rom_sha256": "49c13ae5980cf2fe53c435c39c3014029b33c2e903ec57277eab74d25f602148",
+        "stable_pixels": 56832,
+        "stable_pixel_mismatches": 0,
+        "full_frame_pixels": 57344,
+        "full_frame_pixel_mismatches": 81,
+        "transition_rows": [
+          32,
+          48
+        ],
+        "transition_pixel_mismatches": 81,
+        "passed": true
+      },
+      {
+        "y": 7,
+        "rom_sha256": "a4aef908fe871bbee808a9fb5edc6f5f0ea70205a3e8c1891f6c52d7f233a664",
+        "stable_pixels": 56832,
+        "stable_pixel_mismatches": 0,
+        "full_frame_pixels": 57344,
+        "full_frame_pixel_mismatches": 81,
+        "transition_rows": [
+          32,
+          48
+        ],
+        "transition_pixel_mismatches": 81,
+        "passed": true
+      },
+      {
+        "y": 8,
+        "rom_sha256": "ae48bb1bd99ed9a1be14912ed35358ee2d63f8edb80a17ae4d08e04df7d5ece2",
+        "stable_pixels": 56832,
+        "stable_pixel_mismatches": 0,
+        "full_frame_pixels": 57344,
+        "full_frame_pixel_mismatches": 83,
+        "transition_rows": [
+          32,
+          48
+        ],
+        "transition_pixel_mismatches": 83,
+        "passed": true
+      },
+      {
+        "y": 63,
+        "rom_sha256": "417eed8ff340aa0747238dc7e1582026cfeb73616e8e9530512db76fa94ae30c",
+        "stable_pixels": 56832,
+        "stable_pixel_mismatches": 0,
+        "full_frame_pixels": 57344,
+        "full_frame_pixel_mismatches": 80,
+        "transition_rows": [
+          32,
+          48
+        ],
+        "transition_pixel_mismatches": 80,
+        "passed": true
+      },
+      {
+        "y": 178,
+        "rom_sha256": "0ccca8725bcbfe68c95d481eb73102fc694f293713b0b81d35d9e37c29a0a438",
+        "stable_pixels": 56832,
+        "stable_pixel_mismatches": 0,
+        "full_frame_pixels": 57344,
+        "full_frame_pixel_mismatches": 59,
+        "transition_rows": [
+          32,
+          48
+        ],
+        "transition_pixel_mismatches": 59,
+        "passed": true
+      },
+      {
+        "y": 239,
+        "rom_sha256": "f5de7fb6c19f44b9bad74eaa847e929e8ade376db085d054bfc0002952f12f91",
+        "stable_pixels": 56832,
+        "stable_pixel_mismatches": 0,
+        "full_frame_pixels": 57344,
+        "full_frame_pixel_mismatches": 80,
+        "transition_rows": [
+          32,
+          48
+        ],
+        "transition_pixel_mismatches": 80,
+        "passed": true
+      }
+    ],
+    "passed": true,
+    "stable_pixels": 397824,
+    "stable_pixel_mismatches": 0,
+    "full_frame_pixel_mismatches": 546,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "commercial_game_content": false
+  },
+  "raster_negative_control": {
+    "scope": "Negative control: older renderer on original y178 procedural fixture, no experimental raster option",
+    "stable_pixel_mismatches": 24535,
+    "full_frame_pixel_mismatches": 24781
+  },
+  "extra_raster_enabled_cpu_checks": {
+    "records": 419,
+    "bytes": 1676,
+    "mismatches": 0,
+    "cases": [
+      {
+        "records_checked": 180,
+        "bytes_checked": 720,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 36,
+          "quick_zp_calls": 15,
+          "quick_indirect_calls": 7,
+          "quick_io_calls": 1,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 35
+        },
+        "oam_copy": null,
+        "scope": "Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation."
+      },
+      {
+        "records_checked": 47,
+        "bytes_checked": 188,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 50,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 0,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 33,
+          "simple_direct_write_calls": 143,
+          "direct_bank_calls": 2
+        },
+        "oam_copy": null,
+        "scope": "Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy."
+      },
+      {
+        "records_checked": 192,
+        "bytes_checked": 768,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 7,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 3,
+          "quick_ppu_calls": 1,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 95,
+          "direct_bank_calls": 33
+        },
+        "oam_copy": null,
+        "scope": "Original STA/STX/STY stores and flags in all 32 mapped execution combinations, including C0 fallback."
+      }
+    ]
+  },
+  "trace": {
+    "previous_observed_entries": 8928,
+    "new_observed_entries": 1835,
+    "total_observed_entries": 10763,
+    "complete": false
+  },
+  "old_trace_failure": {
+    "fault": {
+      "code": 1,
+      "bank": 168,
+      "pc": 46582
+    },
+    "status": "failed",
+    "error": "Native bridge rejected an unsupported execution path",
+    "action": "tail 001-1-up80"
+  },
+  "stair_route": {
+    "actions_file": "tools/routes/cv3-stair-room.json",
+    "pattern_steps": 21,
+    "tail_actions": 57,
+    "tail_logical_updates": 3332,
+    "snes_status": "completed_budget",
+    "snes_display_frames_including_startup": 11946,
+    "candidate_position_checkpoints_matched": 57,
+    "candidate_position_checkpoints": [
+      {
+        "name": "000-1-left56",
+        "matches": true
+      },
+      {
+        "name": "001-1-up80",
+        "matches": true
+      },
+      {
+        "name": "002-2-left30",
+        "matches": true
+      },
+      {
+        "name": "003-2-up110",
+        "matches": true
+      },
+      {
+        "name": "004-3-up50",
+        "matches": true
+      },
+      {
+        "name": "005-3-left16",
+        "matches": true
+      },
+      {
+        "name": "006-3-up120",
+        "matches": true
+      },
+      {
+        "name": "007-engage-approach",
+        "matches": true
+      },
+      {
+        "name": "008-engage-whip",
+        "matches": true
+      },
+      {
+        "name": "009-engage-settle",
+        "matches": true
+      },
+      {
+        "name": "010-engage-whip2",
+        "matches": true
+      },
+      {
+        "name": "011-third-stair-endwhip",
+        "matches": true
+      },
+      {
+        "name": "012-third-stair-align",
+        "matches": true
+      },
+      {
+        "name": "013-third-stair-climb",
+        "matches": true
+      },
+      {
+        "name": "014-upper1-climb100",
+        "matches": true
+      },
+      {
+        "name": "015-upper1-climb180",
+        "matches": true
+      },
+      {
+        "name": "016-upper2-align",
+        "matches": true
+      },
+      {
+        "name": "017-upper2-climb",
+        "matches": true
+      },
+      {
+        "name": "018-armor-top",
+        "matches": true
+      },
+      {
+        "name": "019-armor-attack1",
+        "matches": true
+      },
+      {
+        "name": "020-armor-release1",
+        "matches": true
+      },
+      {
+        "name": "021-armor-attack2",
+        "matches": true
+      },
+      {
+        "name": "022-armor-release2",
+        "matches": true
+      },
+      {
+        "name": "023-armor-attack3",
+        "matches": true
+      },
+      {
+        "name": "024-armor-release3",
+        "matches": true
+      },
+      {
+        "name": "025-armor-attack4",
+        "matches": true
+      },
+      {
+        "name": "026-upper-move-release",
+        "matches": true
+      },
+      {
+        "name": "027-upper-move-middle",
+        "matches": true
+      },
+      {
+        "name": "028-upper-move-tryup",
+        "matches": true
+      },
+      {
+        "name": "029-upper-more-up160",
+        "matches": true
+      },
+      {
+        "name": "030-upper-retry-align160",
+        "matches": true
+      },
+      {
+        "name": "031-upper-retry-up180",
+        "matches": true
+      },
+      {
+        "name": "032-upper-jump-jump25",
+        "matches": true
+      },
+      {
+        "name": "033-upper-jump-land",
+        "matches": true
+      },
+      {
+        "name": "034-upper-return-settle",
+        "matches": true
+      },
+      {
+        "name": "035-upper-return-jumpback",
+        "matches": true
+      },
+      {
+        "name": "036-upper-return-land",
+        "matches": true
+      },
+      {
+        "name": "037-upper-leftledge-edge",
+        "matches": true
+      },
+      {
+        "name": "038-upper-leftledge-jump",
+        "matches": true
+      },
+      {
+        "name": "039-upper-leftledge-land",
+        "matches": true
+      },
+      {
+        "name": "040-upper-next-align",
+        "matches": true
+      },
+      {
+        "name": "041-upper-next-climb",
+        "matches": true
+      },
+      {
+        "name": "042-upper-cross-align",
+        "matches": true
+      },
+      {
+        "name": "043-upper-cross-climb",
+        "matches": true
+      },
+      {
+        "name": "044-upper-cross2-realign",
+        "matches": true
+      },
+      {
+        "name": "045-upper-cross2-climb",
+        "matches": true
+      },
+      {
+        "name": "046-upper-cross3-top",
+        "matches": true
+      },
+      {
+        "name": "047-upper-cross3-align",
+        "matches": true
+      },
+      {
+        "name": "048-upper-cross3-upper",
+        "matches": true
+      },
+      {
+        "name": "049-roof-ledge-jump",
+        "matches": true
+      },
+      {
+        "name": "050-roof-ledge-land",
+        "matches": true
+      },
+      {
+        "name": "051-roof-stair-jump",
+        "matches": true
+      },
+      {
+        "name": "052-roof-stair-land",
+        "matches": true
+      },
+      {
+        "name": "053-roof-stair-align",
+        "matches": true
+      },
+      {
+        "name": "054-roof-stair-climb",
+        "matches": true
+      },
+      {
+        "name": "055-exit-stair-align",
+        "matches": true
+      },
+      {
+        "name": "056-exit-stair-climb",
+        "matches": true
+      }
+    ],
+    "whole_ram_equivalence_claimed": false,
+    "all_frame_pixel_equivalence_claimed": false,
+    "boss_or_level_completion_claimed": false
+  },
+  "independent_nes_reference": {
+    "scope": "Unmodified NES reference vs instrumented NES observations at identical host-frame input times. Not SNES equivalence.",
+    "checkpoints": 57,
+    "pixels_checked": 3268608,
+    "pixel_mismatches": 0,
+    "ram_bytes_checked": 116736,
+    "ram_mismatches": 0,
+    "reference_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "probe_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "passed": true
+  },
+  "raster_disabled_previous_counter_build_sha256": "1bf5bbfd14e1e761ec298f457c1e18330cd2588f1a610a77d0aa397748ea9b88",
+  "remaining": [
+    "Two partially updated raster transition rows remain inexact in procedural tests.",
+    "Some moving game images retain frame-phase differences.",
+    "Approximately half-speed execution, not measured faster than NES.",
+    "Coarse audio, no sweep/DMC/full noise/phase fidelity.",
+    "Unclassified execution still halts; no complete-stage/boss/all-character/endings validation.",
+    "No physical-console test."
+  ]
+}

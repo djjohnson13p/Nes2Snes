@@ -1,5 +1,26 @@
 # Verified status — 2026-09-25
 
+## Current: staircase coverage and experimental raster correction
+
+The expanded trace observes 10,763 instruction entries. The ordinary-controller
+build follows 57 new staircase actions to the outdoor section, matching candidate
+player positions at all 57 endpoints. It is not a complete stage or boss run.
+
+The opt-in `--experimental-raster-scroll` corrects the tested live-PPU-address
+reload and 240-line wrap. 140 unit tests and 419 extra independent CPU/PPU records
+pass. Seven authored raster cases match 397,824 stable pixels, but retain 546
+aggregate differences on two partial transition rows. Some moving gameplay
+captures still differ. No perfect-port or new performance gain is claimed.
+
+See [full report](stair-raster-2026-09-25.md) and
+[machine-readable evidence](stair-raster-verification.json).
+
+## Earlier checkpoints
+
+The dated sections below describe the state at their respective checkpoints;
+their "latest" descriptions and test counts are historical, not current totals.
+
+
 Latest continuation: [optional audio envelopes and note counters](apu-counters-2026-09-25.md).
 127 unit tests, 486 independent length/status records, and 324 modeled audio updates pass.
 The new audio mode costs about 3.4% walking throughput and remains opt-in.

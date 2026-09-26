@@ -1,6 +1,6 @@
 ; Native BG/OBJ conversion of the LIVE guest state, not recorded frames.
-; First renderer supports a single HUD/playfield split. Additional IRQ splits
-; are counted as unsupported rather than claimed as visually faithful.
+; Base renderer supports a single HUD/playfield split. Optional live-V reload,
+; one blank band and one 240-line wrap are frame-scheduled approximations.
 TOPCTRL=$0C00
 TOPMASK=$0C01
 TOPFINE=$0C02
@@ -47,10 +47,25 @@ FRAME_FINE=$0CF2
 FRAME_MASK=$0CF3
 FRAME_ID=$0CF4
 FRAME_SPR_CHR=$0CF8
+RASTER_V=$0CC0
+RASTER_LINE=$0CC2
+RASTER_VALID=$0CC3
+RASTER_OFFSET=$0CC4
+RASTER_WRAP=$0CC6
+RASTER_ENABLE=$0CC8
+RASTER_BLANK_START=$0CD0
+RASTER_BLANK_END=$0CD1
+RASTER_BLANK_ACTIVE=$0CD2
+RASTER_BLANK_VALID=$0CD3
 
 CaptureTop:
 .a8
 .i16
+.if USE_RASTER_SCROLL
+    stz RASTER_VALID
+    stz RASTER_BLANK_VALID
+    stz RASTER_BLANK_ACTIVE
+.endif
     lda CTRL
     sta TOPCTRL
     lda MASK
@@ -86,6 +101,9 @@ CaptureTop:
 CaptureSplit:
 .a8
 .i16
+.if USE_RASTER_SCROLL
+    jsr CaptureBlankBand
+.endif
     lda IRQCOUNT
     cmp #$02
     bcc @done
@@ -96,6 +114,49 @@ CaptureSplit:
 .a8
 @done:
     rts
+.if USE_RASTER_SCROLL
+; Recognize an actual all-zero CHR interval instead of hard-coding a game
+; bank number. One blank interval is represented; other raster effects remain
+; outside this frame-scheduled renderer's accuracy contract.
+CaptureBlankBand:
+.a8
+.i16
+    jsr SelectBgBanks
+    ldy #$0000
+@blankcheck:
+    rep #$20
+.a16
+    lda BGCHR,y
+    and #$00FF
+    tax
+    sep #$20
+.a8
+    lda BlankChrBanks,x
+    beq @notblank
+    iny
+    cpy #$0004
+    bne @blankcheck
+    lda RASTER_BLANK_ACTIVE
+    bne @done
+    lda #$01
+    sta RASTER_BLANK_ACTIVE
+    lda LASTIRQ
+    inc a
+    sta RASTER_BLANK_START
+    rts
+@notblank:
+    lda RASTER_BLANK_ACTIVE
+    beq @done
+    stz RASTER_BLANK_ACTIVE
+    lda #$01
+    sta RASTER_BLANK_VALID
+    lda LASTIRQ
+    inc a
+    sta RASTER_BLANK_END
+@done:
+    rts
+.endif
+
 SelectBgBanks:
 .a8
 .i16
@@ -1158,8 +1219,8 @@ UploadObjectsPalette:
     sta $420B
     rts
 
-; Derive horizontal/vertical scroll from NES t/fine-x. 240/256-line vertical
-; nametable wrapping and additional IRQ raster effects still require work.
+; Derive base scroll from NES t/fine-x. The optional live-V path below handles
+; its tested IRQ reload timing and 240/256-line wrap, not arbitrary raster code.
 SetVideoRegisters:
 .a8
 .i16
@@ -1198,6 +1259,27 @@ SetVideoRegisters:
 .a16
     lda FRAME_TEMP
     jsr VerticalOffset
+.if USE_RASTER_SCROLL
+    sta RASTER_OFFSET
+    lda RASTER_VALID
+    and #$00FF
+    beq @ordinaryY
+    lda RASTER_V
+    jsr VerticalOffset
+    sec
+    sbc #$0001
+    sta RASTER_OFFSET
+    lda RASTER_LINE
+    and #$00FF
+    sta VFLAGS
+    lda RASTER_OFFSET
+    sec
+    sbc VFLAGS
+    and #$01FF
+    sta RASTER_OFFSET
+@ordinaryY:
+    lda RASTER_OFFSET
+.endif
     sep #$20
 .a8
     sta $210E
@@ -1249,6 +1331,102 @@ SetVideoRegisters:
     sta TOPEN
     lda BOTTOMEN
     sta $212C
+.if USE_RASTER_SCROLL
+    stz RASTER_ENABLE
+    lda RASTER_VALID
+    beq @noYwrap
+    rep #$20
+.a16
+    lda RASTER_V
+    jsr VerticalOffset
+    sec
+    sbc #$0007
+    and #$00FF
+    sta VFLAGS
+    lda RASTER_LINE
+    and #$00FF
+    clc
+    adc #$00E9
+    sec
+    sbc VFLAGS
+    sta RASTER_WRAP
+    cmp #$00E0
+    bcs @noYwrap16
+    cmp #$0001
+    bcc @noYwrap16
+    ; A non-repeating HDMA entry holds the first offset until the NES
+    ; 240-line boundary, then skips the two SNES-only padding tile rows.
+    ldx #$0000
+    cmp #$0080
+    bcc @writeYrun
+    pha
+    lda #$007F
+    jsr AppendYRun
+    pla
+    sec
+    sbc #$007F
+@writeYrun:
+    jsr AppendYRun
+    lda RASTER_OFFSET
+    clc
+    adc #$0010
+    sta RASTER_OFFSET
+    lda #$0001
+    jsr AppendYRun
+    sep #$20
+.a8
+    lda #$00
+    sta f:$7F2510,x
+    lda #$02
+    sta $4320
+    lda #$0E
+    sta $4321
+    ldx #$2510
+    stx $4322
+    lda #$7F
+    sta $4324
+    lda #$04
+    sta RASTER_ENABLE
+    bra @noYwrap
+@noYwrap16:
+    sep #$20
+.a8
+@noYwrap:
+    lda RASTER_VALID
+    beq @singleTM
+    lda RASTER_BLANK_VALID
+    beq @singleTM
+    lda RASTER_BLANK_START
+    cmp #$09
+    bcc @singleTM
+    cmp #$80
+    bcs @singleTM
+    lda RASTER_BLANK_END
+    cmp RASTER_BLANK_START
+    bcc @singleTM
+    beq @singleTM
+    sec
+    sbc RASTER_BLANK_START
+    cmp #$80
+    bcs @singleTM
+    sta f:$7F2502
+    lda RASTER_BLANK_START
+    sec
+    sbc #$08
+    sta f:$7F2500
+    lda TOPEN
+    sta f:$7F2501
+    and #$10
+    sta f:$7F2503
+    lda #$01
+    sta f:$7F2504
+    lda BOTTOMEN
+    sta f:$7F2505
+    lda #$00
+    sta f:$7F2506
+    bra @configureTM
+@singleTM:
+.endif
     lda TOPLINE
     cmp #$09
     bcc @nosplit
@@ -1265,6 +1443,9 @@ SetVideoRegisters:
     sta f:$7F2503
     lda #$00
     sta f:$7F2504
+.if USE_RASTER_SCROLL
+@configureTM:
+.endif
     stz $4310
     lda #$2C
     sta $4311
@@ -1273,9 +1454,36 @@ SetVideoRegisters:
     lda #$7F
     sta $4314
     lda #$02
+.if USE_RASTER_SCROLL
+    ora RASTER_ENABLE
+.endif
     sta $420C
-@nosplit:
+.if USE_RASTER_SCROLL
     rts
+.endif
+@nosplit:
+.if USE_RASTER_SCROLL
+    lda RASTER_ENABLE
+    sta $420C
+.endif
+    rts
+.if USE_RASTER_SCROLL
+; A16=count, X=table byte index. Each value writes low/high to BG1VOFS.
+AppendYRun:
+.a16
+.i16
+    sep #$20
+.a8
+    sta f:$7F2510,x
+    inx
+    rep #$20
+.a16
+    lda RASTER_OFFSET
+    sta f:$7F2510,x
+    inx
+    inx
+    rts
+.endif
 VerticalOffset:
 .a16
     sta VFLAGS

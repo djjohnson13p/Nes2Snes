@@ -1,5 +1,16 @@
 # Nes2Snes
 
+**Current experimental checkpoint:** a repeatable room-1-02 staircase route
+reaches the outdoor section, with an opt-in live-V vertical-scroll/240-line-wrap
+fix and blank-band handling. 140 unit tests and seven independent procedural
+raster cases pass their stated stable-region checks. Two partial transition
+scanlines and moving-frame differences remain inexact. Still approximately
+half speed, incomplete audio and incomplete game coverage.
+See [stair/raster results and limitations](docs/stair-raster-2026-09-25.md).
+
+The entries below retain earlier milestones; their test counts are historical.
+
+
 **New opt-in audio mode:** `--experimental-audio --audio-counters` adds frame-quantized envelopes, note lengths and triangle linear timing. It remains approximate and has a small performance cost. See [tests and limitations](docs/apu-counters-2026-09-25.md).
 
 Latest continuation: [bank-switch returns, indirect loads and the extended room-1-02 route](docs/bank-returns-2026-09-25.md). Still not full speed or a complete port.
