@@ -1,0 +1,108 @@
+{
+  "baseline_revision": "3bb9a9ceb7d1805bb355857defa051b48212a9d3",
+  "independently_tested_integration_revision": "872fa58060073e85f1cbd055038fe63f8865c2cb",
+  "unit_tests": 283,
+  "new_independent_matrix": {
+    "passed": true,
+    "complete": true,
+    "configurations": 45,
+    "records_checked": 1992,
+    "bytes_checked": 7968,
+    "mismatches": 0,
+    "selector_values_checked": 256,
+    "coverage": "All selector byte values occur; not a Cartesian product of all CPU state, table addresses, and bank mappings.",
+    "reference_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "fault_guards": [
+      {"enabled": false, "fault": 1, "pc": 63360, "bank": 161, "success_marker": 0},
+      {"enabled": true, "fault": 1, "pc": 63360, "bank": 161, "success_marker": 0}
+    ],
+    "boundary_results": [
+      {"return_address": 65279, "records": 6, "bytes": 24, "mismatches": 0, "native_calls": 1},
+      {"return_address": 65280, "records": 6, "bytes": 24, "mismatches": 0, "native_calls": 1},
+      {"return_address": 65281, "records": 6, "bytes": 24, "mismatches": 0, "native_calls": 0},
+      {"return_address": 65527, "records": 6, "bytes": 24, "mismatches": 0, "native_calls": 0}
+    ],
+    "default_identity": [
+      {"fixture": "dispatch", "byte_identical": true, "sha256": "9618eb31b19ac390c8157387e544983bc0feead44ec0ad5bb5aaf15a7607c09c"}
+    ],
+    "scope": "Classified inline table dispatch: outputs, scratch bytes, relative stack balance, raw-table reads and guarded fallback. No cycle or all-game accuracy claim."
+  },
+  "replay_intervals": [
+    {"name": "walk-right", "game_updates": 120, "baseline_display_frames": 149, "candidate_display_frames": 147, "throughput_gain_percent": 1.3605442176870763},
+    {"name": "jump-right", "game_updates": 25, "baseline_display_frames": 39, "candidate_display_frames": 39, "throughput_gain_percent": 0.0},
+    {"name": "attack", "game_updates": 25, "baseline_display_frames": 44, "candidate_display_frames": 44, "throughput_gain_percent": 0.0},
+    {"name": "settle", "game_updates": 60, "baseline_display_frames": 74, "candidate_display_frames": 72, "throughput_gain_percent": 2.777777777777768}
+  ],
+  "replay_settings": {
+    "baseline": "9bb5cac102a58b06af9ace008f33556b34f4a2637cd1e58401d60bd6c6efa9cd",
+    "candidate": "440068e742dab1c29888de99394e999b527971f77a7e378cddc315be78a86e5d",
+    "input": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "core": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "same_input": true
+  },
+  "consecutive_frame_regression": {
+    "frames_compared": 231,
+    "pixel_positions_compared": 13246464,
+    "mismatched_frame_ids": [],
+    "baseline_rom_sha256": "9bb5cac102a58b06af9ace008f33556b34f4a2637cd1e58401d60bd6c6efa9cd",
+    "candidate_rom_sha256": "440068e742dab1c29888de99394e999b527971f77a7e378cddc315be78a86e5d",
+    "scope": "First video callback for each presented frame ID 916..1146; baseline SNES versus candidate SNES, not original-NES equivalence."
+  },
+  "candidate_route": {
+    "passed": true,
+    "complete_routes": true,
+    "clock_mode": "guarded",
+    "reference_platform": "nes",
+    "candidate_platform": "snes",
+    "reference_status": "completed_budget",
+    "candidate_status": "completed_budget",
+    "candidate_fault": null,
+    "planned_checkpoints": 84,
+    "checkpoints_compared": 84,
+    "state_fields_checked": 420,
+    "state_bytes_checked": 756,
+    "mismatched_checkpoints": 0,
+    "mismatches": [],
+    "reference_report_sha256": "ccc4301426f4e2d810d9eca886bc9b0fd9a2134df047238124aa52c63a2b9144",
+    "candidate_report_sha256": "d87b5ba93bad58b4414af38428373a9d171244eca6f04b2c1a73f011af989cfb",
+    "reference_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "candidate_rom_sha256": "3790fef38e52e54643c9abc1d9baf9df9ae2fb9f5040561e4386e21ecb280ddf",
+    "reference_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "candidate_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Selected area, camera and player fields at named input endpoints. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence."
+  },
+  "baseline_route": {
+    "passed": true,
+    "complete_routes": true,
+    "clock_mode": "guarded",
+    "reference_platform": "nes",
+    "candidate_platform": "snes",
+    "reference_status": "completed_budget",
+    "candidate_status": "completed_budget",
+    "candidate_fault": null,
+    "planned_checkpoints": 84,
+    "checkpoints_compared": 84,
+    "state_fields_checked": 420,
+    "state_bytes_checked": 756,
+    "mismatched_checkpoints": 0,
+    "mismatches": [],
+    "reference_report_sha256": "ccc4301426f4e2d810d9eca886bc9b0fd9a2134df047238124aa52c63a2b9144",
+    "candidate_report_sha256": "5abfddb7a4c510ce4f64ef5100fb3c281edcaeafedc2846b8c48a3b4c840b06a",
+    "reference_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "candidate_rom_sha256": "29c01a948ef73a31f436c6c5cb7466b49991ca8bd08ade1c2288a0ad386521d9",
+    "reference_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "candidate_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Selected area, camera and player fields at named input endpoints. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence."
+  },
+  "route_display_frames": {"baseline": 15242, "candidate": 15124, "gain_percent": 0.7802168738429094},
+  "limitations": [
+    "Option is off by default.",
+    "Selected route fields, not full RAM, graphics or audio equivalence.",
+    "No new first-boss, later-stage or ending completion.",
+    "No new audio or raster correction.",
+    "Prior unpublished indirect-load flag-merge experiment is not included."
+  ],
+  "retained_runtime_matrix": {"configurations": 32, "records_checked": 4224, "bytes_checked": 16896, "oam_bytes_checked": 1024, "passed": true},
+  "retained_runtime_report_sha256": "195d1065556ef5f585e34a9c1f2ee06bd96cbffe062202b76bcaebdd63792249"
+}
