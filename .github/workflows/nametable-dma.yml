@@ -33,20 +33,20 @@ jobs:
           set -euo pipefail
           if ! grep -q 'USE_COALESCED_NT_DMA=' tools/build_native.py; then
             /usr/bin/python3 maintenance/nametable-dma/apply.py
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add snes/src/native_video.inc tools/build_native.py
-            git commit -m 'Integrate opt-in background DMA and fill-cache correction'
-          fi
-          /usr/bin/python3 - <<'PY'
+          /usr/bin/python3 - <<'PYHASH'
           import hashlib,json
           from pathlib import Path
           expected=json.loads(Path('docs/nametable-dma-verification.json').read_text())['source_sha256']
           for name,sha in expected.items():
               actual=hashlib.sha256(Path(name).read_bytes()).hexdigest()
               assert actual==sha, (name,actual,sha)
-          print('All eight candidate source hashes match the locally tested files.')
-          PY
+          print('Initial import matches all eight locally tested source files.')
+          PYHASH
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add snes/src/native_video.inc tools/build_native.py
+            git commit -m 'Integrate opt-in background DMA and fill-cache correction'
+          fi
           mkdir -p build/previous-source
           git rev-parse HEAD > build/tested-revision.txt
           git archive 73a572064fc0447f71307cd45d007c106f170f0c | tar -x -C build/previous-source
