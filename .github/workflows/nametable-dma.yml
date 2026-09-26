@@ -1,0 +1,153 @@
+name: Background DMA and independent fill-mode verification
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/nametable-dma-20260926]
+    paths:
+      - '.github/workflows/nametable-dma.yml'
+      - 'maintenance/nametable-dma/**'
+      - 'snes/src/native*.inc'
+      - 'snes/src/native.s'
+      - 'tools/build_native.py'
+      - 'tools/verify_nametable_dma.py'
+      - 'tools/verify_fill_mode.py'
+      - 'tools/fill_mode_fixture.py'
+      - 'tests/test_nametable_dma.py'
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Integrate exact reviewed source if needed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -q 'USE_COALESCED_NT_DMA=' tools/build_native.py; then
+            /usr/bin/python3 maintenance/nametable-dma/apply.py
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add snes/src/native_video.inc tools/build_native.py
+            git commit -m 'Integrate opt-in background DMA and fill-cache correction'
+          fi
+          /usr/bin/python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          expected=json.loads(Path('docs/nametable-dma-verification.json').read_text())['source_sha256']
+          for name,sha in expected.items():
+              actual=hashlib.sha256(Path(name).read_bytes()).hexdigest()
+              assert actual==sha, (name,actual,sha)
+          print('All eight candidate source hashes match the locally tested files.')
+          PY
+          mkdir -p build/previous-source
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive 73a572064fc0447f71307cd45d007c106f170f0c | tar -x -C build/previous-source
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - name: Unit tests including actual assembly gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Build three pinned unmodified emulators
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes9x-build.log 2>&1
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/fceumm-build.log 2>&1
+          git clone --quiet https://github.com/libretro/nestopia.git build/nestopia
+          git -C build/nestopia checkout 8f00f500912a847062de432e38765c7285483e62
+          make -C build/nestopia/libretro -j2 > build/nestopia-build.log 2>&1
+      - name: Full VRAM matrix and deliberate wrong-source control
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_nametable_dma.py --core build/snes9x/libretro/snes9x_libretro.so --out build/dma-matrix 2>&1 | tee build/dma-matrix.log
+          /usr/bin/python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          command = ['/usr/bin/python3','tools/verify_nametable_dma.py','--core','build/snes9x/libretro/snes9x_libretro.so','--out','build/dma-negative','--mutation']
+          result = subprocess.run(command,capture_output=True,text=True,check=False,timeout=90)
+          log = result.stdout + result.stderr
+          Path('build/dma-negative.log').write_text(log)
+          assert result.returncode != 0, 'Mutated uploader unexpectedly passed'
+          assert 'dense/2: 2041 VRAM bytes differ' in log, log[-3000:]
+          Path('build/dma-negative.json').write_text(json.dumps({'expected_failure_observed':True,'mismatched_vram_bytes':2041,'control':'test-only wrong HUD source'},indent=2)+'\n')
+          PY
+      - name: Changed fill graphics, actual old-source failure and retained NES disagreement
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_fill_mode.py --nes-core build/nestopia/libretro/nestopia_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fceumm-core build/fceumm/fceumm_libretro.so --previous-root "$PWD/build/previous-source" --out build/fill-matrix 2>&1 | tee build/fill-matrix.log
+      - name: Retain CPU fault guards and sound stress
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_runtime_counters.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --out build/runtime-safety 2>&1 | tee build/runtime-safety.log
+      - name: New options with animated sprites and nested-interrupt stress
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/video_fixture.py --out build/video-fixture
+          /usr/bin/python3 tools/build_native.py --rom build/video-fixture/fixture.nes --trace build/video-fixture --out build/video-fixture/snes --coalesced-nametable-dma --fix-fill-cache --stress-nmi-restore > build/video-build.log
+          /usr/bin/python3 tools/verify_object_cache.py --core build/snes9x/libretro/snes9x_libretro.so --rom build/video-fixture/snes/native-prototype.sfc --out build/video-fixture/verification 2>&1 | tee build/video-verification.log
+      - name: Default binary identity against actual preceding source
+        run: |
+          /usr/bin/python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json,subprocess,sys
+          sys.path.insert(0,'tools')
+          from native_fixture import create as native_fixture
+          from fill_mode_fixture import create as fill_fixture
+          from build_native import build
+          root=Path('build/default-identity').resolve();root.mkdir(parents=True,exist_ok=True)
+          previous=Path('build/previous-source').resolve()
+          rows=[]
+          for name,create in [('cpu',native_fixture),('fill',fill_fixture)]:
+              folder=root/name;create(folder)
+              build(folder/'fixture.nes',folder,folder/'current')
+              subprocess.run([sys.executable,str(previous/'tools/build_native.py'),'--rom',str(folder/'fixture.nes'),'--trace',str(folder),'--out',str(folder/'previous')],check=True,stdout=subprocess.DEVNULL,timeout=90)
+              old=(folder/'previous/native-prototype.sfc').read_bytes();new=(folder/'current/native-prototype.sfc').read_bytes()
+              assert new == old, name
+              rows.append({'case':name,'byte_identical':True,'sha256':hashlib.sha256(new).hexdigest()})
+          (root/'identity.json').write_text(json.dumps({'baseline':'73a572064fc0447f71307cd45d007c106f170f0c','results':rows},indent=2)+'\n')
+          PY
+      - name: Publish tested integration only to its development branch
+        if: github.ref == 'refs/heads/development/nametable-dma-20260926'
+        shell: bash
+        run: |
+          set -euo pipefail
+          current=$(git ls-remote origin refs/heads/development/nametable-dma-20260926 | cut -f1)
+          test "$current" = "$GITHUB_SHA" || { echo 'Branch advanced; refusing overwrite'; exit 1; }
+          git push origin HEAD:refs/heads/development/nametable-dma-20260926
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: background-dma-and-fill-verification
+          path: |
+            build/*.log
+            build/dma-negative.json
+            build/dma-matrix/nametable-dma-verification.json
+            build/dma-matrix/progress.json
+            build/fill-matrix/fill-mode-verification.json
+            build/fill-matrix/case-*/reference-disagreement.json
+            build/fill-matrix/case-*/*/verification.json
+            build/fill-matrix/case-*/*/screen.png
+            build/runtime-safety/runtime-counter-verification.json
+            build/video-fixture/verification/
+            build/default-identity/identity.json
+            build/tested-source.zip
+            build/tested-revision.txt
+          retention-days: 30
