@@ -1,0 +1,455 @@
+{
+  "base_source_revision": "5656d453416b0e800c774c2009f5719d4918a43e",
+  "unit_tests_passed": 127,
+  "apu_matrix": {
+    "passed": true,
+    "length_oracle": [
+      {
+        "case": "direct",
+        "records_checked": 162,
+        "bytes_checked": 648,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 132,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 0,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 2,
+          "direct_bank_calls": 2
+        },
+        "oam_copy": null,
+        "scope": "Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim."
+      },
+      {
+        "case": "generic",
+        "records_checked": 162,
+        "bytes_checked": 648,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 1786,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 0,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 0
+        },
+        "oam_copy": null,
+        "scope": "Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim."
+      },
+      {
+        "case": "c0",
+        "records_checked": 162,
+        "bytes_checked": 648,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 1780,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 0,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 2,
+          "direct_bank_calls": 2
+        },
+        "oam_copy": null,
+        "scope": "Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim."
+      }
+    ],
+    "envelope_contract": [
+      {
+        "case": "direct",
+        "passed": true,
+        "frames_checked": 108,
+        "state_bytes_checked": 2160,
+        "host_frames": 120,
+        "pcm_segments": [
+          {
+            "name": "decay_loud",
+            "kind": "audible",
+            "rms": 2543.4313569550513,
+            "samples": 1066
+          },
+          {
+            "name": "decay_soft",
+            "kind": "audible",
+            "rms": 1046.7955199019966,
+            "samples": 1068
+          },
+          {
+            "name": "expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 2132
+          },
+          {
+            "name": "restarted",
+            "kind": "audible",
+            "rms": 2550.625387940378,
+            "samples": 1066
+          },
+          {
+            "name": "disabled",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 1068
+          },
+          {
+            "name": "length_active",
+            "kind": "audible",
+            "rms": 3753.842472662975,
+            "samples": 1066
+          },
+          {
+            "name": "length_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 2132
+          },
+          {
+            "name": "no_resurrection",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 1066
+          },
+          {
+            "name": "triangle_active",
+            "kind": "audible",
+            "rms": 1868.2645976793112,
+            "samples": 2132
+          },
+          {
+            "name": "linear_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 2132
+          },
+          {
+            "name": "noise_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 1066
+          },
+          {
+            "name": "final_silence",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 3200
+          }
+        ],
+        "rom_sha256": "63c5887182181259c23832b970e1f48e9564e495fa10f89d9252e1e44d890e43",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "scope": "Frame-quantized event/counter contract, envelope/mute PCM; not cycle-accurate NES APU equivalence"
+      },
+      {
+        "case": "generic",
+        "passed": true,
+        "frames_checked": 108,
+        "state_bytes_checked": 2160,
+        "host_frames": 120,
+        "pcm_segments": [
+          {
+            "name": "decay_loud",
+            "kind": "audible",
+            "rms": 2542.918494007816,
+            "samples": 1066
+          },
+          {
+            "name": "decay_soft",
+            "kind": "audible",
+            "rms": 1046.1268415770228,
+            "samples": 1066
+          },
+          {
+            "name": "expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 2132
+          },
+          {
+            "name": "restarted",
+            "kind": "audible",
+            "rms": 2552.5580040378095,
+            "samples": 1066
+          },
+          {
+            "name": "disabled",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 1068
+          },
+          {
+            "name": "length_active",
+            "kind": "audible",
+            "rms": 3753.951340893169,
+            "samples": 1066
+          },
+          {
+            "name": "length_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 2132
+          },
+          {
+            "name": "no_resurrection",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 1066
+          },
+          {
+            "name": "triangle_active",
+            "kind": "audible",
+            "rms": 1884.2559683888508,
+            "samples": 2132
+          },
+          {
+            "name": "linear_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 2132
+          },
+          {
+            "name": "noise_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 1066
+          },
+          {
+            "name": "final_silence",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 3200
+          }
+        ],
+        "rom_sha256": "ef2e44f0d661d9acaab1c65622830158a08c2dfe60cb46374170f33f3b9edba1",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "scope": "Frame-quantized event/counter contract, envelope/mute PCM; not cycle-accurate NES APU equivalence"
+      },
+      {
+        "case": "nested-nmi",
+        "passed": true,
+        "frames_checked": 108,
+        "state_bytes_checked": 2160,
+        "host_frames": 656,
+        "pcm_segments": [
+          {
+            "name": "decay_loud",
+            "kind": "audible",
+            "rms": 2746.951952963411,
+            "samples": 11728
+          },
+          {
+            "name": "decay_soft",
+            "kind": "audible",
+            "rms": 1258.449324805605,
+            "samples": 11728
+          },
+          {
+            "name": "expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 18126
+          },
+          {
+            "name": "restarted",
+            "kind": "audible",
+            "rms": 2746.908335051731,
+            "samples": 11728
+          },
+          {
+            "name": "disabled",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 11728
+          },
+          {
+            "name": "length_active",
+            "kind": "audible",
+            "rms": 3757.661898129586,
+            "samples": 11728
+          },
+          {
+            "name": "length_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 18126
+          },
+          {
+            "name": "no_resurrection",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 11728
+          },
+          {
+            "name": "triangle_active",
+            "kind": "audible",
+            "rms": 1881.2817301939308,
+            "samples": 18126
+          },
+          {
+            "name": "linear_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 18126
+          },
+          {
+            "name": "noise_expired",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 11728
+          },
+          {
+            "name": "final_silence",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 24524
+          }
+        ],
+        "rom_sha256": "4b12bfec8cd715b103740b85e6d47c34aa6f1e7d2847ddce90f354feb4c0a1b7",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "scope": "Frame-quantized event/counter contract, envelope/mute PCM; not cycle-accurate NES APU equivalence"
+      }
+    ],
+    "scope": "Original data. Independent NES length/status oracle and quantized envelope contract. Not complete APU fidelity."
+  },
+  "gameplay_regression": {
+    "baseline_rom_sha256": "74b8f4b6d47aadab606aaf23c72dea25a69c90c128ab81f0653d30be7d8bdbe1",
+    "candidate_rom_sha256": "255ea53455ca25372a7dedb97149f0d885cbb9057f6cf285d6292ec5e6cb1c98",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 228,
+        "candidate_snes_frames": 236,
+        "speed_ratio": 0.9661016949152542,
+        "candidate_snes_frames_per_logical_frame": 1.9666666666666666
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 48,
+        "candidate_snes_frames": 49,
+        "speed_ratio": 0.9795918367346939,
+        "candidate_snes_frames_per_logical_frame": 1.96
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 118,
+        "candidate_snes_frames": 120,
+        "speed_ratio": 0.9833333333333333,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "ordinary_controller_audio": {
+    "seconds": 15.374687890137329,
+    "sample_rate": 32040.0,
+    "peak": 14235,
+    "rms": 2816.039153383169,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2282,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "long_route": {
+    "platform": "snes",
+    "rom_sha256": "1bf5bbfd14e1e761ec298f457c1e18330cd2588f1a610a77d0aa397748ea9b88",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "steps_requested": 100,
+    "pattern": [
+      {
+        "updates": 40,
+        "buttons": [
+          "right"
+        ]
+      },
+      {
+        "updates": 25,
+        "buttons": [
+          "right",
+          "a"
+        ]
+      },
+      {
+        "updates": 25,
+        "buttons": [
+          "right",
+          "b"
+        ]
+      },
+      {
+        "updates": 10,
+        "buttons": []
+      }
+    ],
+    "scope": "Bounded live-controller early-game route; not all-level or NES/SNES equivalence proof",
+    "start_logical_frame": 856,
+    "status": "completed_budget",
+    "total_emulator_frames": 20977
+  },
+  "long_route_steps_completed": 100,
+  "additional_guest_updates": 10000,
+  "counter_disabled_binary_identical_to_base": true,
+  "full_game_completed": false,
+  "physical_hardware_tested": false,
+  "limitations": [
+    "Guest-frame-quantized APU clocks, not cycle accurate",
+    "No sweep, frame IRQ, DMC or accurate noise waveform",
+    "Coarse five-step sequencing has no CPU-cycle write delay",
+    "Selected-image regression against prior SNES renderer, not full NES equivalence",
+    "Long route stays largely in room 1-02 and does not certify bosses or endings"
+  ]
+}

@@ -1,5 +1,5 @@
 ; Optional four-voice approximation using our original SPC700 receiver.
-; This is deliberately opt-in: no DMC, hardware envelopes, lengths or sweep.
+; Optional frame-quantized envelopes/lengths live in native_apu.inc; no DMC or sweep.
 .if USE_EXPERIMENTAL_AUDIO
 ACACHE = $0A00
 AREADY = $0A80
@@ -120,7 +120,11 @@ AudioFrame:
     ldx APUBASE
     lda f:$7E4000,x
     pha
+.if USE_AUDIO_COUNTERS
+    jsr ApuGetVolume
+.else
     and #$0F
+.endif
     asl a
     sta AVOL
     asl a
@@ -188,8 +192,14 @@ AudioFrame:
     lda f:$7E4015
     and #$04
     beq @trioff
+.if USE_AUDIO_COUNTERS
+    lda ALENGTH+8
+    beq @trioff
+    lda ALINEAR
+.else
     lda f:$7E4008
     and #$7F
+.endif
     bne @tritimer
 @trioff:
     stz AVOL
@@ -210,8 +220,13 @@ AudioFrame:
 .a8
     jsr AudioVoice
     ; Noise uses voice 3 and the DSP's global noise generator.
+.if USE_AUDIO_COUNTERS
+    ldx #$000C
+    jsr ApuGetVolume
+.else
     lda f:$7E400C
     and #$0F
+.endif
     asl a
     asl a
     sta AVOL
@@ -238,6 +253,14 @@ AudioFrame:
     ora #$20
     ldx #$006C
     jsr AudioWrite
+.if USE_AUDIO_COUNTERS
+    rep #$20
+.a16
+    lda AUPDATES
+    sta AOUTPUTFRAMES
+    sep #$20
+.a8
+.endif
     rts
 AudioVoice:
     ; AVOICE contains 0,$10,$20. AVOL/APITCH/ASOURCE describe that voice.

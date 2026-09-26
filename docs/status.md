@@ -1,6 +1,11 @@
 # Verified status — 2026-09-25
 
-Latest continuation: [bank-switch returns, indirect loads and the extended room-1-02 route](bank-returns-2026-09-25.md). Still not full speed or a complete port.
+Latest continuation: [optional audio envelopes and note counters](apu-counters-2026-09-25.md).
+127 unit tests, 486 independent length/status records, and 324 modeled audio updates pass.
+The new audio mode costs about 3.4% walking throughput and remains opt-in.
+The 10,000-update early-room route passes; a complete, full-speed port is not claimed.
+
+Previous continuation: [bank-switch returns, indirect loads and the extended room-1-02 route](bank-returns-2026-09-25.md). Still not full speed or a complete port.
 
 ## Latest: conservative native RAM and shorter simple-I/O handlers
 

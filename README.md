@@ -1,5 +1,7 @@
 # Nes2Snes
 
+**New opt-in audio mode:** `--experimental-audio --audio-counters` adds frame-quantized envelopes, note lengths and triangle linear timing. It remains approximate and has a small performance cost. See [tests and limitations](docs/apu-counters-2026-09-25.md).
+
 Latest continuation: [bank-switch returns, indirect loads and the extended room-1-02 route](docs/bank-returns-2026-09-25.md). Still not full speed or a complete port.
 
 **Latest verified checkpoint:** optional four-voice audio, interrupt-context protection and conservative native RAM/I/O paths. 102 unit tests and 1,438 CPU/PPU records pass; early gameplay remains about half speed and the whole game is not yet ported. See [current results and limits](docs/safe-addresses-2026-09-25.md).

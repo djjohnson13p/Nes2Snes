@@ -38,7 +38,7 @@ def label(opcode: int, address: int) -> str:
     return f'Direct_{opcode:02X}_{address:04X}'
 
 
-def plan(prg: bytes, sites: Iterable[dict], simple: bool = False, bank_switches: bool = False, stress_banks: bool = False) -> tuple[list[dict], str]:
+def plan(prg: bytes, sites: Iterable[dict], simple: bool = False, bank_switches: bool = False, stress_banks: bool = False, audio_counters: bool = False) -> tuple[list[dict], str]:
     selected = []
     entries = {}
     for site in sites:
@@ -48,6 +48,8 @@ def plan(prg: bytes, sites: Iterable[dict], simple: bool = False, bank_switches:
         opcode = prg[offset]
         address = int.from_bytes(prg[offset + 1:offset + 3], 'little')
         kind = handler_kind(opcode, address)
+        if audio_counters and opcode in STORE_OPS and (0x4000 <= address < 0x4014 or address in (0x4015,0x4017)):
+            kind = ("apu", address & 0x1f)
         if bank_switches and opcode in STORE_OPS and address in (0x5115, 0x5116, 0x5117):
             kind = ("bank", address)
         if kind is not None:
@@ -60,6 +62,10 @@ def plan(prg: bytes, sites: Iterable[dict], simple: bool = False, bank_switches:
         lines.append(label(opcode, address) + ':')
         if kind == 'bank':
             lines += bank_veneer(opcode, address, stress_banks)
+        elif kind == 'apu':
+            lines += ['    php', '    phx', f'    ldx #${value:02X}',
+                      f'    jsl $800000+DirectApu{STORE_OPS[opcode]}',
+                      '    plx', '    plp', '    rts']
         elif kind == 'write':
             target = 'DirectSimpleWrite' if simple and value in (0, 1, 2, 3, 5, 6, 10, 11) else 'DirectWrite'
             lines += ['    php', '    phx', f'    ldx #${value * 2:02X}',

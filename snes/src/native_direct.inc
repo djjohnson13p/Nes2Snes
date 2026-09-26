@@ -117,6 +117,46 @@ DirectWriters:
     .word WriteCtrl,WriteMask,WriteIgnore,WriteOaddr,WriteOdata,WriteScroll,WriteAddr,WritePpuData
     .word WriteOamDma,WriteJoy,WriteIrqPos,WriteIrqEnable
 
+; APU write callback: do not lose same-value reloads in the shadow cache.
+.if USE_AUDIO_COUNTERS
+.macro DirectApuHandler name, value_offset
+name:
+.a8
+.i8
+    rep #$30
+.a16
+.i16
+    pha
+    phy
+    phd
+    phb
+    sep #$20
+.a8
+    lda #$00
+    pha
+    plb
+    lda #$01
+    sta COPBUSY
+    lda value_offset,s
+    jsr ApuWriteRegister
+    stz COPBUSY
+    plb
+    pld
+    rep #$30
+.a16
+.i16
+    ply
+    pla
+    sep #$30
+.a8
+.i8
+    rtl
+.endmacro
+DirectApuHandler DirectApuA, 6
+DirectApuHandler DirectApuX, 11
+DirectApuHandler DirectApuY, 4
+.endif
+
 ; LDA changes N/Z only. AND/ORA/LDA/STA preserve guest C/V/D/I. The joypad's
 ; internal shift additionally requires preserving C across that bookkeeping.
 DirectReadStatus:

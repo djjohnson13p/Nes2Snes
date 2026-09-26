@@ -1105,6 +1105,10 @@ ReadValue:
     bcc @raw
     cmp #$4000
     jcc ReadPpu
+.if USE_AUDIO_COUNTERS
+    cmp #$4015
+    beq @apu_status
+.endif
     cmp #$4016
     jeq ReadJoy
     cmp #$4017
@@ -1116,6 +1120,12 @@ ReadValue:
 .a8
     lda [MEM]
     rts
+.if USE_AUDIO_COUNTERS
+@apu_status:
+    sep #$20
+.a8
+    jmp ApuReadStatus
+.endif
 ReadJoy:
     sep #$20
 .a8
@@ -1192,6 +1202,10 @@ WriteValue:
     jeq WriteOamDma
     cmp #$4016
     jeq WriteJoy
+.if USE_AUDIO_COUNTERS
+    cmp #$4018
+    jcc ApuWriteFromContext
+.endif
     cmp #$5115
     jeq WritePrimary
     cmp #$5116
@@ -1976,6 +1990,9 @@ GuestIrqReturn:
     jsr CaptureSplit
     jmp NextGuestIrq
 AfterGuestIrqs:
+    .if USE_AUDIO_COUNTERS
+    jsr ApuFrame
+    .endif
     .if USE_EXPERIMENTAL_AUDIO
     jsr AudioFrame
     .endif
@@ -2030,6 +2047,7 @@ NmiRestore:
     lda f:NCTX
     rti
 
+.include "native_apu.inc"
 .include "native_audio.inc"
 .include "native_direct.inc"
 .include "native_video.inc"
