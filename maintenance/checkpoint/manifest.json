@@ -1,0 +1,39 @@
+{
+  "format": 1,
+  "part_count": 8,
+  "reference_revision": "1919c0ece573e5c30cd0664a0badb45504c9b4e1",
+  "before": {
+    "README.md": "bf270d5c84266bc5c1bdeca95ee09b5bed5095c93320d913af4e866d5425a610",
+    "docs/status.md": "eafcdac7b6501eff7bb440b4409c41abbe1806e170dcf8c4b613c65575940fd4",
+    "docs/stair-raster-2026-09-25.md": null,
+    "docs/stair-raster-verification.json": null,
+    "snes/src/native.s": "67c5770e5d826c9d7047d2292dc42d0c04257e6ebf5be2ec32595d8c102b492e",
+    "snes/src/native_video.inc": "1299d7f9a41185e47bfd9ad241f854a7ac898619b20f1c4410f3c8460fe05148",
+    "tools/build_native.py": "194e66b4866339dccad7894a9c68f2d9c2eddd3993391f047ed9f6f7a5abcf48",
+    "tools/gameplay_route.py": "756a8134304d8294e475f86ac2f7678b8e244e362a4c4da74f59bd68722833e1",
+    "tools/raster_fixture.py": null,
+    "tools/verify_raster.py": null,
+    "tools/verify_reference_route.py": null,
+    "tools/routes/cv3-stair-room.json": null,
+    "tests/test_gameplay_actions.py": null,
+    "tests/test_raster_fixture.py": null
+  },
+  "after": {
+    "README.md": "099ce6faba23f77c772526ccb8d3c541aa82c08a6312ba6f8e761bd3feecf097",
+    "docs/status.md": "a806db1eeb76377afbc44119be3705ba767b19c1a42e375dc1f6cc59afb04185",
+    "docs/stair-raster-2026-09-25.md": "f3c85491566384f4832f4dba99ec601a1f31f0f3e77b5e568a75cdaf0761c0e8",
+    "docs/stair-raster-verification.json": "944dec8319a5274a8ea4ea25190cc9ebfb9043f975be45c629acb4d6b8a80930",
+    "snes/src/native.s": "82d5042c45b10f78d3ce1c6516958338cc0ba776da92c2146a3e971e5ec31340",
+    "snes/src/native_video.inc": "541a1e39d911277fbe4dd2fcfeedddef39d1049d26d3a6bab563fda3e167aa60",
+    "tools/build_native.py": "e5a4928e4e110ecc2a78328dc9af97aac2c87c79438caf3572d547089f39b05c",
+    "tools/gameplay_route.py": "d3cc3d1b4e93c881ac8f7ff3e6f08ee1f645cf216f3ea62c7a923806adeece2b",
+    "tools/raster_fixture.py": "105bb3741bbfa43f58754899e5f5886f20e7e204ce5b552935f1e8df6d481c44",
+    "tools/verify_raster.py": "6bed7887f83a5369d4b3379e639a9a2091f4e9a9a8b32525ffb87e3646ebf879",
+    "tools/verify_reference_route.py": "6103348a99c20587830de30c9ac58c74f80f3900d630c036a376485881029631",
+    "tools/routes/cv3-stair-room.json": "21e7f5fce1c877dac4dbbc8bb649d6d27f61273c587a1ae04a31fccdac961383",
+    "tests/test_gameplay_actions.py": "5d2875e4a5bf7089016035fb01dc9cff0b6239cf356dcad14a1a4fb0f8554e77",
+    "tests/test_raster_fixture.py": "e9d4274100551e9e81ba83a7fbbb5afa2fd993032793360b26b1d983fa5c8a7b"
+  },
+  "patch_sha256": "7ea022ecf43de7698ee12264045e340bde1afea9fd6f9ef1d3139dffb134f453",
+  "message": "Add observed staircase route and optional live-V raster scrolling with explicit mismatch accounting"
+}
