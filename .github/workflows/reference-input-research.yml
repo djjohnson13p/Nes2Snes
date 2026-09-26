@@ -1,0 +1,51 @@
+name: Public controller input research
+on:
+  workflow_dispatch:
+  push:
+    branches: [development/extended-route-20260926]
+    paths: ['.github/workflows/reference-input-research.yml']
+permissions:
+  contents: read
+jobs:
+  retrieve:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - name: Retrieve fixed public replay inputs, not game binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, io, json, urllib.request, zipfile
+          out=Path('reference-inputs');out.mkdir()
+          sources=[
+              (6974,'Grant path','zggzdydp and scrimpeh'),
+              (7006,'Grant path, warp glitch','zggzdydp and scrimpeh'),
+              (2753,'Trevor, Sunken City path','Fortranm'),
+          ]
+          rows=[]
+          for publication,branch,authors in sources:
+              page=f'https://tasvideos.org/{publication}M'
+              request=urllib.request.Request(page+'?handler=Download',headers={'User-Agent':'Nes2Snes-compatibility-research/1.0'})
+              with urllib.request.urlopen(request,timeout=45) as response:
+                  data=response.read(8*1024*1024+1)
+                  if len(data)>8*1024*1024:raise ValueError('Replay exceeds research size limit')
+                  disposition=response.headers.get('Content-Disposition','')
+              archive=zipfile.ZipFile(io.BytesIO(data))
+              if sum(i.file_size for i in archive.infolist())>32*1024*1024:
+                  raise ValueError('Oversized replay archive')
+              name=f'tasvideos-{publication}.download'
+              (out/name).write_bytes(data)
+              rows.append(dict(publication=publication,source_page=page,authors=authors,
+                  goal=branch,file=name,sha256=hashlib.sha256(data).hexdigest(),bytes=len(data),
+                  content_disposition=disposition,members=[i.filename for i in archive.infolist()],
+                  scope='Published tool-assisted speedrun controller input, credited to its authors. Not a project-authored playthrough, game binary, verified synchronization or port completion.'))
+          (out/'provenance.json').write_text(json.dumps(rows,indent=2)+'\n')
+          (out/'README.txt').write_text('Public input recordings obtained from TASVideos for read-only compatibility research.\nActual players are credited in provenance.json. These are tool-assisted speedruns, not live gameplay claims.\nNo game ROM or game assets are downloaded or included. No downloaded code is executed.\nSynchronization with the local original ROM must be independently established before deriving coverage.\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public-controller-input-research
+          path: reference-inputs/
+          retention-days: 14
