@@ -1,0 +1,752 @@
+{
+  "baseline_revision": "a4bc07ac9d5de25c879e4ede64bd26d206d4bc3a",
+  "unit_tests": 242,
+  "independent_controller": {
+    "configurations": 25,
+    "records_checked": 1650,
+    "register_bytes_checked": 6600,
+    "mismatches": 0,
+    "results": [
+      {
+        "name": "input-00",
+        "buttons": [],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-01",
+        "buttons": [
+          "a"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-02",
+        "buttons": [
+          "b"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-03",
+        "buttons": [
+          "start"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-04",
+        "buttons": [
+          "select"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-05",
+        "buttons": [
+          "up"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-06",
+        "buttons": [
+          "down"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-07",
+        "buttons": [
+          "left"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-08",
+        "buttons": [
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-09",
+        "buttons": [
+          "a",
+          "b"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-10",
+        "buttons": [
+          "a",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-11",
+        "buttons": [
+          "b",
+          "left"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-12",
+        "buttons": [
+          "a",
+          "up"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-13",
+        "buttons": [
+          "b",
+          "down"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-14",
+        "buttons": [
+          "start",
+          "select"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-15",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-16",
+        "buttons": [
+          "a",
+          "b",
+          "up"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "input-17",
+        "buttons": [
+          "a",
+          "b",
+          "left",
+          "up"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {}
+      },
+      {
+        "name": "counterfree",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 0,
+        "expected_native_calls": 0,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {
+          "runtime_counters": false
+        }
+      },
+      {
+        "name": "disabled",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 0,
+        "expected_native_calls": 0,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {
+          "native_poll": false
+        }
+      },
+      {
+        "name": "no-direct",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 0,
+        "expected_native_calls": 0,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {
+          "direct": false
+        }
+      },
+      {
+        "name": "c0",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 0,
+        "expected_native_calls": 0,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {
+          "c0": true
+        }
+      },
+      {
+        "name": "outside-nmi",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 0,
+        "expected_native_calls": 0,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {
+          "outside_nmi": true
+        }
+      },
+      {
+        "name": "slowrom",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {
+          "fastrom": false
+        }
+      },
+      {
+        "name": "nested-nmi",
+        "buttons": [
+          "a",
+          "b",
+          "right"
+        ],
+        "records_checked": 66,
+        "mismatches": [],
+        "native_calls": 3,
+        "expected_native_calls": 3,
+        "fallback_indices": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          127,
+          254,
+          255
+        ],
+        "options": {
+          "stress_nmi_restore": true
+        }
+      }
+    ],
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Independent controller/CPU checks for the guarded whole-routine replacement.\n\nNo commercial ROM is needed. The NES core executes the procedural polling body;\nthe SNES core executes either the optimized body or its original fallback.\nThese checks establish polled values/state/flags, not cycle-accurate input timing.\n"
+  },
+  "replay": {
+    "alignment": "video-callback-presented-id-v1",
+    "baseline_rom_sha256": "3736f08108c655c2757082f7a02545361f293caa5403616d86c2264d8a6fffe3",
+    "candidate_rom_sha256": "1305e2c56b93f8f1c07b4c7e83eba8ce2a2519e1d38118c1340abb53f7a85a64",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 191,
+        "candidate_snes_frames": 149,
+        "speed_ratio": 1.2818791946308725,
+        "candidate_snes_frames_per_logical_frame": 1.2416666666666667
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 42,
+        "candidate_snes_frames": 39,
+        "speed_ratio": 1.0769230769230769,
+        "candidate_snes_frames_per_logical_frame": 1.56
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 44,
+        "speed_ratio": 1.1363636363636365,
+        "candidate_snes_frames_per_logical_frame": 1.76
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 106,
+        "candidate_snes_frames": 74,
+        "speed_ratio": 1.4324324324324325,
+        "candidate_snes_frames_per_logical_frame": 1.2333333333333334
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "ordinary_controller_route": {
+    "baseline_status": "completed_budget",
+    "candidate_status": "completed_budget",
+    "tail_endpoints": 57,
+    "differences": [],
+    "previous_host_frames": 13495,
+    "candidate_host_frames": 12540,
+    "scope": "Selected game-state and candidate player-position fields; not entire-game or all-RAM equivalence"
+  },
+  "profiler_calibration": {
+    "samples_identical": true,
+    "samples_checked": 5,
+    "baseline_core": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "diagnostic_core": "a925df7ce36a7e4722aace35e4c4dd90937876f482a64b764163dde22eb2cb80",
+    "rom_sha256": "1305e2c56b93f8f1c07b4c7e83eba8ce2a2519e1d38118c1340abb53f7a85a64",
+    "scope": "Selected delivered frames, pixel hashes and emulator frame counts match; not proof that diagnostic instrumentation is harmless on all paths"
+  },
+  "no_option_rom_identical": true,
+  "interactive_rom_sha256": "a20372c6582112ca41dbfd3f8075b42db6573de348a24f671c4eb9c07be921e2",
+  "complete_port": false,
+  "physical_snes_verified": false,
+  "retained_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Counted and counter-free variants: explicit CPU/PPU/APU events, mapper returns, interrupt stress and zero-offset OAM contents; not cycle accuracy or full-game coverage."
+  },
+  "retained_indexed": {
+    "configurations": 11,
+    "records_checked": 1425,
+    "bytes_checked": 5700,
+    "mismatch_count": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Procedural indexed addressing/ALU flags and PPU dummy-read side effects; not CPU-cycle timing, open-bus fidelity or whole-game validation."
+  },
+  "profile_baseline": {
+    "scope": "Attribute emulator master clocks to dispatched PCs on a bounded fixed replay.\n\nCounts include stalls serviced inside instructions. Interrupt-entry costs outside\nopcode dispatch are separately reported as unattributed. This is diagnostic\nattribution, not an independent gameplay correctness or physical-hardware test.\n",
+    "rom_sha256": "3736f08108c655c2757082f7a02545361f293caa5403616d86c2264d8a6fffe3",
+    "diagnostic_core_sha256": "a925df7ce36a7e4722aace35e4c4dd90937876f482a64b764163dde22eb2cb80",
+    "start_game": 916,
+    "end_game": 1036,
+    "host_frames": 192,
+    "elapsed_master_clocks": 68614192,
+    "attributed_master_clocks": 68602724,
+    "unattributed_master_clocks": 11468,
+    "regions": [
+      {
+        "region": "host_runtime",
+        "master_clocks": 31816670,
+        "percent_of_elapsed": 46.370392294352165
+      },
+      {
+        "region": "native_guest",
+        "master_clocks": 32131544,
+        "percent_of_elapsed": 46.82929735585898
+      },
+      {
+        "region": "wram_veneers",
+        "master_clocks": 4654510,
+        "percent_of_elapsed": 6.783596606369715
+      }
+    ]
+  },
+  "profile_candidate": {
+    "scope": "Attribute emulator master clocks to dispatched PCs on a bounded fixed replay.\n\nCounts include stalls serviced inside instructions. Interrupt-entry costs outside\nopcode dispatch are separately reported as unattributed. This is diagnostic\nattribution, not an independent gameplay correctness or physical-hardware test.\n",
+    "rom_sha256": "1305e2c56b93f8f1c07b4c7e83eba8ce2a2519e1d38118c1340abb53f7a85a64",
+    "diagnostic_core_sha256": "a925df7ce36a7e4722aace35e4c4dd90937876f482a64b764163dde22eb2cb80",
+    "start_game": 916,
+    "end_game": 1036,
+    "host_frames": 150,
+    "elapsed_master_clocks": 53604974,
+    "attributed_master_clocks": 53595912,
+    "unattributed_master_clocks": 9062,
+    "regions": [
+      {
+        "region": "host_runtime",
+        "master_clocks": 28825538,
+        "percent_of_elapsed": 53.77399865915428
+      },
+      {
+        "region": "native_guest",
+        "master_clocks": 20567144,
+        "percent_of_elapsed": 38.36797682244935
+      },
+      {
+        "region": "wram_veneers",
+        "master_clocks": 4203230,
+        "percent_of_elapsed": 7.84111937075093
+      }
+    ]
+  }
+}

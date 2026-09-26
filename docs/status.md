@@ -1,6 +1,17 @@
 # Verified status — 2026-09-26
 
-## Current: OAM destination wrapping integrated with counter-free execution
+## Current: guarded whole-controller-routine replacement
+
+The opt-in native controller path passes 25 independent NES/SNES configurations
+and 242 unit tests. Walking takes 149 rather than 191 display frames for 120
+logical updates; the longer existing route improves from 13,495 to 12,540 frames.
+All 57 selected endpoints and five tagged images preserve the baseline. The
+video callback now supplies exact presentation tags instead of a prior-poll
+heuristic. No new boss or full-speed result is claimed.
+See [implementation, measurements and limits](native-controller.md).
+
+
+## Previous: OAM destination wrapping integrated with counter-free execution
 
 See [sprite-DMA correction and scoped independent tests](oam-offsets.md).
 216 unit tests and 531 scoped OAM configurations pass. All 256 offsets are

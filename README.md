@@ -1,6 +1,14 @@
 # Nes2Snes
 
-Latest compatibility work: **[nonzero sprite-DMA destinations](docs/oam-offsets.md)**.
+Latest performance work: **[guarded native controller polling](docs/native-controller.md)**.
+A complete recognized routine can now use a native replacement with checked
+fallbacks. Controlled walking improves from 191 to 149 display frames per 120
+updates (28.19% higher throughput); the longer existing route improves 7.62%.
+242 unit tests and 25 new independent configurations pass. Still incomplete,
+not full speed, and not whole-game validated. No partial downloads are published.
+
+
+Previous compatibility work: **[nonzero sprite-DMA destinations](docs/oam-offsets.md)**.
 Every OAM destination offset is checked against unmodified Nestopia, with known
 reference disagreements retained rather than hidden. This integrates with the
 counter-free performance option below, not a replacement of that optimization.

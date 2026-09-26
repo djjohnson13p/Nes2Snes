@@ -2148,6 +2148,7 @@ NmiRestore:
 .include "native_apu.inc"
 .include "native_audio.inc"
 .include "native_direct.inc"
+.include "native_controller.inc"
 .include "native_video.inc"
 
 BadOperation:

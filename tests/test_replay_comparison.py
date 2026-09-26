@@ -52,6 +52,14 @@ class ReplayComparisonTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, field):
                 self.run_compare()
 
+    def test_refuses_mixed_frame_tagging_methods(self):
+        path=self.root / 'new/replay.json'
+        report=json.loads(path.read_text())
+        report['alignment']='video-callback-presented-id-v1'
+        path.write_text(json.dumps(report))
+        with self.assertRaisesRegex(ValueError,'alignment'):
+            self.run_compare()
+
     def test_refuses_different_render_frame(self):
         path = self.root / 'new/replay.json'
         report = json.loads(path.read_text())

@@ -17,6 +17,8 @@ from PIL import Image
 def compare(baseline: Path, candidate: Path, out: Path) -> dict:
     old = json.loads((baseline / 'replay.json').read_text())
     new = json.loads((candidate / 'replay.json').read_text())
+    if old.get('alignment', 'legacy-previous-poll') != new.get('alignment', 'legacy-previous-poll'):
+        raise ValueError('Replay alignment methods must match; recapture both builds')
     for field in ('input_sha256', 'core_sha256'):
         if old[field] != new[field]:
             raise ValueError(f'Replays must have identical {field}')
@@ -55,7 +57,7 @@ def compare(baseline: Path, candidate: Path, out: Path) -> dict:
                                   speed_ratio=before / after,
                                   candidate_snes_frames_per_logical_frame=after / logical))
         previous = a, b
-    result = dict(baseline_rom_sha256=old['rom_sha256'],
+    result = dict(alignment=new.get('alignment', 'legacy-previous-poll'),baseline_rom_sha256=old['rom_sha256'],
                   candidate_rom_sha256=new['rom_sha256'],
                   core_sha256=new['core_sha256'], input_sha256=new['input_sha256'],
                   pixels_checked=total_pixels, pixel_mismatches=total_mismatches,

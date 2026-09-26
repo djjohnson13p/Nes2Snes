@@ -5,11 +5,35 @@ The optional input mode is compiled out of ordinary interactive builds. This
 bounded route does not establish full-game correctness. Keep all output private.
 """
 from __future__ import annotations
+import ctypes as C
 import argparse
 import hashlib
 import json
 from pathlib import Path
 from libretro_runner import Runner
+
+
+ALIGNMENT = 'video-callback-presented-id-v1'
+
+class TaggedRunner(Runner):
+    """Read the presented-frame ID when the emulator delivers the video frame.
+
+    Sampling after retro_run, or taking its previous value, can associate the
+    image with a different upload when the guest's execution time changes.
+    """
+    def __init__(self, *args, **kwargs):
+        self.render_tag = None
+        super().__init__(*args, **kwargs)
+
+    def video(self, data, width, height, pitch):
+        super().video(data, width, height, pitch)
+        if data and data != C.c_void_p(-1).value:
+            size = self.lib.retro_get_memory_size(2)
+            ptr = self.lib.retro_get_memory_data(2)
+            if not ptr or size < 0x976:
+                self.errors.append('Presented-frame tag requires SNES WRAM')
+                return
+            self.render_tag = int.from_bytes(C.string_at(ptr + 0x974, 2), 'little')
 
 SAMPLES = {'stage-idle':916, 'walk-right':1036, 'jump-right':1061,
            'attack':1086, 'settle':1146}
@@ -25,9 +49,8 @@ def inputs() -> bytes:
 
 def capture(core:Path,rom:Path,out:Path) -> dict:
     out.mkdir(parents=True,exist_ok=True)
-    r=Runner(core,rom)
+    r=TaggedRunner(core,rom)
     results=[]
-    previous_presented=0
     pending={value:key for key,value in SAMPLES.items()}
     try:
         for _ in range(20000):
@@ -35,20 +58,18 @@ def capture(core:Path,rom:Path,out:Path) -> dict:
             m=r.memory()
             if len(m)<0x20000:raise RuntimeError('Expected full SNES WRAM')
             if m[0x90f]:raise RuntimeError(f'Bridge fault: {m[0x90c:0x910].hex()}')
-            presented=int.from_bytes(m[0x974:0x976],'little')
-            # VRAM committed in the preceding blank is now a displayed frame.
-            if previous_presented in pending:
-                name=pending.pop(previous_presented)
+            presented=r.render_tag
+            if presented in pending:
+                name=pending.pop(presented)
                 if m[0x18]!=4:raise RuntimeError('Replay did not reach main game state')
                 r.save_png(out/(name+'.png'))
                 (out/(name+'.ram')).write_bytes(m)
-                results.append(dict(name=name,render_frame=previous_presented,
+                results.append(dict(name=name,render_frame=presented,
                                     snes_frame=r.frames,pixel_sha256=hashlib.sha256(r.rgb().tobytes()).hexdigest(),
                                     fault=m[0x90f]))
-            previous_presented=presented
             if not pending:break
         else:raise RuntimeError(f'Replay did not reach samples: {pending}')
-        result=dict(rom_sha256=hashlib.sha256(rom.read_bytes()).hexdigest(),
+        result=dict(alignment=ALIGNMENT,rom_sha256=hashlib.sha256(rom.read_bytes()).hexdigest(),
                     core_sha256=hashlib.sha256(core.read_bytes()).hexdigest(),
                     input_sha256=hashlib.sha256(inputs()).hexdigest(),samples=results,
                     scope='Five render-aligned captures on one fixed guest-input route; not full-game proof.')
