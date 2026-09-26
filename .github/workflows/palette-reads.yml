@@ -46,6 +46,9 @@ jobs:
         run: |
           set -euo pipefail
           /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Same-revision opt-in defaults
+        run: |
+          /usr/bin/python3 tools/verify_default_options.py --out build/default-identity
       - name: Build pinned unmodified reference emulators
         run: |
           set -euo pipefail
@@ -89,6 +92,7 @@ jobs:
             build/*.log
             build/tested-revision.txt
             build/tested-source.zip
+            build/default-identity/identity.json
             build/palette-reads/palette-read-verification.json
             build/palette-reads/negative-control.json
             build/palette-reads/reference-disagreement.json

@@ -1,0 +1,87 @@
+{
+  "scope": "Local same-revision default-option checks plus exact independent palette acceptance provenance. No new runtime changes.",
+  "unit_tests": {
+    "passed": true,
+    "count": 313,
+    "origin": "fresh local execution"
+  },
+  "acceptance_ci": {
+    "run_id": 36267690618,
+    "staging_revision": "3f33cb701dea111aea8176814ffd8ff9af5db707",
+    "tested_revision": "4fa42bcd313eb75a0c933f2752c6afb8db064a3f",
+    "tested_tree": "780ef063fbf5f051eb6779a8a7f51d23b2335d74",
+    "source_archive_matches_local": true,
+    "unit_tests": 307,
+    "palette_configurations": 16,
+    "palette_records": 2368,
+    "palette_bytes": 9472,
+    "palette_mismatches": 0,
+    "runtime_safety_configurations": 32,
+    "runtime_safety_records": 4224,
+    "runtime_safety_bytes": 16896,
+    "runtime_safety_oam_bytes": 1024,
+    "runtime_safety_mismatches": 0,
+    "artifact_sha256": "a40c20ced6e19eba05f0ed2cdde423e6bccb34830fdba41a4cff2df51a6f4ae1"
+  },
+  "default_options": {
+    "passed": true,
+    "comparison": "same-source omitted versus explicit False",
+    "historical_binary_identity_claimed": false,
+    "disabled_options": [
+      "native_inline_dispatch",
+      "coalesced_nt_dma",
+      "fill_cache_fix"
+    ],
+    "results": [
+      {
+        "fixture": "cpu",
+        "byte_identical": true,
+        "bytes": 4194304,
+        "sha256": "b11c7f53621033540a1bdf783182fb0995e44caf20123c90ca50299d043c8099"
+      },
+      {
+        "fixture": "fill",
+        "byte_identical": true,
+        "bytes": 4194304,
+        "sha256": "eab72fce25c26bbb567614dbc52be2ad6ce9b8c9ef4ec3a85f54ab0c07972871"
+      },
+      {
+        "fixture": "dispatch",
+        "byte_identical": true,
+        "bytes": 4194304,
+        "sha256": "9635eae7c0f193f0f7c14c9b45268608de07c45a6bd1756e5fc93eafc2b0561b"
+      }
+    ]
+  },
+  "intentional_historical_difference": {
+    "baseline": "a209aaf64f707913e028af43cd7dd6bf9459c63a",
+    "purpose": "Intentional runtime correction changes default bytes; not a claimed cross-revision identity.",
+    "results": [
+      {
+        "fixture": "cpu",
+        "bytes_changed": 6880,
+        "same_size": true,
+        "before_sha256": "327148c97e7f61f16d91aa55de5cab14b7843547d62c6d4282bb732c7d08ffdc",
+        "after_sha256": "b11c7f53621033540a1bdf783182fb0995e44caf20123c90ca50299d043c8099"
+      },
+      {
+        "fixture": "fill",
+        "bytes_changed": 6995,
+        "same_size": true,
+        "before_sha256": "1493b8acd4aa1e502609e29699db0215a549c8d8b232085430d9b208d9d44cfa",
+        "after_sha256": "eab72fce25c26bbb567614dbc52be2ad6ce9b8c9ef4ec3a85f54ab0c07972871"
+      },
+      {
+        "fixture": "dispatch",
+        "bytes_changed": 6891,
+        "same_size": true,
+        "before_sha256": "9618eb31b19ac390c8157387e544983bc0feead44ec0ad5bb5aaf15a7607c09c",
+        "after_sha256": "9635eae7c0f193f0f7c14c9b45268608de07c45a6bd1756e5fc93eafc2b0561b"
+      }
+    ]
+  },
+  "runtime_source_sha256": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "snes/src/native_ppudata.inc": "13feb07293950996a67656ba0cb0461193c06067cedbb9719ea49e6a749022a9"
+  }
+}

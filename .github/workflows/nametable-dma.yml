@@ -2,7 +2,7 @@ name: Background DMA and independent fill-mode verification
 on:
   workflow_dispatch:
   push:
-    branches: [main, development/nametable-dma-20260926]
+    branches: [main, development/nametable-dma-20260926, development/palette-reads-20260926]
     paths:
       - '.github/workflows/nametable-dma.yml'
       - 'maintenance/nametable-dma/**'
@@ -10,6 +10,8 @@ on:
       - 'snes/src/native.s'
       - 'tools/build_native.py'
       - 'tools/verify_nametable_dma.py'
+      - 'tools/verify_default_options.py'
+      - 'tests/test_default_options.py'
       - 'tools/verify_fill_mode.py'
       - 'tools/fill_mode_fixture.py'
       - 'tests/test_nametable_dma.py'
@@ -103,27 +105,9 @@ jobs:
           /usr/bin/python3 tools/video_fixture.py --out build/video-fixture
           /usr/bin/python3 tools/build_native.py --rom build/video-fixture/fixture.nes --trace build/video-fixture --out build/video-fixture/snes --coalesced-nametable-dma --fix-fill-cache --stress-nmi-restore > build/video-build.log
           /usr/bin/python3 tools/verify_object_cache.py --core build/snes9x/libretro/snes9x_libretro.so --rom build/video-fixture/snes/native-prototype.sfc --out build/video-fixture/verification 2>&1 | tee build/video-verification.log
-      - name: Default binary identity against actual preceding source
+      - name: Same-revision omitted versus explicitly disabled background options
         run: |
-          /usr/bin/python3 - <<'PY'
-          from pathlib import Path
-          import hashlib,json,subprocess,sys
-          sys.path.insert(0,'tools')
-          from native_fixture import create as native_fixture
-          from fill_mode_fixture import create as fill_fixture
-          from build_native import build
-          root=Path('build/default-identity').resolve();root.mkdir(parents=True,exist_ok=True)
-          previous=Path('build/previous-source').resolve()
-          rows=[]
-          for name,create in [('cpu',native_fixture),('fill',fill_fixture)]:
-              folder=root/name;create(folder)
-              build(folder/'fixture.nes',folder,folder/'current')
-              subprocess.run([sys.executable,str(previous/'tools/build_native.py'),'--rom',str(folder/'fixture.nes'),'--trace',str(folder),'--out',str(folder/'previous')],check=True,stdout=subprocess.DEVNULL,timeout=90)
-              old=(folder/'previous/native-prototype.sfc').read_bytes();new=(folder/'current/native-prototype.sfc').read_bytes()
-              assert new == old, name
-              rows.append({'case':name,'byte_identical':True,'sha256':hashlib.sha256(new).hexdigest()})
-          (root/'identity.json').write_text(json.dumps({'baseline':'73a572064fc0447f71307cd45d007c106f170f0c','results':rows},indent=2)+'\n')
-          PY
+          /usr/bin/python3 tools/verify_default_options.py --fixtures cpu fill --out build/default-identity
       - name: Publish tested integration only to its development branch
         if: github.ref == 'refs/heads/development/nametable-dma-20260926'
         shell: bash
