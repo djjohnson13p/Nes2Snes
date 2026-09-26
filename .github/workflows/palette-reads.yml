@@ -1,0 +1,98 @@
+name: Palette reads and retained runtime safety
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/palette-reads-20260926]
+    paths:
+      - '.github/workflows/palette-reads.yml'
+      - 'maintenance/palette-reads/**'
+      - 'snes/**'
+      - 'tools/**'
+      - 'tests/**'
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install assembler and test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Integrate exact tested source when needed
+        run: |
+          set -euo pipefail
+          if ! grep -q 'native_ppudata.inc' snes/src/native.s; then
+            /usr/bin/python3 maintenance/palette-reads/apply.py
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add snes/src/native.s snes/src/native_ppudata.inc README.md docs/engineering-status.md \
+              docs/palette-reads.md docs/palette-reads-verification.json \
+              tools/palette_read_fixture.py tools/verify_palette_reads.py tests/test_palette_reads.py
+            git commit -m 'Integrate independently checked PPUDATA palette reads and recovery ledger'
+          fi
+          mkdir -p build/previous-source
+          git archive a209aaf64f707913e028af43cd7dd6bf9459c63a | tar -x -C build/previous-source
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - name: Unit tests including assembler output
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Build pinned unmodified reference emulators
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes9x-build.log 2>&1
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/fceumm-build.log 2>&1
+          git clone --quiet https://github.com/libretro/nestopia.git build/nestopia
+          git -C build/nestopia checkout 8f00f500912a847062de432e38765c7285483e62
+          make -C build/nestopia/libretro -j2 > build/nestopia-build.log 2>&1
+      - name: Independent unmasked palette matrix and failing baseline control
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_palette_reads.py \
+            --nes-core build/nestopia/libretro/nestopia_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --fceumm-core build/fceumm/fceumm_libretro.so \
+            --previous-root build/previous-source --out build/palette-reads \
+            2>&1 | tee build/palette-reads.log
+      - name: Retained CPU, PPU, mapper, audio, interrupt, and fault checks
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_runtime_counters.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/palette-safety 2>&1 | tee build/palette-safety.log
+      - name: Publish tested integration to its development branch only
+        if: github.ref == 'refs/heads/development/palette-reads-20260926'
+        run: |
+          set -euo pipefail
+          current=$(git ls-remote origin refs/heads/development/palette-reads-20260926 | cut -f1)
+          test "$current" = "$GITHUB_SHA" || { echo 'Branch changed; refusing overwrite'; exit 1; }
+          git push origin HEAD:refs/heads/development/palette-reads-20260926
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: palette-read-verification
+          path: |
+            build/*.log
+            build/tested-revision.txt
+            build/tested-source.zip
+            build/palette-reads/palette-read-verification.json
+            build/palette-reads/negative-control.json
+            build/palette-reads/reference-disagreement.json
+            build/palette-reads/progress.json
+            build/palette-safety/runtime-counter-verification.json
+            build/palette-safety/progress.json
+          retention-days: 30

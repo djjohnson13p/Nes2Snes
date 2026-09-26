@@ -1,0 +1,26 @@
+{
+  "base_revision": "a209aaf64f707913e028af43cd7dd6bf9459c63a",
+  "before": {
+    "snes/src/native.s": "d17313c9692d731e899f428cc95c459b575d35594f6157c3124cdb16f5a6ed30",
+    "snes/src/native_ppudata.inc": null,
+    "README.md": "50d6d6dc0d8df0990354187f91c9b7c522c24a67b5a1789f61c801a914ff4a59",
+    "docs/engineering-status.md": "a25e181719c63607ee5dc929655a6d2620112a5f642fdaea239c936695ccb85e",
+    "docs/palette-reads.md": null,
+    "docs/palette-reads-verification.json": null,
+    "tools/palette_read_fixture.py": null,
+    "tools/verify_palette_reads.py": null,
+    "tests/test_palette_reads.py": null
+  },
+  "after": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "snes/src/native_ppudata.inc": "13feb07293950996a67656ba0cb0461193c06067cedbb9719ea49e6a749022a9",
+    "README.md": "8931c68e930e4bb23cf0d0c192e4d1839500d94f62b5b9b6c15547d76f3b2d06",
+    "docs/engineering-status.md": "7deed294c03dd3f16169a1ffa5b0ea89ffebf90c089aef910549e7ac07de6138",
+    "docs/palette-reads.md": "cd8ad94f755422b1b8f0438d4e30483b1cf24e580ed8c34a2fd6ff56a4301529",
+    "docs/palette-reads-verification.json": "6e6b0847519005d491e38447623c745be3444dfe3a37dbeb721608a9d695be90",
+    "tools/palette_read_fixture.py": "0e5b0c7228863e07740a33b5b9a3f223fa65c6b828a382f87cfcb3334248337c",
+    "tools/verify_palette_reads.py": "ac5f8a46ebfd7718ed0629cc43f48d5fd7883e00d9f722a9934a1bf617380629",
+    "tests/test_palette_reads.py": "52282e66ea6feb60469205f72c3e79e3a4f3c3b9fc7b3884d87ad4de984ac353"
+  },
+  "patch_sha256": "c95d33067a44c6b567256bc1b9bf112291af8310de23982c4ce77996ea17d610"
+}
