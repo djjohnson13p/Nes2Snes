@@ -1,9 +1,12 @@
 # Nes2Snes
 
-Latest tested implementation: [indexed memory and NES dummy-read side effects](docs/indexed-bus.md).
-178 unit tests and 1,425 new independent comparison records pass. A PPU side-effect
-bug is fixed; walking improves modestly from 239 to 235 display frames per 120
-game updates. This remains an unfinished, approximately half-speed port.
+Latest tested implementation: [memory-path follow-up and sprite-DMA latch correction](docs/memory-followup.md).
+190 unit tests and 29 independent memory/DMA configurations pass. The prior
+runtime fails two new PPU-latch checks; both are corrected. Controlled walking
+uses 225 display frames per 120 game updates, down from 235 (4.44% higher
+throughput). This remains incomplete, below full speed and not hardware-tested.
+
+Previous: [indexed memory and NES dummy-read side effects](docs/indexed-bus.md).
 
 The following entries are historical checkpoints, not current test totals.
 

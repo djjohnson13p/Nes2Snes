@@ -1,0 +1,324 @@
+{
+  "baseline_source_revision": "0e1bb3d913bf6777fb59d9c656a3b7775b54f610",
+  "complete_port": false,
+  "full_speed": false,
+  "physical_console_tested": false,
+  "unit_tests": {
+    "passed": 190,
+    "failed": 0,
+    "log_sha256": "b3efcbe0bc89d427a94e0f821b0303be3e6c1a7bf70cadf626bbd42f0e0a8937"
+  },
+  "memory_matrix": {
+    "passed": true,
+    "configurations": 29,
+    "records_checked": 1953,
+    "register_flag_bytes": 7812,
+    "oam_bytes_checked": 4864,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Explicit indexed-zero-page, indirect-read and zero-offset OAM/latch cases. No active-rendering, OAMADDR rotation, stack-page DMA, cycle accuracy or full-game claim."
+  },
+  "negative_control": {
+    "source_revision": "0e1bb3d913bf6777fb59d9c656a3b7775b54f610",
+    "expected_mismatches": 2,
+    "result": {
+      "records_checked": 3,
+      "bytes_checked": 12,
+      "mismatch_count": 2,
+      "mismatches": [
+        {
+          "test": "last_dma_byte_on_ppu_latch",
+          "nes": "a491a3c1",
+          "snes": "0091a343"
+        },
+        {
+          "test": "mirrored_ppu_latch",
+          "nes": "a491a3c1",
+          "snes": "0091a343"
+        }
+      ],
+      "native_execution_counters": {
+        "cop_calls": 3,
+        "quick_zp_calls": 0,
+        "quick_indirect_calls": 0,
+        "quick_io_calls": 0,
+        "quick_ppu_calls": 0,
+        "direct_write_calls": 1,
+        "simple_direct_write_calls": 4,
+        "direct_bank_calls": 2,
+        "quick_indexed_memory_calls": 0,
+        "quick_indexed_apu_calls": 0,
+        "indexed_dummy_io_reads": 0
+      },
+      "oam_copy": null,
+      "scope": "Actual preceding runtime; expected failure on two zero-offset DMA PPU-latch readback records."
+    }
+  },
+  "indexed_bus_regression": {
+    "configurations": 11,
+    "records_checked": 1425,
+    "bytes_checked": 5700,
+    "mismatch_count": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Procedural indexed addressing/ALU flags and PPU dummy-read side effects; not CPU-cycle timing, open-bus fidelity or whole-game validation."
+  },
+  "sweep_regression": {
+    "passed": true,
+    "configurations": 3,
+    "length_status_records": 486,
+    "length_status_mismatches": 0,
+    "independent_oracle": {
+      "passed": true,
+      "period_values_checked": 108,
+      "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+      "scope": "Explicit sweep events versus unmodified FCEUmm periods; not cycle-accurate sound equivalence.",
+      "cases": 54
+    },
+    "scope": "Sweep event semantics and bounded audio output; not exact APU timing or whole-game fidelity."
+  },
+  "sprite_regression": {
+    "frames_checked": 160,
+    "oam_bytes_checked": 81920,
+    "mismatch_count": 0,
+    "sprite_modes": [
+      0,
+      8,
+      32,
+      40
+    ],
+    "converted_objects": 2624,
+    "cached_objects": 7616,
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "rom_sha256": "54bb736241cd1ee427ac119b3b6bb14efb325c9446a6b89ab7ade33d42e92edd",
+    "scope": "Original procedural dynamic OAM encoding and cache invalidation; not full PPU accuracy."
+  },
+  "replay_comparison": {
+    "baseline_rom_sha256": "a419539fb4d332cd1f2a525af03ac715cae05485d370027fd110cecc8871b989",
+    "candidate_rom_sha256": "5d7157316888d045cc62c24bf2ded52c9ce1b490998645355662a088337fdff1",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 235,
+        "candidate_snes_frames": 225,
+        "speed_ratio": 1.0444444444444445,
+        "candidate_snes_frames_per_logical_frame": 1.875
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 46,
+        "speed_ratio": 1.0869565217391304,
+        "candidate_snes_frames_per_logical_frame": 1.84
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 120,
+        "candidate_snes_frames": 114,
+        "speed_ratio": 1.0526315789473684,
+        "candidate_snes_frames_per_logical_frame": 1.9
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "stair_comparison": {
+    "endpoints_checked": 57,
+    "mismatch_count": 0,
+    "differences": [],
+    "fields": [
+      "name",
+      "logical_frame",
+      "game_state",
+      "candidate_player_x",
+      "candidate_player_y"
+    ],
+    "baseline_rom_sha256": "273a270e4a751209a747d15ecde71377c635e6df5a365e62d0926c8f14584189",
+    "candidate_rom_sha256": "cda02effedec3f3d964bc0aef6fa19ed5da10d081865c2852e040ef1581834fe",
+    "scope": "57 selected staircase endpoints versus previous SNES checkpoint; not an all-frame NES or full-game proof."
+  },
+  "audio_capture": {
+    "seconds": 14.709113607990012,
+    "sample_rate": 32040.0,
+    "peak": 13972,
+    "rms": 2856.137062687659,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2282,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "interactive_sha256": "cda02effedec3f3d964bc0aef6fa19ed5da10d081865c2852e040ef1581834fe",
+  "fallback_sha256": "37c88f7c9904cf39513acd2743a399a59dd4c5b94a28f769f308a3c9b1477185",
+  "fallback_benchmark": {
+    "sfc_sha256": "37c88f7c9904cf39513acd2743a399a59dd4c5b94a28f769f308a3c9b1477185",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "records": [
+      {
+        "label": "stage-idle",
+        "guest_frames": 60,
+        "snes_frames": 120,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 5264,
+        "game_state": 4,
+        "guest_frame": 916,
+        "fault": 0
+      },
+      {
+        "label": "walk-right",
+        "guest_frames": 120,
+        "snes_frames": 240,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 10525,
+        "game_state": 4,
+        "guest_frame": 1036,
+        "fault": 0
+      },
+      {
+        "label": "jump-right",
+        "guest_frames": 25,
+        "snes_frames": 53,
+        "snes_frames_per_guest_frame": 2.12,
+        "cop_calls": 2335,
+        "game_state": 4,
+        "guest_frame": 1061,
+        "fault": 0
+      },
+      {
+        "label": "attack",
+        "guest_frames": 25,
+        "snes_frames": 50,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 2864,
+        "game_state": 4,
+        "guest_frame": 1086,
+        "fault": 0
+      },
+      {
+        "label": "settle",
+        "guest_frames": 60,
+        "snes_frames": 120,
+        "snes_frames_per_guest_frame": 2.0,
+        "cop_calls": 5638,
+        "game_state": 4,
+        "guest_frame": 1146,
+        "fault": 0
+      }
+    ],
+    "total_snes_frames": 2091,
+    "definition": "SNES video frames divided by guest NMI count; not wall time, full-game coverage or gameplay equivalence proof."
+  },
+  "input_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+  "trace_files": {
+    "counts.u32": "9c8ec3a8318e5091f19ea1386c6ce7e8aa23c7b8fce42f5def1a3a09ba286c8d",
+    "cpu-address.u16": "8358ba9c60e7215080dd2683131aa82d2fbe68b13c516232de21afcdf1a676af",
+    "rgb-palette.bin": "da30843b331e2e4474395866bc9871fcd60a7d716b3c8ee5ce3c89ee46e8c91e",
+    "trace-summary.json": "794660397af90c1f34928ce2c1351df4015b43da348a850878b355495abd1cda"
+  },
+  "primary_build_flags": [
+    "--experimental-audio",
+    "--audio-counters",
+    "--audio-sweep",
+    "--experimental-raster-scroll"
+  ],
+  "fallback_extra_flags": [
+    "--no-word-oam",
+    "--no-quick-zp",
+    "--no-specialized-indirect"
+  ],
+  "local_checks": [
+    {
+      "name": "unit-tests",
+      "returncode": 0,
+      "elapsed_seconds": 3.075
+    },
+    {
+      "name": "memory-matrix",
+      "returncode": 0,
+      "elapsed_seconds": 49.463
+    },
+    {
+      "name": "indexed-matrix",
+      "returncode": 0,
+      "elapsed_seconds": 14.815
+    },
+    {
+      "name": "sweep-matrix",
+      "returncode": 0,
+      "elapsed_seconds": 54.683
+    },
+    {
+      "name": "video-fixture",
+      "returncode": 0,
+      "elapsed_seconds": 0.638
+    },
+    {
+      "name": "video-build",
+      "returncode": 0,
+      "elapsed_seconds": 0.668
+    },
+    {
+      "name": "video-verify",
+      "returncode": 0,
+      "elapsed_seconds": 0.732
+    },
+    {
+      "name": "fallback-build",
+      "returncode": 0,
+      "elapsed_seconds": 0.718
+    },
+    {
+      "name": "fallback-play",
+      "returncode": 0,
+      "elapsed_seconds": 1.469
+    }
+  ],
+  "scope": "Bounded memory/DMA behavior, selected previous-SNES replay images, existing staircase endpoints and live sound; not complete, full-speed, cycle-accurate or physical-hardware validated."
+}

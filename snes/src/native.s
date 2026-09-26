@@ -668,6 +668,24 @@ QuickZpxHandler QuickROR, ror
 QuickZpxHandler QuickINC, inc
 QuickZpxHandler QuickDEC, dec
 
+; STY has no absolute,X encoding on the 65C816. Use A only as the temporary
+; store value; the original full A/X and unmodified guest P remain on the
+; COP stack. Y and the hidden accumulator byte are preserved on return.
+QuickSTY:
+.a16
+.i16
+    jsr PrepareQuickZpx
+.a8
+.i8
+    tya
+    sta a:$0000,x
+    rep #$30
+.a16
+.i16
+    plx
+    pla
+    rti
+
 ; Pure RAM / original-ROM indirect reads can execute directly too. All
 ; hardware and cartridge-RAM addresses fall back to the existing I/O handler.
 PrepareQuickIndirect:
@@ -743,6 +761,7 @@ name:
 QuickLDA_IY:
 .a16
 .i16
+    sty EA                 ; preserve Y for the 16-bit pointer addition
     lda 6,s
     dec a
     tax
@@ -762,14 +781,11 @@ QuickLDA_IY:
     rep #$20
 .a16
 @pointer:
-    sta EA
-    tya
     clc
     adc EA
+    bmi @safe               ; negative 16-bit address is original ROM
     cmp #$2000
     bcc @ram
-    cmp #$8000
-    bcs @safe
     jmp CopGeneric
 @ram:
     and #$07FF
@@ -1381,9 +1397,9 @@ WriteOamDma:
 .a8
     lda VAL
     cmp #$20
-    bcs @genericcopy
-    ; MVN safely copies WRAM to WRAM; SNES DMA cannot do that transfer.
+    jcs @genericcopy
     ; Mirror NES RAM pages before selecting the 256-byte source block.
+    ; Both branches finish copying now: later source mutations cannot alter OAM.
     rep #$30
 .a16
 .i16
@@ -1391,6 +1407,15 @@ WriteOamDma:
     and #$0007
     xba
     tax
+    .if USE_WORD_OAM
+    ; The entire selected page is ordinary WRAM. Copy two bytes per
+    ; instruction pair; no guest buffer is retained after this DMA event.
+    ; X is the mirrored source-page base, and DBR is already zero here.
+    .repeat 128, word_index
+        lda a:$0000+word_index*2,x
+        sta f:$7E3800+word_index*2
+    .endrepeat
+    .else
     ldy #$3800
     lda #$00FF
     mvn #$7E,#$7E
@@ -1398,7 +1423,13 @@ WriteOamDma:
 .a8
     lda #$00
     pha
-    plb                    ; MVN changed DBR to its destination bank
+    plb                    ; MVN selects the destination bank
+    .endif
+    sep #$20
+.a8
+    ; OAM DMA performs writes to $2004, including its PPU I/O-latch effect.
+    lda f:$7E38FF
+    sta PPUBUS
     rts
 @genericcopy:
     lda VAL
@@ -1427,6 +1458,8 @@ WriteOamDma:
     bne @loop
     sep #$20
 .a8
+    lda f:$7E38FF
+    sta PPUBUS
     rts
 WriteJoy:
     sep #$20

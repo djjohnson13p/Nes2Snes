@@ -78,6 +78,12 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
             'mismatch_count':len(mismatches),'mismatches':mismatches,
             'native_execution_counters':diagnostics,'oam_copy':oam_check,
             'scope':('NMOS indexed PPU dummy reads, page crossings and RMW bus side effects; not cycle accuracy.' if source.get('indexed_bus_fixture') else 'Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage.' if source.get('indexed_memory_fixture') else 'Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim.' if source.get('apu_counter_fixture') else 'Original indexed zero-base and internal RAM-mirror boundary cases; not mapper or full-game coverage.' if source.get('safe_address_fixture') else 'Original STA/STX/STY stores and flags in all 32 mapped execution combinations, including C0 fallback.' if source.get('direct_fixture') else 'Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy.' if 'ppu_fixture_seed' in source else 'Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation.' if 'fastpath_stress_seed' in source else 'Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation.')}
+    if source.get('zero_page_store_fixture'):
+        result['scope']='Explicit STY zero-page indexed wraparound, stored values and register/flag preservation; not full-game coverage.'
+    elif source.get('oam_copy_fixture'):
+        result['scope']='Zero-offset OAM DMA register preservation and last-byte PPU latch readback; not OAM rendering or cycle timing.'
+    elif source.get('indirect_load_fixture'):
+        result['scope']='Indirect LDA zero-page-pointer wrap, 16-bit address wrap, RAM/ROM reads and joypad fallback; not full-game coverage.'
     (out/'cpu-verification.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps(result,indent=2))
     if mismatches:raise RuntimeError('Independent CPU comparison failed.')

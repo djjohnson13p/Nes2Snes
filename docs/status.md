@@ -1,6 +1,15 @@
-# Verified status — 2026-09-25
+# Verified status — 2026-09-26
+## Current: memory fast paths and sprite-DMA latch correction
 
-## Current: indexed memory and PPU dummy-read correction
+190 unit tests and 29 independent configurations pass: 1,953 CPU/register/flag
+records plus 4,864 raw OAM bytes match. The old DMA path fails two PPU-latch
+readback records; both now pass. The controlled walking sample improves from
+235 to 225 display frames per 120 game updates. Selected replay pixels and all
+57 tested staircase endpoints still match the prior SNES checkpoint. OAMADDR
+rotation, active-rendering/stack-page DMA, full-game coverage and full speed are
+not certified. See [complete scope and evidence](memory-followup.md).
+
+## Previous: indexed memory and PPU dummy-read correction
 
 The runtime now preserves tested side effects of intermediate indexed NES reads.
 The previous runtime fails 60 of the new bus fixture's 131 records; the corrected
