@@ -59,7 +59,7 @@ def create(out: Path, block: int = 0, seed: int = 0,
             target = targets[(i + op_i + seed) % len(targets)]
             # Walk all 32 supported mapper combinations across the matrix.
             primary = (i + block + op_i) % 16
-            cbank = 7 if (i + op_i + block) & 1 else 30
+            cbank = 7 if (block + op_i) & 1 else 30
             p.op('LDA', 'imm', 0x80 | (primary * 2)); p.op('STA', 'abs', 0x5115)
             p.op('LDA', 'imm', 0x80 | cbank); p.op('STA', 'abs', 0x5116)
             if target < 0x2000:
