@@ -24,6 +24,12 @@ jobs:
           if len(payload) > 2 * 1024 * 1024:
               raise ValueError('Reference download exceeds the bounded input size')
           archive = zipfile.ZipFile(io.BytesIO(payload))
+          print('Outer member names:', archive.namelist())
+          if 'Input Log.txt' not in archive.namelist():
+              members = [item for item in archive.infolist() if not item.is_dir()]
+              if len(members) != 1 or not members[0].filename.lower().endswith('.bk2') or members[0].file_size > 2 * 1024 * 1024:
+                  raise ValueError('Expected exactly one bounded BK2 input recording')
+              archive = zipfile.ZipFile(io.BytesIO(archive.read(members[0])))
           accepted = {'Input Log.txt', 'Header.txt', 'SyncSettings.json', 'Comments.txt'}
           selected = {}
           for item in archive.infolist():
@@ -32,7 +38,7 @@ jobs:
                       raise ValueError('Duplicate or oversized reference member')
                   selected[item.filename] = archive.read(item).decode('utf-8-sig')
           if 'Input Log.txt' not in selected or 'Header.txt' not in selected:
-              raise ValueError('Expected text-only movie members were not found')
+              raise ValueError('Expected text-only movie members were not found: ' + repr(archive.namelist()))
           for name, text in selected.items():
               Path('reference', name).write_text(text, encoding='utf-8')
           report = {
@@ -41,7 +47,7 @@ jobs:
               'description': 'Tool-assisted speedrun input; reference experiment, not a port correctness result',
               'download_sha256': hashlib.sha256(payload).hexdigest(),
               'members': {name: hashlib.sha256(text.encode()).hexdigest() for name, text in selected.items()},
-              'limitations': 'Movie sync is not established. Only input/metadata are retained; no ROM, save state, video or audio is downloaded into this artifact.'
+              'limitations': 'Movie sync is not established. Only input/metadata are retained; no ROM, save state, video or audio is retained in this artifact.'
           }
           Path('reference/provenance.json').write_text(json.dumps(report, indent=2) + '\n')
           print(json.dumps(report, indent=2))
