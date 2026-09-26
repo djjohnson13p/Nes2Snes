@@ -1,0 +1,74 @@
+name: Performance budget and diagnostic calibration
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/performance-roadmap-20260926]
+    paths:
+      - '.github/workflows/performance-budget.yml'
+      - 'tools/instrument_frame_costs.py'
+      - 'tools/profile_frame_costs.py'
+      - 'tools/performance_budget.py'
+      - 'tools/verify_cost_probe.py'
+      - 'tests/test_cop_costs.py'
+      - 'tests/test_performance_budget.py'
+  pull_request:
+    paths:
+      - 'tools/*cost*'
+      - 'tools/performance_budget.py'
+      - 'tests/test_cop_costs.py'
+      - 'tests/test_performance_budget.py'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Unit tests including executed C++ accounting
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Build original pinned emulator cores
+        run: |
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes9x-build.log 2>&1
+          cp build/snes9x/libretro/snes9x_libretro.so build/snes9x-plain.so
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/fceumm-build.log 2>&1
+      - name: Build diagnostic core from the same source
+        run: |
+          /usr/bin/python3 tools/instrument_frame_costs.py build/snes9x
+          make -C build/snes9x/libretro -j2 > build/probe-build.log 2>&1
+      - name: Independent CPU records and complete WRAM calibration
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_cost_probe.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --plain-core build/snes9x-plain.so \
+            --probe-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/cost-probe 2>&1 | tee build/cost-probe.log
+      - name: Archive tested source
+        run: |
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-budget-verification
+          path: |
+            build/*.log
+            build/cost-probe/probe-verification.json
+            build/cost-probe/*-oracle/cpu-verification.json
+            build/tested-source.zip
+            build/tested-revision.txt
+          retention-days: 30
