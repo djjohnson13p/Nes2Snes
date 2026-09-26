@@ -1,0 +1,101 @@
+{
+  "baseline_revision": "73a572064fc0447f71307cd45d007c106f170f0c",
+  "local_verification_completed": true,
+  "github_ci_result": "not yet established when this local evidence file was authored",
+  "options": {"coalesced_nt_dma": true, "fill_cache_fix": true, "both_default_off": true},
+  "unit_tests": 259,
+  "unit_test_log_sha256": "66220e099fe27ff8ecb8107f7621708ce76d2ed2a083f72287805a0d0c0a09bf",
+  "dma": {
+    "passed": true, "configurations": 842, "cases": 421,
+    "vram_bytes_checked": 55181312, "mismatches": 0,
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "harness_sha256": "b8cd8de2725d693c691f4f84baa746075b89fe7eb860de45e740b6623646afd2",
+    "scope": "Actual project DMA routines executed under forced blank in unmodified Snes9x; independent row-write specification and full VRAM comparison. No NES/gameplay/active-display/cycle-equivalence claim."
+  },
+  "dma_transfer_examples": {
+    "dense": {"legacy": 160, "coalesced": 2},
+    "actual-30-row-tables": {"legacy": 150, "coalesced": 5},
+    "alternating-0": {"legacy": 80, "coalesced": 80}
+  },
+  "dma_negative_control": {"kind": "test-only mutation of HUD source by one row", "expected_failure": true, "vram_byte_mismatches": 2041},
+  "fill": {
+    "passed": true, "cases": 16, "configurations": 32,
+    "pixels_checked": 1835008, "pixel_mismatches": 0,
+    "tile_words_checked": 153600, "tile_word_mismatches": 0,
+    "negative_control": {"kind": "actual-previous-source", "pixel_mismatches": 43008, "pixels_compared": 57344, "expected_failure_observed": true},
+    "reference_disagreement": {
+      "status": "reference-disagreement-not-a-pass",
+      "primary_vs_fceumm_pixel_mismatches": 26880, "pixels_compared": 57344,
+      "fceumm_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "register": "$5107", "value": 254, "documented_low_bits": 2,
+      "explanation": "Pinned FCEUmm expands unmasked upper bits; Nestopia and the low-two-bit renderer agree. Physical hardware has not been tested."
+    },
+    "nes_core_sha256": "1522b3a14ac49f48481c7f71f5b92f5d2b376fa6c181016f132d9b14c89287f2",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Compare steady changed-fill screens with an unmodified independent NES core. All pixels are black/white classes. Analog color, mid-frame fill changes, extended attributes and physical-console behavior are outside scope."
+  },
+  "retained_safety": {
+    "passed": true, "configurations": 32, "records_checked": 4224,
+    "bytes_checked": 16896, "oam_bytes_checked": 1024, "mismatches": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Counted and counter-free variants: explicit CPU/PPU/APU events, mapper returns, interrupt stress and zero-offset OAM contents; not cycle accuracy or full-game coverage."
+  },
+  "animated_objects_new_options_enabled": {
+    "frames_checked": 160, "oam_bytes_checked": 81920, "mismatch_count": 0,
+    "sprite_modes": [0, 8, 32, 40], "converted_objects": 2624, "cached_objects": 7616,
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "rom_sha256": "4596070f0880b8f9b38c3946133100be90f6c014a9ecc4746af69c265dd0e19f",
+    "scope": "Original procedural dynamic OAM encoding and cache invalidation; not full PPU accuracy."
+  },
+  "fixed_input_gameplay": {
+    "alignment": "video-callback-presented-id-v1",
+    "baseline_rom_sha256": "1305e2c56b93f8f1c07b4c7e83eba8ce2a2519e1d38118c1340abb53f7a85a64",
+    "candidate_rom_sha256": "9bb5cac102a58b06af9ace008f33556b34f4a2637cd1e58401d60bd6c6efa9cd",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720, "pixel_mismatches": 0,
+    "samples": [
+      {"name": "stage-idle", "render_frame": 916, "pixels_checked": 57344, "pixel_mismatches": 0},
+      {"name": "walk-right", "render_frame": 1036, "pixels_checked": 57344, "pixel_mismatches": 0},
+      {"name": "jump-right", "render_frame": 1061, "pixels_checked": 57344, "pixel_mismatches": 0},
+      {"name": "attack", "render_frame": 1086, "pixels_checked": 57344, "pixel_mismatches": 0},
+      {"name": "settle", "render_frame": 1146, "pixels_checked": 57344, "pixel_mismatches": 0}
+    ],
+    "intervals": [
+      {"ending_sample": "walk-right", "logical_frames": 120, "baseline_snes_frames": 149, "candidate_snes_frames": 149, "speed_ratio": 1.0, "candidate_snes_frames_per_logical_frame": 1.2416666666666667},
+      {"ending_sample": "jump-right", "logical_frames": 25, "baseline_snes_frames": 39, "candidate_snes_frames": 39, "speed_ratio": 1.0, "candidate_snes_frames_per_logical_frame": 1.56},
+      {"ending_sample": "attack", "logical_frames": 25, "baseline_snes_frames": 44, "candidate_snes_frames": 44, "speed_ratio": 1.0, "candidate_snes_frames_per_logical_frame": 1.76},
+      {"ending_sample": "settle", "logical_frames": 60, "baseline_snes_frames": 74, "candidate_snes_frames": 74, "speed_ratio": 1.0, "candidate_snes_frames_per_logical_frame": 1.2333333333333334}
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "consecutive_gameplay_frames": {
+    "frames": 231, "pixels": 13246464, "mismatched_frames": [],
+    "scope": "RGB hash identity to earlier SNES renderer over a bounded fixed-input route; not independent NES equivalence."
+  },
+  "ordinary_controller_route": {
+    "approach_steps": 31, "staircase_actions": 57, "matched_endpoints": 57,
+    "fields_checked": ["name", "logical_frame", "game_state", "candidate_player_x", "candidate_player_y"],
+    "baseline_display_frames": 12540, "candidate_display_frames": 12547,
+    "both_completed": true, "new_level_or_boss_completion": false
+  },
+  "default_binary_identity": {
+    "baseline_revision": "73a572064fc0447f71307cd45d007c106f170f0c", "new_options_enabled": false,
+    "results": [
+      {"input": "procedural", "byte_identical": true, "sha256": "327148c97e7f61f16d91aa55de5cab14b7843547d62c6d4282bb732c7d08ffdc"},
+      {"input": "private-game", "byte_identical": true, "sha256": "0351188c4e3137b4a3382fc119149bdcabe51dc3c15afda345e6b4f77d9fc641"}
+    ]
+  },
+  "limits": ["No measured game speed improvement", "No new boss, level, character or ending coverage", "Partial-row raster differences remain", "Sound clocks and DMC remain incomplete", "No physical-console test", "NES reference disagreement on upper fill-color bits explicitly retained"],
+  "source_sha256": {
+    "snes/src/native_fill_cache.inc": "04c7c90a21834fae2518c672ff5f5142e1356b64eae971aef284ef1f1fc0232f",
+    "snes/src/native_nametable_dma.inc": "4abdbe0649934722f6baa48e519fa9a5ed034e39ce085049c8beff7224720937",
+    "snes/src/native_video.inc": "108a439f3d313a5df5f81bdce1b10e2b5c3762f864389a14f7bc5c53c2edad56",
+    "tests/test_nametable_dma.py": "18b51c5f6013bcaddea4cfeb2667e8ad68d2ec1448bdb43ce02daebb807fb719",
+    "tools/build_native.py": "0f14b098169002229d8a3680b3d54f5e6dbfbbdac6b30086ccb24bb0da619087",
+    "tools/fill_mode_fixture.py": "92b1162578dac5c938202dc7509c2cf29f3d5d5a979dd62306ba9aab138354ee",
+    "tools/verify_fill_mode.py": "f94edf7f639bfbef6c76609e38b1ae6ca5c6b98e6eada5dc80a877962a53f797",
+    "tools/verify_nametable_dma.py": "0e21da9dcc30e76f93001de1c8001ac68dba8db7b6c45ef656aa7f051cfcc231"
+  }
+}
