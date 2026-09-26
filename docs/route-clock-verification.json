@@ -1,0 +1,152 @@
+{
+  "baseline_revision": "8428ab0321c7f55b15950ed3e80acd79095465a7",
+  "local_verification_completed": true,
+  "github_ci_result": "Not yet run when local evidence was authored; inspect the workflow for the published revision.",
+  "unit_tests": 272,
+  "unit_test_log_sha256": "ff653715959806b22abeca4a405d1f4945ca4ded9b1d416989f471c6645d881c",
+  "source_sha256": {
+    "tools/route_evidence.py": "fdecb8923345460b580096ef0f679785b59a57585e653ad7d06a3d1465f549ca",
+    "tools/gameplay_route.py": "1b6a8c5c5cb0eae15a50b741377476dffbe4a5e0945f7a508444ad6c03b322cc",
+    "tools/verify_update_clock.py": "fb4695566d42a43b8360e8109f4782fe13b3deda0ce1ad6a973959ccf9aa620d",
+    "tests/test_route_evidence.py": "7ddeba9c1548703e678df011a8f3669118beae2bb2cb68dbdca8711b9f38d321",
+    "tools/routes/cv3-outdoor-respawn.json": "dff497b7dcd8e5c3dc8d7ec9d1ec0f7f429c81db63100978d29d974852981f63",
+    ".github/workflows/route-clock.yml": "03da954b20f8d51daf0724e9aa52511fdc774549dc0358983d395a61fcb07ec7"
+  },
+  "private_input_hashes": {
+    "rom": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "base_counts": "9c8ec3a8318e5091f19ea1386c6ce7e8aa23c7b8fce42f5def1a3a09ba286c8d",
+    "final_counts": "7c59ef025a34d41c43162ce439cb833953ae5f80b1dca95b1c6f237805f1adb1",
+    "final_pc_map": "1cb72de1ce7812d7ff5b8a8a110f989347044a83ca5411d319742045370a7f83"
+  },
+  "route": {
+    "approach_steps": 31,
+    "named_actions": 84,
+    "original_stair_actions": 57,
+    "new_outdoor_actions": 27,
+    "input_sha256": "dff497b7dcd8e5c3dc8d7ec9d1ec0f7f429c81db63100978d29d974852981f63",
+    "outcome": "Outdoor combat followed by death/respawn; not a successful next-room or boss completion.",
+    "comparison": {
+      "passed": true,
+      "complete_routes": true,
+      "clock_mode": "guarded",
+      "reference_platform": "nes",
+      "candidate_platform": "snes",
+      "reference_status": "completed_budget",
+      "candidate_status": "completed_budget",
+      "candidate_fault": null,
+      "planned_checkpoints": 84,
+      "checkpoints_compared": 84,
+      "state_fields_checked": 420,
+      "state_bytes_checked": 756,
+      "mismatched_checkpoints": 0,
+      "mismatches": [],
+      "reference_report_sha256": "b151b90e4c3e35353849df89af9ccd827bc37e779081164e9db99e6cc084a703",
+      "candidate_report_sha256": "5df94c2c3ec3ad3ced097b2a5c28227e1fe08c909cf1ff7782b19c0d38741ecd",
+      "reference_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+      "candidate_rom_sha256": "1e9dbad5f919c9cb75156bb3c6df12fa40ad47674f9a43f61154b3e5080fea20",
+      "reference_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+      "candidate_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+      "scope": "Selected area, camera and player fields at named input endpoints. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence."
+    }
+  },
+  "original_nes_probe_validation": {
+    "passed": true,
+    "endpoints": 84,
+    "pixels_checked": 4816896,
+    "ram_bytes_checked": 172032,
+    "pixel_mismatches": 0,
+    "ram_byte_mismatches": 0,
+    "reference_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "probe_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "scope": "Unmodified NES reference vs instrumented NES observations at identical host-frame input times. Not SNES equivalence.",
+    "report_sha256": "65848affdea30a601df9b85e62c918305745163c8f8e5ad92686bb450fc7b673"
+  },
+  "clock_fixture": {
+    "passed": true,
+    "cases": 2,
+    "snapshots": 8,
+    "reference_ram_bytes_checked": 16384,
+    "skipped_updates_observed": true,
+    "legacy_entry_count_overcounts_updates": true,
+    "scope": "Authored alternating-guard program; independent NES RAM and probe counts. Not arbitrary-game timing accuracy."
+  },
+  "legacy_failure": {
+    "passed": false,
+    "checkpoints_compared": 75,
+    "mismatched_checkpoints": 8,
+    "first_difference": {
+      "index": 67,
+      "name": "outdoor-top-cross1",
+      "fields": {
+        "camera_x": {
+          "reference": 105,
+          "candidate": 150
+        }
+      }
+    },
+    "scope": "Diagnostic result with legacy platform adapters and first-expanded trace; not a valid guarded equivalence comparison."
+  },
+  "trace": {
+    "before_observed_entries": 10763,
+    "first_additional_entries": 613,
+    "second_additional_entries": 177,
+    "final_observed_entries": 11553,
+    "coverage_complete": false,
+    "observations_from_original_nes_only": true,
+    "unknown_code_guard_removed": false,
+    "actual_stops": [
+      {
+        "code": 1,
+        "bank": "AC",
+        "pc": "8E5A"
+      },
+      {
+        "code": 1,
+        "bank": "AF",
+        "pc": "8B57"
+      }
+    ]
+  },
+  "retained_runtime": {
+    "passed": true,
+    "fault_guards": [
+      {
+        "runtime_counters": true,
+        "code": 1,
+        "bank": 161,
+        "pc": 63488
+      },
+      {
+        "runtime_counters": false,
+        "code": 1,
+        "bank": 161,
+        "pc": 63488
+      }
+    ],
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Counted and counter-free variants: explicit CPU/PPU/APU events, mapper returns, interrupt stress and zero-offset OAM contents; not cycle accuracy or full-game coverage."
+  },
+  "audio_regressions": {
+    "cases": 3,
+    "all_passed": true,
+    "scope": "Existing model/state and actual DSP-output tests, not independent cycle-accurate NES audio equivalence."
+  },
+  "runtime_source_changed": false,
+  "performance_gain_claimed": false,
+  "full_game_complete": false,
+  "boss_clear_established": false,
+  "physical_console_tested": false,
+  "limitations": [
+    "Only five selected state fields at named NES/SNES endpoints match; not full RAM or every frame.",
+    "The 84-image pixel comparison is NES probe versus unmodified NES, not NES versus SNES.",
+    "The new clock recognizer targets a narrow guarded handler structure; legacy mode is preserved.",
+    "No manual phase offset or guest-state edit is used in the accepted route.",
+    "Known raster and audio/DMC issues remain; no new speed measurement is claimed."
+  ]
+}

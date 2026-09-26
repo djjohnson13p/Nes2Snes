@@ -15,6 +15,7 @@ import struct
 from pathlib import Path
 from libretro_runner import Runner
 from rom import Rom
+from route_evidence import guarded_update_pc, selected_state, atomic_json
 
 PATTERN=((40,('right',)),(25,('right','a')),(25,('right','b')),(10,()))
 
@@ -75,7 +76,9 @@ def merge_trace(base:Path,out:Path,rom:Rom,counts:bytes,pcs:bytes,palette:bytes,
     return extension
 
 
-def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:Path|None=None,actions:list[dict]|None=None)->dict:
+def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:Path|None=None,actions:list[dict]|None=None,clock_mode:str='legacy')->dict:
+    if clock_mode not in ('legacy','guarded'):
+        raise ValueError('Clock mode must be legacy or guarded')
     if platform not in ('nes','snes') or not 1<=steps<=1000:
         raise ValueError('Require nes/snes and 1..1000 route steps')
     actions=validate_actions(actions) if actions is not None else []
@@ -94,9 +97,15 @@ def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:P
     report=dict(platform=platform,rom_sha256=hashlib.sha256(rom_path.read_bytes()).hexdigest(),
                 core_sha256=hashlib.sha256(core.read_bytes()).hexdigest(),steps_requested=steps,
                 pattern=[dict(updates=n,buttons=list(b)) for n,b in PATTERN],
-                tail_actions=actions,
+                tail_actions=actions,clock_mode=clock_mode,
+                startup_policy='legacy-platform-adapter' if clock_mode=='legacy' else 'first-guarded-update-plus-120',
                 scope='Bounded live-controller early-game route; not all-level or NES/SNES equivalence proof')
+    def progress(status:str)->None:
+        snapshot=dict(report,status=status,action=current_action,records=records,tail_records=tail_records,
+                      input_segments=input_segments,total_emulator_calls=emulator_calls,total_emulator_frames=r.frames)
+        atomic_json(out/'progress.json',snapshot)
     try:
+        progress('running')
         if platform=='nes':
             nes=Rom.read(rom_path)
             if nes.mapper!=5 or len(nes.prg)!=0x40000:
@@ -108,7 +117,9 @@ def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:P
             host_run(1)
             pointer=C.cast(r.lib.retro_n2s_data(0),C.POINTER(C.c_uint32))
             if r.lib.retro_n2s_size(0)!=0x100000 or not pointer:raise RuntimeError('NES probe unavailable')
-            clock=lambda: int(pointer[0x3e000+nmi-0xe000])
+            marker=guarded_update_pc(nes.prg,nmi) if clock_mode=='guarded' else nmi
+            report['nes_clock_pc']=marker
+            clock=lambda: int(pointer[0x3e000+marker-0xe000])
         else:
             clock=lambda: int.from_bytes(r.memory()[0x906:0x908],'little')
         def advance(count:int,buttons:tuple[str,...]=())->None:
@@ -121,7 +132,7 @@ def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:P
                 if (clock()-initial)&0xffff>=count:return
             raise RuntimeError('Logical clock stopped progressing')
         # Match the previously documented per-platform live startup adapters.
-        if platform=='nes':
+        if platform=='nes' and clock_mode=='legacy':
             host_run(120)
         else:
             for _ in range(1000):
@@ -134,6 +145,8 @@ def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:P
             advance(2,('start',));advance(145)
         else:raise RuntimeError('Did not reach the main-game state')
         report['start_logical_frame']=clock()
+        report['start_selected_state']=selected_state(r.memory())
+        progress('running')
         for step in range(steps):
             for count,buttons in PATTERN:
                 current_action=f'step {step}: {buttons}'
@@ -143,6 +156,7 @@ def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:P
                 r.save_png(out/f'step-{step:03d}.png')
                 (out/f'step-{step:03d}.state').write_bytes(r.state())
                 print(json.dumps(records[-1]),flush=True)
+            progress('running')
         for i,action in enumerate(actions):
             current_action='tail '+action['name']
             advance(action['updates'],tuple(action['buttons']))
@@ -154,6 +168,7 @@ def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:P
                                      logical_frame=clock(),game_state=memory[0x18],
                                      candidate_player_x=memory[0x438],candidate_player_y=memory[0x41c]))
             print(json.dumps(tail_records[-1]),flush=True)
+            progress('running')
         report['status']='completed_budget'
     except Exception as exc:
         report.update(status='failed',error=str(exc),action=current_action)
@@ -161,11 +176,17 @@ def run(core:Path,rom_path:Path,out:Path,platform:str,steps:int=100,base_trace:P
         (out/'failure.ram').write_bytes(r.memory())
     finally:
         report.update(records=records,tail_records=tail_records,input_segments=input_segments,total_emulator_calls=emulator_calls,total_emulator_frames=r.frames)
-        if base_trace and report.get('status')=='completed_budget':
-            arrays={kind:C.string_at(r.lib.retro_n2s_data(kind),r.lib.retro_n2s_size(kind)) for kind in (0,1,14)}
-            report['trace_extension']=merge_trace(base_trace,out/'trace',nes,arrays[0],arrays[1],arrays[14],dict(steps=steps,pattern=report['pattern'],actions=actions,total_emulator_frames=r.frames))
-        (out/'route-report.json').write_text(json.dumps(report,indent=2)+'\n')
-        r.close()
+        try:
+            if base_trace and report.get('status')=='completed_budget':
+                try:
+                    arrays={kind:C.string_at(r.lib.retro_n2s_data(kind),r.lib.retro_n2s_size(kind)) for kind in (0,1,14)}
+                    report['trace_extension']=merge_trace(base_trace,out/'trace',nes,arrays[0],arrays[1],arrays[14],dict(steps=steps,pattern=report['pattern'],actions=actions,total_emulator_frames=r.frames,clock_mode=clock_mode))
+                except Exception as exc:
+                    report.update(status='failed',error='Trace export failed: '+str(exc),action='trace-export')
+            atomic_json(out/'route-report.json',report)
+            progress(report['status'])
+        finally:
+            r.close()
     return report
 
 if __name__=='__main__':
@@ -175,7 +196,8 @@ if __name__=='__main__':
     p.add_argument('--steps',type=int,default=100)
     p.add_argument('--base-trace',type=Path)
     p.add_argument('--actions',type=Path,help='JSON array of named bounded actions after the repeated route')
+    p.add_argument('--clock-mode',choices=['legacy','guarded'],default='legacy',help='Guarded mode counts the original reentrancy-gated NMI update and aligns startup to the first update; not a ROM patch')
     a=p.parse_args();actions=json.loads(a.actions.read_text()) if a.actions else None
-    result=run(a.core,a.rom,a.out,a.platform,a.steps,a.base_trace,actions)
+    result=run(a.core,a.rom,a.out,a.platform,a.steps,a.base_trace,actions,a.clock_mode)
     print(json.dumps({k:v for k,v in result.items() if k!='records'},indent=2))
     raise SystemExit(result['status']!='completed_budget')

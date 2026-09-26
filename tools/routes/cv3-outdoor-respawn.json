@@ -1,0 +1,580 @@
+[
+  {
+    "name": "000-1-left56",
+    "updates": 56,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "001-1-up80",
+    "updates": 80,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "002-2-left30",
+    "updates": 30,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "003-2-up110",
+    "updates": 110,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "004-3-up50",
+    "updates": 50,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "005-3-left16",
+    "updates": 16,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "006-3-up120",
+    "updates": 120,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "007-engage-approach",
+    "updates": 20,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "008-engage-whip",
+    "updates": 12,
+    "buttons": [
+      "b",
+      "right"
+    ]
+  },
+  {
+    "name": "009-engage-settle",
+    "updates": 15,
+    "buttons": []
+  },
+  {
+    "name": "010-engage-whip2",
+    "updates": 12,
+    "buttons": [
+      "b",
+      "right"
+    ]
+  },
+  {
+    "name": "011-third-stair-endwhip",
+    "updates": 24,
+    "buttons": []
+  },
+  {
+    "name": "012-third-stair-align",
+    "updates": 45,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "013-third-stair-climb",
+    "updates": 150,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "014-upper1-climb100",
+    "updates": 100,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "015-upper1-climb180",
+    "updates": 80,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "016-upper2-align",
+    "updates": 30,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "017-upper2-climb",
+    "updates": 130,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "018-armor-top",
+    "updates": 20,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "019-armor-attack1",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "020-armor-release1",
+    "updates": 18,
+    "buttons": []
+  },
+  {
+    "name": "021-armor-attack2",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "022-armor-release2",
+    "updates": 18,
+    "buttons": []
+  },
+  {
+    "name": "023-armor-attack3",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "024-armor-release3",
+    "updates": 18,
+    "buttons": []
+  },
+  {
+    "name": "025-armor-attack4",
+    "updates": 16,
+    "buttons": [
+      "b"
+    ]
+  },
+  {
+    "name": "026-upper-move-release",
+    "updates": 20,
+    "buttons": []
+  },
+  {
+    "name": "027-upper-move-middle",
+    "updates": 56,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "028-upper-move-tryup",
+    "updates": 80,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "029-upper-more-up160",
+    "updates": 160,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "030-upper-retry-align160",
+    "updates": 38,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "031-upper-retry-up180",
+    "updates": 180,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "032-upper-jump-jump25",
+    "updates": 25,
+    "buttons": [
+      "a",
+      "right"
+    ]
+  },
+  {
+    "name": "033-upper-jump-land",
+    "updates": 12,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "034-upper-return-settle",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "035-upper-return-jumpback",
+    "updates": 34,
+    "buttons": [
+      "a",
+      "left"
+    ]
+  },
+  {
+    "name": "036-upper-return-land",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "037-upper-leftledge-edge",
+    "updates": 42,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "038-upper-leftledge-jump",
+    "updates": 35,
+    "buttons": [
+      "left",
+      "a"
+    ]
+  },
+  {
+    "name": "039-upper-leftledge-land",
+    "updates": 5,
+    "buttons": []
+  },
+  {
+    "name": "040-upper-next-align",
+    "updates": 45,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "041-upper-next-climb",
+    "updates": 175,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "042-upper-cross-align",
+    "updates": 79,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "043-upper-cross-climb",
+    "updates": 175,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "044-upper-cross2-realign",
+    "updates": 64,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "045-upper-cross2-climb",
+    "updates": 175,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "046-upper-cross3-top",
+    "updates": 60,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "047-upper-cross3-align",
+    "updates": 28,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "048-upper-cross3-upper",
+    "updates": 140,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "049-roof-ledge-jump",
+    "updates": 34,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "050-roof-ledge-land",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "051-roof-stair-jump",
+    "updates": 35,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "052-roof-stair-land",
+    "updates": 8,
+    "buttons": []
+  },
+  {
+    "name": "053-roof-stair-align",
+    "updates": 14,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "054-roof-stair-climb",
+    "updates": 160,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "055-exit-stair-align",
+    "updates": 31,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "056-exit-stair-climb",
+    "updates": 180,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "outdoor-approach",
+    "updates": 80,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-whip1",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "outdoor-forward1",
+    "updates": 56,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-stair-approach",
+    "updates": 28,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-stair-up",
+    "updates": 100,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "outdoor-stair-top",
+    "updates": 64,
+    "buttons": [
+      "up"
+    ]
+  },
+  {
+    "name": "outdoor-top-whip",
+    "updates": 24,
+    "buttons": [
+      "b",
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-top-forward",
+    "updates": 56,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-whip-approach2",
+    "updates": 16,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-whip2",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "outdoor-top-cross1",
+    "updates": 80,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-cross-00",
+    "updates": 32,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-cross-01",
+    "updates": 24,
+    "buttons": [
+      "right",
+      "b"
+    ]
+  },
+  {
+    "name": "outdoor-cross-02",
+    "updates": 32,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-cross-03",
+    "updates": 32,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "outdoor-cross-04",
+    "updates": 32,
+    "buttons": [
+      "right",
+      "a",
+      "b"
+    ]
+  },
+  {
+    "name": "outdoor-cross-05",
+    "updates": 32,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-cross-06",
+    "updates": 32,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "outdoor-cross-07",
+    "updates": 32,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-cross-08",
+    "updates": 32,
+    "buttons": [
+      "right",
+      "a"
+    ]
+  },
+  {
+    "name": "outdoor-cross-09",
+    "updates": 32,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-landing",
+    "updates": 48,
+    "buttons": []
+  },
+  {
+    "name": "outdoor-exit-align",
+    "updates": 30,
+    "buttons": [
+      "left"
+    ]
+  },
+  {
+    "name": "outdoor-exit-down",
+    "updates": 100,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "outdoor-exit-realign",
+    "updates": 8,
+    "buttons": [
+      "right"
+    ]
+  },
+  {
+    "name": "outdoor-descend",
+    "updates": 240,
+    "buttons": [
+      "down"
+    ]
+  },
+  {
+    "name": "outdoor-transition-settle",
+    "updates": 60,
+    "buttons": []
+  }
+]
