@@ -24,7 +24,7 @@ def capture(core:Path,rom:Path,out:Path,limit:int):
                 if len(m)>=0x974:
                     diagnostics={name:int.from_bytes(m[a:a+4],'little') for name,a in
                                  (('cop_calls',0x960),('quick_zp_calls',0x964),
-                                  ('quick_indirect_calls',0x968),('quick_io_calls',0x96c),('quick_ppu_calls',0x970),('direct_write_calls',0x980),('simple_direct_write_calls',0x984),('direct_bank_calls',0x988),('quick_indexed_memory_calls',0x990),('quick_indexed_apu_calls',0x994),('indexed_dummy_io_reads',0x998))}
+                                  ('quick_indirect_calls',0x968),('quick_io_calls',0x96c),('quick_ppu_calls',0x970),('direct_write_calls',0x980),('simple_direct_write_calls',0x984),('direct_bank_calls',0x988),('quick_indexed_memory_calls',0x990),('quick_indexed_apu_calls',0x994),('indexed_dummy_io_reads',0x998),('native_dispatch_calls',0x9B0))}
                 out.with_suffix('.diagnostics.json').write_text(json.dumps(diagnostics,indent=2)+'\n')
                 return
         raise RuntimeError(f'CPU fixture did not complete in {limit} frames; diagnostic RAM={m[0x90c:0x910].hex() if len(m)>0x910 else "NES"}')
