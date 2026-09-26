@@ -17,14 +17,17 @@ from build_native import build
 from dispatch_fixture import create as dispatch_fixture
 from fill_mode_fixture import create as fill_fixture
 from native_fixture import create as cpu_fixture
+from indirect_x_fixture import create as indirect_x_fixture
 
-FIXTURES = {'cpu': cpu_fixture, 'fill': fill_fixture, 'dispatch': dispatch_fixture}
+FIXTURES = {'cpu': cpu_fixture, 'fill': fill_fixture, 'dispatch': dispatch_fixture,
+            'indirect-x': indirect_x_fixture}
 OPTIONS = {'native_inline_dispatch': 'native_inline_dispatch',
            'coalesced_nt_dma': 'coalesced_nametable_dma',
-           'fill_cache_fix': 'fill_cache_fix'}
+           'fill_cache_fix': 'fill_cache_fix',
+           'quick_indirect_x': 'quick_indirect_x'}
 
 
-def run(out: Path, fixtures: tuple[str, ...] = ('cpu', 'fill', 'dispatch')) -> dict:
+def run(out: Path, fixtures: tuple[str, ...] = ('cpu', 'fill', 'dispatch', 'indirect-x')) -> dict:
     if not fixtures or len(set(fixtures)) != len(fixtures) or any(
             name not in FIXTURES for name in fixtures):
         raise ValueError('Require nonempty, unique, known fixture names')

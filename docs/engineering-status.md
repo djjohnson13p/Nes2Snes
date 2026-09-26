@@ -94,3 +94,10 @@ verified `a209aaf` baseline, the newly reconstructed palette-read correction,
 and the missing 117-action Block 1-03 script. Do not infer that an old local
 route, an unpublished experiment, or a source-staging commit passed acceptance.
 Keep exact tested source hashes and private trace provenance with each new run.
+
+## Latest continuation after the palette merge
+
+Read `block103-entry.md` first for the newly authored 133-action clean-boot route,
+explicit destination contract, recovered trace provenance and the post-merge
+indirect-CI repair. The older missing 117-action route is still not recovered.
+The new route proves Block 1-03 entry, not a boss clear or full-speed completion.

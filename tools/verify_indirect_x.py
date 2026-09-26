@@ -11,6 +11,7 @@ from build_native import build
 from indirect_x_fixture import create
 from native_fixture import create as native_fixture
 from verify_native_cpu import verify
+from verify_default_options import run as verify_default_options
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -22,7 +23,27 @@ def write_json(path: Path, value: dict) -> None:
     temporary.write_text(json.dumps(value, indent=2)+'\n')
     temporary.replace(path)
 
-def run(nes_core: Path, snes_core: Path, out: Path, previous_root: Path) -> dict:
+def historical_identity(previous_root: Path, out: Path) -> list[dict]:
+    # An unchanged default must really produce the previous ROM, not merely
+    # appear to behave similarly. Both builders receive the same input bytes.
+    identity = []
+    for name, creator in [('general', native_fixture), ('indirect-x', create)]:
+        directory = out/('identity-'+name)
+        creator(directory)
+        build(directory/'fixture.nes', directory, directory/'current')
+        with (directory/'previous-build.log').open('w') as log:
+            subprocess.run([sys.executable, str(previous_root/'tools/build_native.py'),
+                            '--rom', str(directory/'fixture.nes'), '--trace', str(directory),
+                            '--out', str(directory/'previous')], stdout=log,
+                           stderr=subprocess.STDOUT, check=True, timeout=120)
+        new = digest(directory/'current/native-prototype.sfc')
+        old = digest(directory/'previous/native-prototype.sfc')
+        if new != old:
+            raise RuntimeError(f'{name}: default ROM changed')
+        identity.append(dict(fixture=name, sha256=new, matches_baseline=True))
+    return identity
+
+def run(nes_core: Path, snes_core: Path, out: Path, previous_root: Path | None = None) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     rows, coverage = [], []
     configs = []
@@ -75,23 +96,8 @@ def run(nes_core: Path, snes_core: Path, out: Path, previous_root: Path) -> dict
         raise RuntimeError('Incomplete independent pointer/index coverage')
     if banks != {(p,c) for p in range(16) for c in (7,30)}:
         raise RuntimeError('Incomplete supported bank coverage')
-    # An unchanged default must really produce the previous ROM, not merely
-    # appear to behave similarly. Both builders receive the same input bytes.
-    identity = []
-    for name, creator in [('general', native_fixture), ('indirect-x', create)]:
-        directory = out/('identity-'+name)
-        creator(directory)
-        build(directory/'fixture.nes', directory, directory/'current')
-        with (directory/'previous-build.log').open('w') as log:
-            subprocess.run([sys.executable, str(previous_root/'tools/build_native.py'),
-                            '--rom', str(directory/'fixture.nes'), '--trace', str(directory),
-                            '--out', str(directory/'previous')], stdout=log,
-                           stderr=subprocess.STDOUT, check=True, timeout=120)
-        new = digest(directory/'current/native-prototype.sfc')
-        old = digest(directory/'previous/native-prototype.sfc')
-        if new != old:
-            raise RuntimeError(f'{name}: default ROM changed')
-        identity.append(dict(fixture=name, sha256=new, matches_baseline=True))
+    default_policy = verify_default_options(out/'default-policy', ('cpu', 'indirect-x'))
+    identity = historical_identity(previous_root, out) if previous_root is not None else []
     report = dict(passed=True, complete=True,
         source_revision=subprocess.check_output(['git','rev-parse','HEAD'], cwd=ROOT, text=True).strip(),
         configurations=len(rows), records_checked=sum(r['records_checked'] for r in rows),
@@ -100,7 +106,8 @@ def run(nes_core: Path, snes_core: Path, out: Path, previous_root: Path) -> dict
         supported_bank_pairs_checked=len(banks),
         coverage_qualification='Every pointer offset and every X value occurs; this is not every Cartesian combination of all operands, flags, banks and addresses.',
         nes_core_sha256=digest(nes_core), snes_core_sha256=digest(snes_core),
-        default_binary_identity=identity, option_enabled_by_default=False,
+        default_binary_identity=identity, historical_identity_requested=previous_root is not None,
+        same_revision_default_policy=default_policy, option_enabled_by_default=False,
         full_game_validation=False, gameplay_performance_measured=False,
         scope='New optional (zero-page,X) read handlers compared with the pinned unmodified FCEUmm core. No commercial ROM, whole-game, hardware-console or cycle-exact claim.',
         results=rows)
@@ -112,7 +119,8 @@ if __name__ == '__main__':
     parser.add_argument('--nes-core', type=Path, required=True)
     parser.add_argument('--snes-core', type=Path, required=True)
     parser.add_argument('--out', type=Path, required=True)
-    parser.add_argument('--previous-root', type=Path, required=True)
+    parser.add_argument('--previous-root', type=Path,
+                        help='Optional strict historical identity check; not an invariant across runtime fixes')
     args = parser.parse_args()
-    report = run(args.nes_core.resolve(), args.snes_core.resolve(), args.out.resolve(), args.previous_root.resolve())
+    report = run(args.nes_core.resolve(), args.snes_core.resolve(), args.out.resolve(), args.previous_root.resolve() if args.previous_root else None)
     print(json.dumps({k:v for k,v in report.items() if k != 'results'}, indent=2))

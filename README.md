@@ -1,5 +1,14 @@
 # Nes2Snes
 
+## New coverage: clean-boot Block 1-03 entry
+
+A newly authored **133-action route** now reaches Block 1-03 on NES and SNES,
+with independent recording checks and explicit destination predicates. It is
+not the unrecovered 117-action script. The old respawn route is preserved.
+327 local unit tests and the full indirect-X execution matrix pass; an overlooked
+historical binary-identity CI assertion is repaired without changing the runtime.
+No boss clear or speed gain is claimed. See [results and resumption](docs/block103-entry.md).
+
 ## Current checkpoint: palette-read correctness and recovery
 
 The [palette-read report](docs/palette-reads.md) records the correction, independent

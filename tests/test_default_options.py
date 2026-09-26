@@ -33,8 +33,17 @@ class DefaultOptionTests(unittest.TestCase):
             result = self.exercise(Path(name))
             self.assertTrue(result['passed'])
             self.assertFalse(result['historical_binary_identity_claimed'])
-            self.assertEqual(len(result['results']), 3)
+            self.assertEqual(len(result['results']), 4)
             self.assertTrue((Path(name)/'identity.json').is_file())
+
+    def test_indexed_indirect_default_is_checked(self):
+        def changed_build(*args, native_inline_dispatch=False,
+                          coalesced_nt_dma=False, fill_cache_fix=False,
+                          quick_indirect_x=True):
+            raise AssertionError('Must reject enabled indexed-indirect default')
+        with patch.object(check, 'build', changed_build):
+            with self.assertRaisesRegex(RuntimeError, 'disabled by default'):
+                check.run(Path('unused'), ('indirect-x',))
 
     def test_changed_byte_is_rejected(self):
         with tempfile.TemporaryDirectory() as name:

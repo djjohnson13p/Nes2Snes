@@ -1,0 +1,200 @@
+{
+  "base_revision": "0cd1df54868d9481f55c2e3388b7bd16eefc14f6",
+  "scope": "Fresh local clean-boot route evidence and corrected ongoing indirect default-policy check. No runtime-source change, boss defeat, speed gain or recovered-117-action claim.",
+  "unit_tests": {
+    "passed": true,
+    "count": 327
+  },
+  "route": {
+    "authorship": "new",
+    "actions": 133,
+    "approach_steps": 31,
+    "clock_mode": "guarded",
+    "recovered_117_action_script": false,
+    "selected_state_comparison": {
+      "passed": true,
+      "complete_routes": true,
+      "clock_mode": "guarded",
+      "reference_platform": "nes",
+      "candidate_platform": "snes",
+      "reference_status": "completed_budget",
+      "candidate_status": "completed_budget",
+      "candidate_fault": null,
+      "planned_checkpoints": 133,
+      "checkpoints_compared": 133,
+      "state_fields_checked": 665,
+      "state_bytes_checked": 1197,
+      "mismatched_checkpoints": 0,
+      "mismatches": [],
+      "reference_report_sha256": "8e71a8f40724395aa5513448e17cdb4d0d8f1f63da5a1f668aa31e2448e81d34",
+      "candidate_report_sha256": "55d4c355fc979aa5d95e44d326be405a3867b74a9a2f2b09a2e35dbbf9764d84",
+      "reference_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+      "candidate_rom_sha256": "0f4ac141190f4b7e0c3bbc1a691938c21872b133560e33bb4256f57c5b66f0ac",
+      "reference_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+      "candidate_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+      "scope": "Selected area, camera and player fields at named input endpoints. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence."
+    },
+    "nes_emulator_calls": 11185,
+    "nes_video_callbacks": 11185,
+    "snes_emulator_calls": 19133,
+    "snes_video_callbacks": 19134,
+    "new_observed_sites": 1145,
+    "union_observed_sites": 12359,
+    "milestones": {
+      "nes": {
+        "passed": true,
+        "complete_route": true,
+        "label": "Newly authored CV3 Block 1-03 entry, not the missing 117-action route",
+        "platform": "nes",
+        "milestones_checked": 3,
+        "results": [
+          {
+            "name": "b103-082-down-200",
+            "passed": true,
+            "differences": {}
+          },
+          {
+            "name": "b103-129-none-60",
+            "passed": true,
+            "differences": {}
+          },
+          {
+            "name": "b103-entry-settled",
+            "passed": true,
+            "differences": {}
+          }
+        ],
+        "contract_sha256": "53ae4bf196f2bb875c46b20aa43a07d1733d7b4e23e7186732ba6308f22b4a8b",
+        "route_report_sha256": "8e71a8f40724395aa5513448e17cdb4d0d8f1f63da5a1f668aa31e2448e81d34",
+        "actions_sha256": "e08062f4d5e3c3847ffa964e50fca5e7650494fa0b614c7ba8b400a8f319269c",
+        "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+        "core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+        "scope": "Named selected-state and common-RAM predicates for this exact input. Not full memory, pixels, audio, speed, boss defeat or whole-game equivalence."
+      },
+      "snes": {
+        "passed": true,
+        "complete_route": true,
+        "label": "Newly authored CV3 Block 1-03 entry, not the missing 117-action route",
+        "platform": "snes",
+        "milestones_checked": 3,
+        "results": [
+          {
+            "name": "b103-082-down-200",
+            "passed": true,
+            "differences": {}
+          },
+          {
+            "name": "b103-129-none-60",
+            "passed": true,
+            "differences": {}
+          },
+          {
+            "name": "b103-entry-settled",
+            "passed": true,
+            "differences": {}
+          }
+        ],
+        "contract_sha256": "53ae4bf196f2bb875c46b20aa43a07d1733d7b4e23e7186732ba6308f22b4a8b",
+        "route_report_sha256": "55d4c355fc979aa5d95e44d326be405a3867b74a9a2f2b09a2e35dbbf9764d84",
+        "actions_sha256": "e08062f4d5e3c3847ffa964e50fca5e7650494fa0b614c7ba8b400a8f319269c",
+        "rom_sha256": "0f4ac141190f4b7e0c3bbc1a691938c21872b133560e33bb4256f57c5b66f0ac",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "scope": "Named selected-state and common-RAM predicates for this exact input. Not full memory, pixels, audio, speed, boss defeat or whole-game equivalence."
+      }
+    },
+    "trace_hashes": {
+      "counts.u32": "0161081f2a2d709e3378926d17330437ae1bdc6e43792bbeb8a643dddfa98b5f",
+      "cpu-address.u16": "9537f6f8a3e2df8db5041ae2067a93dbe7940f75e2a7484404ec7ee443488664",
+      "rgb-palette.bin": "da30843b331e2e4474395866bc9871fcd60a7d716b3c8ee5ce3c89ee46e8c91e",
+      "trace-summary.json": "e8d5ea9e15766a6d5ab060d9db2e8d2a0eed954cc9eeb9d3513b09dc87182acb"
+    },
+    "old_route_negative_control": {
+      "old_84_route_rejected": true,
+      "reason": "Route action digest does not match contract"
+    }
+  },
+  "nes_probe_reference": {
+    "passed": true,
+    "checkpoints": 133,
+    "pixels_checked": 7626752,
+    "ram_bytes_checked": 272384,
+    "pixel_mismatches": 0,
+    "ram_mismatches": 0,
+    "scope": "Unmodified NES reference vs instrumented NES observations at identical host-frame input times. Not SNES equivalence.",
+    "reference_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "probe_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13"
+  },
+  "retained_84_route": {
+    "passed": true,
+    "complete_routes": true,
+    "clock_mode": "guarded",
+    "reference_platform": "nes",
+    "candidate_platform": "snes",
+    "reference_status": "completed_budget",
+    "candidate_status": "completed_budget",
+    "candidate_fault": null,
+    "planned_checkpoints": 84,
+    "checkpoints_compared": 84,
+    "state_fields_checked": 420,
+    "state_bytes_checked": 756,
+    "mismatched_checkpoints": 0,
+    "mismatches": [],
+    "reference_report_sha256": "ccc4301426f4e2d810d9eca886bc9b0fd9a2134df047238124aa52c63a2b9144",
+    "candidate_report_sha256": "caefc85713ebee5faff34d6a285a47531cb3f484dd875f5419c184c85becda0b",
+    "reference_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "candidate_rom_sha256": "0f4ac141190f4b7e0c3bbc1a691938c21872b133560e33bb4256f57c5b66f0ac",
+    "reference_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "candidate_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Selected area, camera and player fields at named input endpoints. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence."
+  },
+  "post_merge_ci_failure": {
+    "run_id": 36270922954,
+    "job_id": 108484591266,
+    "runtime_matrix_configurations_completed": 40,
+    "failure": "general: default ROM changed",
+    "historical_baseline": "ad0648cf46e3a799ea55815c9b0015a765bd27ec",
+    "original_artifact_sha256": "000f8f65542fcf1c55fe2f60ddda5c6be499a29d7f15a5150b48ca74825cb848"
+  },
+  "fresh_indirect_matrix": {
+    "passed": true,
+    "complete": true,
+    "configurations": 40,
+    "records_checked": 5440,
+    "register_flag_bytes": 21760,
+    "mismatches": 0,
+    "pointer_offsets_checked": 256,
+    "x_values_checked": 256,
+    "supported_bank_pairs_checked": 32,
+    "same_revision_default_policy": {
+      "passed": true,
+      "comparison": "same-source omitted versus explicit False",
+      "historical_binary_identity_claimed": false,
+      "disabled_options": [
+        "native_inline_dispatch",
+        "coalesced_nt_dma",
+        "fill_cache_fix",
+        "quick_indirect_x"
+      ],
+      "results": [
+        {
+          "fixture": "cpu",
+          "byte_identical": true,
+          "bytes": 4194304,
+          "sha256": "b11c7f53621033540a1bdf783182fb0995e44caf20123c90ca50299d043c8099"
+        },
+        {
+          "fixture": "indirect-x",
+          "byte_identical": true,
+          "bytes": 4194304,
+          "sha256": "becf1020be3957057609d2793f5076f4fbe0408e5f19cda0b9e82718ef0e8f79"
+        }
+      ]
+    },
+    "historical_identity_requested": false
+  },
+  "unchanged_runtime_source_sha256": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "snes/src/native_ppudata.inc": "13feb07293950996a67656ba0cb0461193c06067cedbb9719ea49e6a749022a9",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  }
+}

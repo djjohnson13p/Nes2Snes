@@ -1,0 +1,83 @@
+{
+  "format": 1,
+  "label": "Newly authored CV3 Block 1-03 entry, not the missing 117-action route",
+  "clock_mode": "guarded",
+  "steps_requested": 31,
+  "pattern": [
+    {
+      "updates": 40,
+      "buttons": [
+        "right"
+      ]
+    },
+    {
+      "updates": 25,
+      "buttons": [
+        "right",
+        "a"
+      ]
+    },
+    {
+      "updates": 25,
+      "buttons": [
+        "right",
+        "b"
+      ]
+    },
+    {
+      "updates": 10,
+      "buttons": []
+    }
+  ],
+  "actions_sha256": "e08062f4d5e3c3847ffa964e50fca5e7650494fa0b614c7ba8b400a8f319269c",
+  "milestones": [
+    {
+      "name": "b103-082-down-200",
+      "state": {
+        "game_state": 4,
+        "area_bytes": 33685760,
+        "camera_x": 0,
+        "player_x": 122,
+        "player_y": 54
+      },
+      "ram_bytes": [
+        {
+          "address": 60,
+          "equals": 8
+        }
+      ]
+    },
+    {
+      "name": "b103-129-none-60",
+      "state": {
+        "game_state": 4,
+        "area_bytes": 33620480,
+        "camera_x": 640,
+        "player_x": 115,
+        "player_y": 144
+      },
+      "ram_bytes": [
+        {
+          "address": 60,
+          "equals": 8
+        }
+      ]
+    },
+    {
+      "name": "b103-entry-settled",
+      "state": {
+        "game_state": 4,
+        "area_bytes": 33620480,
+        "camera_x": 0,
+        "player_x": 28,
+        "player_y": 144
+      },
+      "ram_bytes": [
+        {
+          "address": 60,
+          "equals": 8
+        }
+      ]
+    }
+  ]
+}

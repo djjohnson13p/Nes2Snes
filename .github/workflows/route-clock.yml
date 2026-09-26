@@ -2,7 +2,7 @@ name: Guarded update clocks and route evidence
 on:
   workflow_dispatch:
   push:
-    branches: [main, development/route-clock-20260926]
+    branches: [main, development/route-clock-20260926, development/block103-route-20260926]
     paths:
       - '.github/workflows/route-clock.yml'
       - 'tools/**'
