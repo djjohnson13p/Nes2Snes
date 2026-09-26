@@ -1,0 +1,110 @@
+name: Memory paths and independent sprite DMA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/memory-paths.yml'
+      - 'snes/src/native.s'
+      - 'snes/src/native*.inc'
+      - 'tools/build_native.py'
+      - 'tools/zero_page_store_fixture.py'
+      - 'tools/oam_copy_fixture.py'
+      - 'tools/indirect_load_fixture.py'
+      - 'tools/verify_memory_completion.py'
+      - 'tools/verify_native_cpu.py'
+      - 'tests/test_memory_completion.py'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install build and test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Unit tests
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: Build pinned independent emulators
+        run: |
+          mkdir -p build
+          git clone https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2
+          git clone https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2
+      - name: Twenty-nine independent memory and sprite-DMA configurations
+        run: |
+          /usr/bin/python3 tools/verify_memory_completion.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/memory-matrix
+      - name: Confirm preceding runtime fails both new DMA-latch checks
+        run: |
+          mkdir -p build/previous-source
+          git archive 0e1bb3d913bf6777fb59d9c656a3b7775b54f610 | tar -x -C build/previous-source
+          /usr/bin/python3 tools/oam_copy_fixture.py --out build/previous-dma --seed 0
+          /usr/bin/python3 tools/build_native.py \
+            --rom "$PWD/build/previous-dma/fixture.nes" \
+            --trace "$PWD/build/previous-dma" \
+            --out "$PWD/build/previous-dma/snes"
+          /usr/bin/python3 tools/verify_native_cpu.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --fixture build/previous-dma --out build/corrected-dma/verification
+          /usr/bin/python3 build/previous-source/tools/build_native.py \
+            --rom "$PWD/build/previous-dma/fixture.nes" \
+            --trace "$PWD/build/previous-dma" \
+            --out "$PWD/build/previous-dma/snes"
+          /usr/bin/python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          command = [
+              '/usr/bin/python3', 'tools/verify_native_cpu.py',
+              '--nes-core', 'build/fceumm/fceumm_libretro.so',
+              '--snes-core', 'build/snes9x/libretro/snes9x_libretro.so',
+              '--fixture', 'build/previous-dma',
+              '--out', 'build/previous-dma/verification',
+          ]
+          result = subprocess.run(command, check=False)
+          report = json.loads(Path('build/previous-dma/verification/cpu-verification.json').read_text())
+          assert result.returncode != 0, 'Negative control unexpectedly passed'
+          assert report['records_checked'] == 3, report
+          assert report['mismatch_count'] == 2, report
+          assert {r['test'] for r in report['mismatches']} == {
+              'last_dma_byte_on_ppu_latch', 'mirrored_ppu_latch'}, report
+          print('Expected negative control: both latch checks fail in preceding runtime.')
+          PY
+      - name: Retain indexed bus-side-effect regressions
+        run: |
+          /usr/bin/python3 tools/verify_indexed_matrix.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/indexed-matrix
+      - name: Retain pulse-sweep, length and nested-interrupt regressions
+        run: |
+          /usr/bin/python3 tools/verify_sweep_matrix.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/sweep-matrix
+      - name: Archive exact tested source
+        run: git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: memory-paths-and-dma-verification
+          path: |
+            build/memory-matrix/memory-completion.json
+            build/memory-matrix/*/verification/
+            build/previous-dma/verification/
+            build/corrected-dma/verification/
+            build/indexed-matrix/indexed-matrix.json
+            build/sweep-matrix/sweep-matrix.json
+            build/tested-source.zip
+          retention-days: 30
