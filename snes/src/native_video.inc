@@ -42,6 +42,7 @@ UPLOAD=$0E00
 VIDEO_MULTISPLIT=$0CE0
 BOTTOMEN=$0CE2
 TOPEN=$0CE3
+HDMA_ENABLE=$0CE6
 FRAME_TEMP=$0CF0
 FRAME_FINE=$0CF2
 FRAME_MASK=$0CF3
@@ -438,12 +439,29 @@ UploadPreparedFrame:
     jsr UploadNametables
     jsr UploadObjectsPalette
     jsr SetVideoRegisters
+.if USE_LAYER_MASKS
+    jsr SetWindowRegisters
+.endif
     ; A large first upload may exceed vblank. Keep forced blank until another
     ; complete vblank instead of exposing a partially uploaded frame.
 @finishblank:
     lda $4212
     bpl @finishblank
     lda FRAME_MASK
+.if USE_LAYER_MASKS
+    pha
+    lda TOPLINE
+    cmp #$09
+    bcc :+
+    cmp #$88
+    bcs :+
+    pla
+    ora TOPMASK
+    bra :++
+:
+    pla
+:
+.endif
     and #$18
     beq @remainblank
     lda #$0F
@@ -1224,6 +1242,9 @@ UploadObjectsPalette:
 SetVideoRegisters:
 .a8
 .i16
+ .if USE_LAYER_MASKS
+    stz HDMA_ENABLE
+ .endif
     stz $2105
     lda #$23
     sta $2107
@@ -1329,6 +1350,19 @@ SetVideoRegisters:
     and #$10
     ora TOPEN
     sta TOPEN
+.if USE_LAYER_MASKS
+    stz TOPEN
+    lda TOPMASK
+    and #$08
+    beq :+
+    lda #$02
+    sta TOPEN
+:
+    lda TOPMASK
+    and #$10
+    ora TOPEN
+    sta TOPEN
+.endif
     lda BOTTOMEN
     sta $212C
 .if USE_RASTER_SCROLL
@@ -1457,6 +1491,9 @@ SetVideoRegisters:
 .if USE_RASTER_SCROLL
     ora RASTER_ENABLE
 .endif
+ .if USE_LAYER_MASKS
+    sta HDMA_ENABLE
+ .endif
     sta $420C
 .if USE_RASTER_SCROLL
     rts
@@ -1464,6 +1501,9 @@ SetVideoRegisters:
 @nosplit:
 .if USE_RASTER_SCROLL
     lda RASTER_ENABLE
+ .if USE_LAYER_MASKS
+    sta HDMA_ENABLE
+ .endif
     sta $420C
 .endif
     rts
@@ -1509,3 +1549,5 @@ VerticalOffset:
     clc
     adc #$0007
     rts
+
+.include "native_masks.inc"

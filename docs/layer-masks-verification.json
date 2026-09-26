@@ -1,0 +1,711 @@
+{
+  "based_on": "fe74572107f068ffa7e3244d251b3b431fa8c830",
+  "complete_game_port": false,
+  "unit_tests_passed": 150,
+  "interactive_build": {
+    "bytes": 4194304,
+    "sha256": "4ccb9e2d9ce9a8edb9c3d2337ff9ca4a663b298eb36d14626dd0941314a4c49d",
+    "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "observed_instruction_sites": 10763,
+    "statically_inferred_instruction_sites": 5829,
+    "classified_code_bytes": 35225,
+    "unresolved_direct_edges": 114,
+    "layer_masks": true,
+    "experimental_raster_scroll": true,
+    "audio_implemented": true,
+    "audio_counters": true,
+    "test_input_replay_sha256": null,
+    "test_nmi_restore_stress": false,
+    "test_bank_switch_stress": false,
+    "complete_game_port": false
+  },
+  "steady_masks": {
+    "cases": 32,
+    "pixels": 1835008,
+    "mismatches": 0,
+    "cases_detail": [
+      {
+        "mask": 0,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 2,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 4,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 6,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 8,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 10,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 12,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 14,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 16,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 18,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 20,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 22,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 24,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 26,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 28,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 30,
+        "sprite16": false,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 0,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 2,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 4,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 6,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 8,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 10,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 12,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 14,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 16,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 18,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 20,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 22,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 24,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 26,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 28,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      },
+      {
+        "mask": 30,
+        "sprite16": true,
+        "mismatches": 0,
+        "left_edge_mismatches": 0,
+        "other_mismatches": 0,
+        "passed": true
+      }
+    ]
+  },
+  "mask_changes": [
+    {
+      "scope": "Settled presentations only; change-boundary frames are not aligned or claimed exact",
+      "sprite16": false,
+      "frames_observed": 272,
+      "frames_checked": 221,
+      "transition_samples_not_compared": 51,
+      "masks": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30
+      ],
+      "pixels_checked": 12673024,
+      "mismatches": 0,
+      "snes_sha256": "43b291f4e921cf8084a9c1041a6fc56342bd8cd749f4362eb1c63a906482b9a9",
+      "passed": true
+    },
+    {
+      "scope": "Settled presentations only; change-boundary frames are not aligned or claimed exact",
+      "sprite16": true,
+      "frames_observed": 272,
+      "frames_checked": 221,
+      "transition_samples_not_compared": 51,
+      "masks": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        24,
+        26,
+        28,
+        30
+      ],
+      "pixels_checked": 12673024,
+      "mismatches": 0,
+      "snes_sha256": "1580befaf0481d72bd076439ff891dbdfaf50bbe0bd79b4aa8d947d4e623618a",
+      "passed": true
+    }
+  ],
+  "split_masks": {
+    "scope": "Independent NES oracle; one partial IRQ row reported separately, not exact",
+    "cases": [
+      {
+        "top_mask": 10,
+        "bottom_mask": 30,
+        "snes_sha256": "5614966e19a2fd1f154deb3748194b3bbaf8d2f09773a1f41c86f9d8a5ec73ba",
+        "pixels": 57344,
+        "mismatches": 0,
+        "stable_pixels": 57088,
+        "stable_mismatches": 0,
+        "transition_row": 88,
+        "transition_mismatches": 0,
+        "full_frame_exact": true,
+        "passed": true
+      },
+      {
+        "top_mask": 30,
+        "bottom_mask": 10,
+        "snes_sha256": "92408ab20ffce4b5dd77fc6d19060af4a3b9dcee6e1299eb46905f51530dc260",
+        "pixels": 57344,
+        "mismatches": 0,
+        "stable_pixels": 57088,
+        "stable_mismatches": 0,
+        "transition_row": 88,
+        "transition_mismatches": 0,
+        "full_frame_exact": true,
+        "passed": true
+      },
+      {
+        "top_mask": 30,
+        "bottom_mask": 16,
+        "snes_sha256": "38ac7194a77fa844a21ecd498255ea060a9dc749c173722a8d2de2ffec2a3ad3",
+        "pixels": 57344,
+        "mismatches": 40,
+        "stable_pixels": 57088,
+        "stable_mismatches": 0,
+        "transition_row": 88,
+        "transition_mismatches": 40,
+        "full_frame_exact": false,
+        "passed": true
+      },
+      {
+        "top_mask": 16,
+        "bottom_mask": 30,
+        "snes_sha256": "cb669c618458dc0507260507a2141f6d5b307cefc9d182799c10e46cbbcb9aee",
+        "pixels": 57344,
+        "mismatches": 40,
+        "stable_pixels": 57088,
+        "stable_mismatches": 0,
+        "transition_row": 88,
+        "transition_mismatches": 40,
+        "full_frame_exact": false,
+        "passed": true
+      },
+      {
+        "top_mask": 24,
+        "bottom_mask": 30,
+        "snes_sha256": "92f33c47c90a66502de18ae17f89ce8b4106d2346727629a8d8bf319b3961133",
+        "pixels": 57344,
+        "mismatches": 5,
+        "stable_pixels": 57088,
+        "stable_mismatches": 0,
+        "transition_row": 88,
+        "transition_mismatches": 5,
+        "full_frame_exact": false,
+        "passed": true
+      },
+      {
+        "top_mask": 30,
+        "bottom_mask": 24,
+        "snes_sha256": "aeae9ad53ec2b468e0b6858f7701ac43f839b7054e03032d36a20cdd631a6eaf",
+        "pixels": 57344,
+        "mismatches": 5,
+        "stable_pixels": 57088,
+        "stable_mismatches": 0,
+        "transition_row": 88,
+        "transition_mismatches": 5,
+        "full_frame_exact": false,
+        "passed": true
+      }
+    ],
+    "pixels": 344064,
+    "stable_pixels": 342528,
+    "stable_mismatches": 0,
+    "mismatches": 90,
+    "full_frame_exact": false,
+    "passed": true,
+    "commercial_game_content": false,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+  },
+  "unresolved_oracle_disagreement": {
+    "status": "diagnostic_only_not_accuracy_pass",
+    "scope": "Complete layer disable following MMC5 IRQ; independent reference disagreement remains unresolved; no hardware result",
+    "fixture_sha256": "c223e214aa37e4c51a54ace9fa869821a9d96f444131e248123b047b634c40d5",
+    "emulators": {
+      "fceumm": {
+        "core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+        "rom_sha256": "c223e214aa37e4c51a54ace9fa869821a9d96f444131e248123b047b634c40d5",
+        "options": {},
+        "frames": [
+          {
+            "frame": 99,
+            "pixels": 57344,
+            "white_pixels": 12987,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "7edc7e9657444f99a8412760db2bae0272fbbaec4330ef2d4273faae78311023",
+            "guest_nmi_counter": 97
+          },
+          {
+            "frame": 100,
+            "pixels": 57344,
+            "white_pixels": 32676,
+            "white_pixels_below_row_100": 17932,
+            "pixel_class_sha256": "d5a716bb36cda4fa0a94357ac18d71ba44c298994c0f95d8be7430f27d756122",
+            "guest_nmi_counter": 98
+          },
+          {
+            "frame": 101,
+            "pixels": 57344,
+            "white_pixels": 12987,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "7edc7e9657444f99a8412760db2bae0272fbbaec4330ef2d4273faae78311023",
+            "guest_nmi_counter": 99
+          },
+          {
+            "frame": 102,
+            "pixels": 57344,
+            "white_pixels": 32676,
+            "white_pixels_below_row_100": 17932,
+            "pixel_class_sha256": "d5a716bb36cda4fa0a94357ac18d71ba44c298994c0f95d8be7430f27d756122",
+            "guest_nmi_counter": 100
+          }
+        ]
+      },
+      "nestopia": {
+        "core_sha256": "1522b3a14ac49f48481c7f71f5b92f5d2b376fa6c181016f132d9b14c89287f2",
+        "rom_sha256": "c223e214aa37e4c51a54ace9fa869821a9d96f444131e248123b047b634c40d5",
+        "options": {
+          "nestopia_blargg_ntsc_filter": "disabled"
+        },
+        "frames": [
+          {
+            "frame": 99,
+            "pixels": 57344,
+            "white_pixels": 0,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "4f81904a9b06c58572a0e5769b3b4ffb99e7bd4be88ee8c2b64a804f483d9dc6",
+            "guest_nmi_counter": 97
+          },
+          {
+            "frame": 100,
+            "pixels": 57344,
+            "white_pixels": 0,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "4f81904a9b06c58572a0e5769b3b4ffb99e7bd4be88ee8c2b64a804f483d9dc6",
+            "guest_nmi_counter": 98
+          },
+          {
+            "frame": 101,
+            "pixels": 57344,
+            "white_pixels": 0,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "4f81904a9b06c58572a0e5769b3b4ffb99e7bd4be88ee8c2b64a804f483d9dc6",
+            "guest_nmi_counter": 99
+          },
+          {
+            "frame": 102,
+            "pixels": 57344,
+            "white_pixels": 0,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "4f81904a9b06c58572a0e5769b3b4ffb99e7bd4be88ee8c2b64a804f483d9dc6",
+            "guest_nmi_counter": 100
+          }
+        ]
+      },
+      "snes9x": {
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "rom_sha256": "b3dfba064c747c3394bb133cd9ad8efb0d03180be3c9f7a5eb7da817b86520e9",
+        "options": {},
+        "frames": [
+          {
+            "frame": 159,
+            "pixels": 57344,
+            "white_pixels": 12952,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "3e2a9c40f7ade621c5f6a998c91109c21a951637347ef260ef0bddd1cabb8557",
+            "guest_nmi_counter": 143
+          },
+          {
+            "frame": 160,
+            "pixels": 57344,
+            "white_pixels": 12952,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "3e2a9c40f7ade621c5f6a998c91109c21a951637347ef260ef0bddd1cabb8557",
+            "guest_nmi_counter": 143
+          },
+          {
+            "frame": 161,
+            "pixels": 57344,
+            "white_pixels": 12952,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "3e2a9c40f7ade621c5f6a998c91109c21a951637347ef260ef0bddd1cabb8557",
+            "guest_nmi_counter": 144
+          },
+          {
+            "frame": 162,
+            "pixels": 57344,
+            "white_pixels": 12952,
+            "white_pixels_below_row_100": 0,
+            "pixel_class_sha256": "3e2a9c40f7ade621c5f6a998c91109c21a951637347ef260ef0bddd1cabb8557",
+            "guest_nmi_counter": 145
+          }
+        ]
+      }
+    },
+    "fceumm_observed_pixel_classes": 2,
+    "nestopia_observed_pixel_classes": 1
+  },
+  "earlier_raster_regression": {
+    "scope": "Black/white pattern geometry against independent NES core; transition rows are known inexact; fixed reload timing contract only",
+    "passed": true,
+    "stable_pixels": 397824,
+    "stable_pixel_mismatches": 0,
+    "full_frame_pixel_mismatches": 546,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "commercial_game_content": false
+  },
+  "cpu_regressions": {
+    "records": 419,
+    "bytes": 1676,
+    "mismatches": 0
+  },
+  "objects": {
+    "frames_checked": 160,
+    "oam_bytes_checked": 81920,
+    "mismatch_count": 0,
+    "sprite_modes": [
+      0,
+      8,
+      32,
+      40
+    ],
+    "converted_objects": 2624,
+    "cached_objects": 7616,
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "rom_sha256": "69fd706f14fe833323f4302f78d1bda57a51ec4db1fb3957d7a576cfdd8dce2c",
+    "scope": "Original procedural dynamic OAM encoding and cache invalidation; not full PPU accuracy."
+  },
+  "audio_matrix": {
+    "passed": true,
+    "configurations": 4,
+    "scope": "Original procedural input only; not full NES APU fidelity."
+  },
+  "interactive_audio": {
+    "seconds": 15.491136079900125,
+    "sample_rate": 32040.0,
+    "peak": 14074,
+    "rms": 2813.2637404713137,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2282,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "selected_replay": {
+    "baseline_rom_sha256": "08a0c738da3e7177953c03fcb59dedac6c5028cd326579817d91d64a2468987d",
+    "candidate_rom_sha256": "be07db8fcf71ef41b5cf508cffab3c1080290f7ea54258044e69ef71360679a8",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 236,
+        "candidate_snes_frames": 237,
+        "speed_ratio": 0.9957805907172996,
+        "candidate_snes_frames_per_logical_frame": 1.975
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 120,
+        "candidate_snes_frames": 120,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "stair_route": {
+    "status": "completed_budget",
+    "tail_actions": 57,
+    "snes_frames_before": 11946,
+    "snes_frames_after": 11960,
+    "endpoint_mismatches_vs_previous": 0,
+    "endpoint_mismatches_vs_nes": 0,
+    "scope": "Three candidate state bytes at 57 endpoints only; not complete state or frame equality"
+  },
+  "negative_control": {
+    "scope": "Mask 0x18, small sprites, renderer disabled; one authored scene",
+    "pixels": 57344,
+    "mismatches": 1092,
+    "left_eight_pixels_only": true
+  },
+  "limitations": [
+    "No full-speed claim",
+    "No complete-game, boss, ending, or physical-console validation",
+    "Frame-level guest scheduling is not cycle-exact",
+    "Known partial-row raster and masking differences persist",
+    "Full rendering-disable split disagrees across reference cores and is not a passing test",
+    "Sweeps, DMC, accurate noise, expansion sound and exact audio timing incomplete"
+  ],
+  "raw_evidence": "Per-case JSON, images and logs are emitted by the committed verification scripts; public procedural artifacts are archived by layer-masks.yml. Private game artifacts are in the downloadable checkpoint, not GitHub."
+}

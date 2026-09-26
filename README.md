@@ -1,6 +1,16 @@
 # Nes2Snes
 
-**Current experimental checkpoint:** a repeatable room-1-02 staircase route
+## Current: independent left-edge masks and HUD layer control
+
+The renderer now clips background and sprites independently in the leftmost
+eight pixels and uses the HUD's own layer-enable snapshot. 150 unit tests and
+32 whole-frame procedural scenes pass: 1,835,008 binary pixel classes match.
+Partial-row timing remains inexact; a rendering-disable split disagrees across
+reference emulators and is explicitly reported as unresolved. The 57-action
+staircase route still completes. This is not a speedup or a completed port.
+See [current results and limits](docs/layer-masks-2026-09-25.md).
+
+**Previous experimental checkpoint:** a repeatable room-1-02 staircase route
 reaches the outdoor section, with an opt-in live-V vertical-scroll/240-line-wrap
 fix and blank-band handling. 140 unit tests and seven independent procedural
 raster cases pass their stated stable-region checks. Two partial transition
