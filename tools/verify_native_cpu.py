@@ -44,7 +44,12 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
         if n!=s:mismatches.append({'test':item['name'],'nes':n.hex(),'snes':s.hex()})
     diagnostics=json.loads((out/'snes.diagnostics.json').read_text())
     build_meta=json.loads((fixture/'snes/native-build.json').read_text())
-    if 'fastpath_stress_seed' in source:
+    runtime_counters = build_meta.get('runtime_counters', True)
+    if type(runtime_counters) is not bool:
+        raise ValueError('runtime_counters must be a boolean')
+    if not runtime_counters and any(diagnostics.values()):
+        raise RuntimeError('Counter-free build unexpectedly updated access counters')
+    if 'fastpath_stress_seed' in source and runtime_counters:
         for flag,counter in [('quick_zero_page','quick_zp_calls'),
                              ('quick_indirect_reads','quick_indirect_calls'),
                              ('quick_io','quick_io_calls')]:
@@ -53,18 +58,18 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
                 exercised += diagnostics.get('direct_bank_calls',0)
             if build_meta.get(flag) and not exercised:
                 raise RuntimeError(f'Enabled path {flag} was not exercised')
-    if source.get('direct_fixture') and build_meta.get('direct_calls'):
+    if source.get('direct_fixture') and build_meta.get('direct_calls') and runtime_counters:
         counter = 'simple_direct_write_calls' if build_meta.get('simple_direct_writes') else 'direct_write_calls'
         if diagnostics.get(counter) != 95 or not diagnostics.get('quick_ppu_calls'):
             raise RuntimeError('Must exercise 95 direct writes (including two initialization writes) and the C0 COP fallback')
-    if 'ppu_fixture_seed' in source:
+    if 'ppu_fixture_seed' in source and runtime_counters:
         counter = 'direct_write_calls' if build_meta.get('direct_calls') else 'quick_ppu_calls'
         if (build_meta.get('direct_calls') or build_meta.get('quick_ppu_writes')) and not diagnostics.get(counter):
             raise RuntimeError(f'Enabled PPU write path was not exercised: {counter}')
     if source.get('safe_address_fixture') and build_meta.get('safe_addresses'):
         if not build_meta.get('safe_native_sites') or diagnostics.get('cop_calls') != 0:
             raise RuntimeError('Safe-address fixture must use native replacements without COP')
-    if source.get('bank_switch_fixture') and build_meta.get('direct_bank_switches'):
+    if source.get('bank_switch_fixture') and build_meta.get('direct_bank_switches') and runtime_counters:
         if diagnostics.get('direct_bank_calls', 0) < 90 or diagnostics.get('cop_calls', 0) == 0:
             raise RuntimeError('Must exercise the direct mapper returns and C0 COP fallback')
     oam_check=None
@@ -76,7 +81,9 @@ def verify(nes_core:Path,snes_core:Path,fixture:Path,out:Path):
         if len(actual)!=256 or actual!=expected:raise RuntimeError('Native OAM page copy mismatch')
     result={'records_checked':len(source['records']),'bytes_checked':len(source['records'])*4,
             'mismatch_count':len(mismatches),'mismatches':mismatches,
-            'native_execution_counters':diagnostics,'oam_copy':oam_check,
+            'native_execution_counters':diagnostics,'runtime_counters_enabled':runtime_counters,
+            'counter_scope':'Measured access counts' if runtime_counters else 'Disabled; zero values are not evidence of zero compatibility calls',
+            'oam_copy':oam_check,
             'scope':('NMOS indexed PPU dummy reads, page crossings and RMW bus side effects; not cycle accuracy.' if source.get('indexed_bus_fixture') else 'Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage.' if source.get('indexed_memory_fixture') else 'Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim.' if source.get('apu_counter_fixture') else 'Original indexed zero-base and internal RAM-mirror boundary cases; not mapper or full-game coverage.' if source.get('safe_address_fixture') else 'Original STA/STX/STY stores and flags in all 32 mapped execution combinations, including C0 fallback.' if source.get('direct_fixture') else 'Original buffered PPU, register aliases, palette mirrors, status latch and store flags; rendering disabled, not cycle accuracy.' if 'ppu_fixture_seed' in source else 'Seeded indexed-zero-page/indirect reads, switchable-code bank changes and serial joypad fallback. Not complete game validation.' if 'fastpath_stress_seed' in source else 'Original synthetic documented-6502 instructions and all 32 supported mapper combinations. Not complete game validation.')}
     if source.get('zero_page_store_fixture'):
         result['scope']='Explicit STY zero-page indexed wraparound, stored values and register/flag preservation; not full-game coverage.'

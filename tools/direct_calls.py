@@ -115,7 +115,7 @@ def bank_veneer(opcode: int, address: int, stress: bool = False) -> list[str]:
     if opcode not in STORE_OPS or address not in (0x5115, 0x5116, 0x5117):
         raise ValueError('Unsupported direct bank store')
     body = ['    php', '    rep #$20', '.a16', '    pha',
-            '    inc $0988', '    bne :+', '    inc $098A', ':',
+            '    CountRuntime $0988',
             '    sep #$20', '.a8']
     if opcode != 0x8D:
         body.append('    txa' if opcode == 0x8E else '    tya')

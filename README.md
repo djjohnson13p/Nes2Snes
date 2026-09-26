@@ -1,10 +1,16 @@
 # Nes2Snes
 
-Latest tested implementation: [memory-path follow-up and sprite-DMA latch correction](docs/memory-followup.md).
-190 unit tests and 29 independent memory/DMA configurations pass. The prior
-runtime fails two new PPU-latch checks; both are corrected. Controlled walking
-uses 225 display frames per 120 game updates, down from 235 (4.44% higher
-throughput). This remains incomplete, below full speed and not hardware-tested.
+Latest tested implementation: [optional runtime profiling counters](docs/runtime-counters.md).
+The counter-free preview removes debug bookkeeping without removing fault checks.
+Controlled walking uses 191 display frames per 120 game updates, versus 225 in
+the counted build (17.80% higher throughput). This short sample does not imply
+that every route is 17.80% faster. The port is still incomplete and below full speed.
+
+**Why this is difficult and how to resume:** [engineering status](docs/engineering-status.md).
+This is a trace-bounded hardware-compatibility bridge, not a completed native
+engine rewrite. The counted build remains the default for diagnostics.
+
+Previous: [memory-path follow-up and sprite-DMA latch correction](docs/memory-followup.md).
 
 Previous: [indexed memory and NES dummy-read side effects](docs/indexed-bus.md).
 

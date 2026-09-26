@@ -23,6 +23,7 @@
 :
 .endmacro
 .include "config.inc"
+.include "native_counters.inc"
 
 SA=$0800
 SX=$0802
@@ -246,10 +247,7 @@ CopGeneric:
     sta COPBUSY
     rep #$20
 .a16
-    inc $0960
-    bne :+
-    inc $0962
-:
+    CountRuntime $0960
     lda [PPC]
     and #$00FF
     tax
@@ -612,14 +610,8 @@ CopReturn:
 PrepareQuickZpx:
 .a16
 .i16
-    inc $0964
-    bne :+
-    inc $0966
-:
-    inc $0960
-    bne :+
-    inc $0962
-:
+    CountRuntime $0964
+    CountRuntime $0960
     ; JSR adds two bytes: +3 is saved X, +5 saved A, +7 guest P, +8 guest PC.
     lda 8,s
     dec a
@@ -725,14 +717,8 @@ PrepareQuickIndirect:
     and #$07FF
 @safe:
     tax
-    inc $0968
-    bne :+
-    inc $096A
-:
-    inc $0960
-    bne :+
-    inc $0962
-:
+    CountRuntime $0968
+    CountRuntime $0960
     sep #$20
 .a8
     lda 7,s
@@ -791,14 +777,8 @@ QuickLDA_IY:
     and #$07FF
 @safe:
     tax
-    inc $0968
-    bne :+
-    inc $096A
-:
-    inc $0960
-    bne :+
-    inc $0962
-:
+    CountRuntime $0968
+    CountRuntime $0960
     sep #$20
 .a8
     lda a:$0000,x
@@ -1042,10 +1022,7 @@ QuickPpuStore:
     and #$0007
     asl a
     tax
-    inc $0970
-    bne :+
-    inc $0972
-:
+    CountRuntime $0970
     jsr CountQuickIo
     phy
     phd
@@ -1077,14 +1054,8 @@ QuickPpuStore:
 CountQuickIo:
 .a16
 .i16
-    inc $096C
-    bne :+
-    inc $096E
-:
-    inc $0960
-    bne :+
-    inc $0962
-:
+    CountRuntime $096C
+    CountRuntime $0960
     rts
 QuickAbsReturn:
     sep #$20
@@ -1168,10 +1139,7 @@ IndexedDummyRead:
     pha
     lda 3,s
     sta EA
-    inc $0998
-    bne :+
-    inc $099A
-:
+    CountRuntime $0998
     jsr ReadValue
     rep #$30
 .a16

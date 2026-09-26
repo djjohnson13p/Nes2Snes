@@ -1,4 +1,22 @@
 # Verified status — 2026-09-26
+
+## Current: profiling overhead separated from gameplay
+
+The explicit `--no-runtime-counters` build removes per-access debug increments,
+not safety traps or actual game/audio counters. Fixed-input walking takes 191
+SNES display frames per 120 game updates instead of 225 (17.80% higher
+throughput); attacking is unchanged. The counted build is byte-identical to
+the previous checkpoint. 200 unit tests and the independent 32-configuration
+CPU/PPU/APU/mapper matrix pass. Both modes retain the unknown-code fault guard.
+The previously tested staircase route still completes. This is not a new boss
+clear, full-speed result or a perfect port.
+
+See [results and limitations](runtime-counters.md) and
+[architecture diagnosis/resumption guide](engineering-status.md).
+
+## Historical checkpoints below
+
+# Verified status — 2026-09-26
 ## Current: memory fast paths and sprite-DMA latch correction
 
 190 unit tests and 29 independent configurations pass: 1,953 CPU/register/flag

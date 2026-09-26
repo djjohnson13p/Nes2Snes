@@ -37,10 +37,7 @@ name:
     phy
     phd
     phb
-    inc $0980
-    bne :+
-    inc $0982
-:
+    CountRuntime $0980
     lda #$0800
     tcd
     sep #$20
@@ -86,10 +83,7 @@ name:
     rep #$20
 .a16
     pha
-    inc $0984
-    bne :+
-    inc $0986
-:
+    CountRuntime $0984
     sep #$20
 .a8
 .if source = 1

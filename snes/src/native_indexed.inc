@@ -43,14 +43,8 @@ name:
     and #$07FF
 @safe:
     tax
-    inc QUICK_INDEXED_CALLS
-    bne :+
-    inc QUICK_INDEXED_CALLS+2
-:
-    inc $0960
-    bne :+
-    inc $0962
-:
+    CountRuntime QUICK_INDEXED_CALLS
+    CountRuntime $0960
     sep #$20
 .a8
     lda 7,s
@@ -122,14 +116,8 @@ QuickIndexedIoWrite:
     pla
     and #$001F
     tax
-    inc $0994
-    bne :+
-    inc $0996
-:
-    inc $0960
-    bne :+
-    inc $0962
-:
+    CountRuntime $0994
+    CountRuntime $0960
 .if USE_AUDIO_COUNTERS
     phy
     phd
