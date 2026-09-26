@@ -1635,6 +1635,7 @@ ResolveVram:
     rep #$20
 .a16
     lda VRAMV
+ResolveVramAddress:
     and #$3FFF
     sta PADDR
     cmp #$2000
@@ -1746,66 +1747,7 @@ WritePpuData:
 @ignore:
     jsr AdvanceVram
     rts
-ReadPpuData:
-    jsr ResolveVram
-    bcs @special
-    lda [PTR]
-    bra @buffer
-@special:
-    rep #$20
-.a16
-    lda PADDR
-    cmp #$2000
-    bcc @readchr
-    and #$03FF
-    cmp #$03C0
-    bcs @attr
-    sep #$20
-.a8
-    lda f:$7E5106
-    bra @buffer
-@attr:
-    sep #$20
-.a8
-    lda f:$7E5107
-    and #$03
-    sta TMP
-    asl a
-    asl a
-    ora TMP
-    sta TMP
-    asl a
-    asl a
-    asl a
-    asl a
-    ora TMP
-    bra @buffer
-@readchr:
-    jsr ReadChr
-@buffer:
-    sta TMP
-    rep #$20
-.a16
-    lda PADDR
-    cmp #$3F00
-    bcs @immediate
-    sep #$20
-.a8
-    lda RDBUF
-    pha
-    lda TMP
-    sta RDBUF
-    bra @advance
-@immediate:
-    sep #$20
-.a8
-    lda TMP
-    pha
-@advance:
-    jsr AdvanceVram
-    pla
-    sta PPUBUS
-    rts
+.include "native_ppudata.inc"
 ReadChr:
 .a16
     ; Raw CHR begins at LoROM bank $CD, 32 one-KiB pages per bank.

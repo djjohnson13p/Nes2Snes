@@ -1,0 +1,178 @@
+{
+  "evidence_origin": "Fresh local execution; CI records its own tested revision separately",
+  "baseline_revision": "a209aaf64f707913e028af43cd7dd6bf9459c63a",
+  "baseline_tree": "e77bf541f0efefd5f43970490f8ab6bebce58dba",
+  "baseline_unit_tests": 299,
+  "corrected_unit_tests": 307,
+  "palette": {
+    "status": "passed",
+    "configurations": 16,
+    "records_checked": 2368,
+    "bytes_checked": 9472,
+    "mismatch_count": 0,
+    "core_sha256": {
+      "nestopia": "1522b3a14ac49f48481c7f71f5b92f5d2b376fa6c181016f132d9b14c89287f2",
+      "snes9x": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+      "fceumm": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157"
+    },
+    "scope": "Forced-blank PPUDATA palette values, aliases, grayscale, upper bus bits, I/O latch, shadow-buffer refill, address increments/wrap, CIRAM and MMC5 fill. Not rendering-time fetch behavior, latch decay, DMC interference, or full-game accuracy."
+  },
+  "negative_control": {
+    "baseline_revision": "a209aaf64f707913e028af43cd7dd6bf9459c63a",
+    "records_checked": 148,
+    "mismatch_count": 130,
+    "same_fixture": true
+  },
+  "secondary_reference": {
+    "oracle": "Unmodified pinned FCEUmm",
+    "records_checked": 148,
+    "mismatch_count": 91,
+    "included_in_pass_totals": false,
+    "raw_differences": "Actions artifact reference-disagreement.json"
+  },
+  "retained_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Counted and counter-free variants: explicit CPU/PPU/APU events, mapper returns, interrupt stress and zero-offset OAM contents; not cycle accuracy or full-game coverage."
+  },
+  "route": {
+    "passed": true,
+    "complete_routes": true,
+    "clock_mode": "guarded",
+    "reference_platform": "nes",
+    "candidate_platform": "snes",
+    "reference_status": "completed_budget",
+    "candidate_status": "completed_budget",
+    "candidate_fault": null,
+    "planned_checkpoints": 84,
+    "checkpoints_compared": 84,
+    "state_fields_checked": 420,
+    "state_bytes_checked": 756,
+    "mismatched_checkpoints": 0,
+    "mismatches": [],
+    "reference_report_sha256": "b151b90e4c3e35353849df89af9ccd827bc37e779081164e9db99e6cc084a703",
+    "candidate_report_sha256": "943bb7368f3d6dcc7dace0d23c607a6c984b7ce6ab7f3c3178716580b2f9c257",
+    "reference_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "candidate_rom_sha256": "2c449758cf6f83afba1417e07b6c5ef1b711c8f50d6612d7bc15d8ccc36108f6",
+    "reference_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "candidate_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Selected area, camera and player fields at named input endpoints. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence."
+  },
+  "route_timing": {
+    "baseline_snes_display_frames": 15124,
+    "corrected_snes_display_frames": 15124,
+    "no_speedup_claim": true
+  },
+  "nes_probe_validation": {
+    "passed": true,
+    "endpoints": 84,
+    "ram_bytes_checked": 172032,
+    "pixels_checked": 4816896,
+    "mismatches": 0,
+    "scope": "Unmodified NES versus instrumented NES, not SNES"
+  },
+  "snes_endpoint_visual_regression": {
+    "endpoints": 84,
+    "pixels_checked": 4816896,
+    "mismatches": 0,
+    "scope": "Prior SNES versus corrected SNES, not NES"
+  },
+  "fixed_input": {
+    "alignment": "video-callback-presented-id-v1",
+    "baseline_rom_sha256": "cb146225671c48ba9b469e538c6f416c19349f33a2be52d7d49c3c98713ef4d2",
+    "candidate_rom_sha256": "825c6b8330661a6a12a54a8f9b62a932c7fff8bba77d6d307f2ac91b2e588289",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 147,
+        "candidate_snes_frames": 147,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 1.225
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 39,
+        "candidate_snes_frames": 39,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 1.56
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 44,
+        "candidate_snes_frames": 44,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 1.76
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 72,
+        "candidate_snes_frames": 72,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 1.2
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "recovery": {
+    "original_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "saved_trace_entries": 10763,
+    "legacy_union_entries": 11376,
+    "guarded_union_entries": 11553,
+    "exact_117_action_route_recovered": false,
+    "previous_local_palette_source_recovered": false,
+    "palette_source": "new reconstruction"
+  },
+  "source_sha256": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "snes/src/native_ppudata.inc": "13feb07293950996a67656ba0cb0461193c06067cedbb9719ea49e6a749022a9",
+    "tools/palette_read_fixture.py": "0e5b0c7228863e07740a33b5b9a3f223fa65c6b828a382f87cfcb3334248337c",
+    "tools/verify_palette_reads.py": "ac5f8a46ebfd7718ed0629cc43f48d5fd7883e00d9f722a9934a1bf617380629",
+    "tests/test_palette_reads.py": "52282e66ea6feb60469205f72c3e79e3a4f3c3b9fc7b3884d87ad4de984ac353"
+  }
+}

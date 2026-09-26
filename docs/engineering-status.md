@@ -86,3 +86,11 @@ checkpoint. No claim of unattended development after a response ends is made.
 
 No copied commercial ROM, game assets or game-derived disassembly belongs in the
 public source repository. Do not publish the private trace or playable binaries.
+
+## Latest saved-source recovery
+
+See `palette-reads.md` before resuming beyond this guide. It separates the
+verified `a209aaf` baseline, the newly reconstructed palette-read correction,
+and the missing 117-action Block 1-03 script. Do not infer that an old local
+route, an unpublished experiment, or a source-staging commit passed acceptance.
+Keep exact tested source hashes and private trace provenance with each new run.
