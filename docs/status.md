@@ -1,6 +1,15 @@
 # Verified status — 2026-09-25
 
-## Current: independent left-edge masks and HUD layer control
+## Current: optional pulse sweeps
+
+The opt-in audio sweep module passes 170 unit tests, 54 independent period
+cases, 486 length/status/store-flag records and 420 quantized audio updates.
+The 57-action staircase route still completes; all five selected replay images
+match the prior renderer. Walking is slightly slower (239 vs 237 display frames
+for 120 game updates). This remains an incomplete, approximately half-speed port.
+See [sweep results and explicit limits](pulse-sweep.md).
+
+## Previous: independent left-edge masks and HUD layer control
 
 The renderer now clips background and sprites independently in the leftmost
 eight pixels and uses the HUD's own layer-enable snapshot. 150 unit tests and

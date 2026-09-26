@@ -1,0 +1,291 @@
+{
+  "base_source": "65c371bfce6cc08d5402d07af7e24a5dcb02ff29",
+  "unit_tests": 170,
+  "sweep_oracle": {
+    "passed": true,
+    "cases": 54,
+    "period_values_checked": 108,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+  },
+  "quantized_state": [
+    {
+      "mode": "direct",
+      "passed": true,
+      "frames_checked": 140,
+      "state_bytes_checked": 3920,
+      "pcm_segments": [
+        {
+          "name": "overflow",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4264
+        },
+        {
+          "name": "zero_shift_overflow",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4266
+        },
+        {
+          "name": "negate_zero_tone",
+          "kind": "audible",
+          "rms": 3374.769199519197,
+          "samples": 4266
+        },
+        {
+          "name": "period_seven",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4264
+        },
+        {
+          "name": "disabled",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4266
+        },
+        {
+          "name": "no_resurrection",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4264
+        },
+        {
+          "name": "final_silence",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 5332
+        }
+      ],
+      "scope": "Frame-quantized sweep/counter state, actual overflow/mute PCM; not independent NES cycle or waveform equivalence"
+    },
+    {
+      "mode": "generic",
+      "passed": true,
+      "frames_checked": 140,
+      "state_bytes_checked": 3920,
+      "pcm_segments": [
+        {
+          "name": "overflow",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4264
+        },
+        {
+          "name": "zero_shift_overflow",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4266
+        },
+        {
+          "name": "negate_zero_tone",
+          "kind": "audible",
+          "rms": 3215.27901304682,
+          "samples": 4266
+        },
+        {
+          "name": "period_seven",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4264
+        },
+        {
+          "name": "disabled",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4266
+        },
+        {
+          "name": "no_resurrection",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 4264
+        },
+        {
+          "name": "final_silence",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 5332
+        }
+      ],
+      "scope": "Frame-quantized sweep/counter state, actual overflow/mute PCM; not independent NES cycle or waveform equivalence"
+    },
+    {
+      "mode": "nested-nmi",
+      "passed": true,
+      "frames_checked": 140,
+      "state_bytes_checked": 3920,
+      "pcm_segments": [
+        {
+          "name": "overflow",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 30920
+        },
+        {
+          "name": "zero_shift_overflow",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 30920
+        },
+        {
+          "name": "negate_zero_tone",
+          "kind": "audible",
+          "rms": 7390.30998453285,
+          "samples": 30922
+        },
+        {
+          "name": "period_seven",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 30920
+        },
+        {
+          "name": "disabled",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 30922
+        },
+        {
+          "name": "no_resurrection",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 30922
+        },
+        {
+          "name": "final_silence",
+          "kind": "silent",
+          "rms": 0.0,
+          "samples": 37318
+        }
+      ],
+      "scope": "Frame-quantized sweep/counter state, actual overflow/mute PCM; not independent NES cycle or waveform equivalence"
+    }
+  ],
+  "length_and_flags": [
+    {
+      "mode": "direct",
+      "records_checked": 162,
+      "bytes_checked": 648,
+      "mismatch_count": 0,
+      "scope": "Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim."
+    },
+    {
+      "mode": "generic",
+      "records_checked": 162,
+      "bytes_checked": 648,
+      "mismatch_count": 0,
+      "scope": "Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim."
+    },
+    {
+      "mode": "c0",
+      "records_checked": 162,
+      "bytes_checked": 648,
+      "mismatch_count": 0,
+      "scope": "Explicit five-step APU length/status event oracle, including reload/disable and store flags; no periodic cycle-timing claim."
+    }
+  ],
+  "replay": {
+    "baseline_rom_sha256": "be07db8fcf71ef41b5cf508cffab3c1080290f7ea54258044e69ef71360679a8",
+    "candidate_rom_sha256": "342c6144d3ded90a9c766e060607483f5fa835b9f149e731d5de85e3f4ef93bf",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 237,
+        "candidate_snes_frames": 239,
+        "speed_ratio": 0.9916317991631799,
+        "candidate_snes_frames_per_logical_frame": 1.9916666666666667
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 120,
+        "candidate_snes_frames": 120,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "route_endpoints": {
+    "passed": true,
+    "endpoints_checked": 57,
+    "fields": [
+      "game_state",
+      "candidate_player_x",
+      "candidate_player_y"
+    ],
+    "mismatches": [],
+    "scope": "Selected RAM bytes at route endpoints versus prior SNES checkpoint; not full-state NES equivalence."
+  },
+  "live_audio": {
+    "seconds": 15.873845193508116,
+    "sample_rate": 32040.0,
+    "peak": 14089,
+    "rms": 2814.8823776707113,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2282,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "interactive_rom_sha256": "6dbcdc4901cfee7a81b1444ba437bb9ca2551277c715b0f102ac36f44f8a4319",
+  "legacy_audio_byte_identical": true,
+  "complete_port": false,
+  "cycle_accurate_audio": false,
+  "physical_snes_tested": false
+}

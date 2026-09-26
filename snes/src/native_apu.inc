@@ -38,6 +38,9 @@ ApuWriteRegister:
 .i16
     sta f:$7E4000,x
     sta AEVENT
+.if USE_AUDIO_SWEEP
+    jsr SweepWrite
+.endif
     rep #$20
 .a16
     inc AREGWRITES
@@ -187,6 +190,9 @@ ApuFrame:
 ApuHalf:
 .a8
 .i16
+.if USE_AUDIO_SWEEP
+    jsr SweepHalf
+.endif
     rep #$20
 .a16
     inc AHALFCLOCKS
@@ -308,3 +314,5 @@ ApuLengthTable:
     .byte 12,16,24,18,48,20,96,22,192,24,72,26,16,28,32,30
 .segment "CODE"
 .endif
+
+.include "native_sweep.inc"

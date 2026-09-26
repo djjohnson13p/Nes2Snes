@@ -1,5 +1,10 @@
 # Nes2Snes
 
+Latest tested implementation: [optional pulse sweeps](docs/pulse-sweep.md).
+170 unit tests and independent event checks pass; the port remains unfinished
+and approximately half speed. Sound is not cycle-accurate.
+
+
 ## Current: independent left-edge masks and HUD layer control
 
 The renderer now clips background and sprites independently in the leftmost

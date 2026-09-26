@@ -139,11 +139,24 @@ AudioFrame:
     lsr a
     lsr a
     sta ASOURCE
+.if USE_AUDIO_SWEEP
+    rep #$20
+.a16
+    lda SWPERIOD,x
+    sta ATIMER
+    sep #$20
+.a8
+    jsr SweepMuted
+    beq :+
+    stz AVOL
+:
+.else
     lda f:$7E4003,x
     and #$07
     sta ATIMER+1
     lda f:$7E4002,x
     sta ATIMER
+.endif
     lda AVOICE
     beq @first
     lda f:$7E4015
