@@ -1,0 +1,93 @@
+name: Indexed-indirect reads and retained runtime safety
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/indirect-read-20260926]
+    paths:
+      - '.github/workflows/indirect-read-candidate.yml'
+      - 'maintenance/indirect-x/**'
+      - 'snes/src/native*.inc'
+      - 'snes/src/native.s'
+      - 'tools/build_native.py'
+      - 'tools/indirect_x_fixture.py'
+      - 'tools/verify_indirect_x.py'
+      - 'tests/test_indirect_x.py'
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Integrate only the checked baseline and record the tested source
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! grep -q USE_QUICK_INDIRECT_X tools/build_native.py; then
+            /usr/bin/python3 maintenance/indirect-x/apply.py
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add snes/src/native.s tools/build_native.py tools/indirect_x_fixture.py
+            git commit -m 'Integrate opt-in indexed-indirect reader with unchanged default execution'
+          fi
+          mkdir -p build/previous-source
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive ad0648cf46e3a799ea55815c9b0015a765bd27ec | tar -x -C build/previous-source
+      - name: Unit tests and actual assembler gates
+        shell: bash
+        run: /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Build pinned unmodified independent emulators
+        run: |
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2
+      - name: Independent pointer, index, flag and I/O matrix
+        run: |
+          /usr/bin/python3 tools/verify_indirect_x.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --previous-root build/previous-source --out build/indirect-x
+      - name: Retain CPU safety, audio and whole-controller regressions
+        run: |
+          /usr/bin/python3 tools/verify_runtime_counters.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/runtime-counters
+          /usr/bin/python3 tools/verify_native_controller.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/native-controller
+      - name: Publish tested integration to its development branch only
+        if: github.ref == 'refs/heads/development/indirect-read-20260926'
+        shell: bash
+        run: |
+          set -euo pipefail
+          current=$(git ls-remote origin refs/heads/development/indirect-read-20260926 | cut -f1)
+          test "$current" = "$GITHUB_SHA" || { echo 'Branch changed; refusing to overwrite it'; exit 1; }
+          git push origin HEAD:refs/heads/development/indirect-read-20260926
+      - name: Archive exact tested source
+        run: git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: indexed-indirect-read-verification
+          path: |
+            build/unit-tests.log
+            build/tested-revision.txt
+            build/indirect-x/progress.json
+            build/indirect-x/indirect-x-verification.json
+            build/indirect-x/*/verification/*.json
+            build/runtime-counters/runtime-counter-verification.json
+            build/native-controller/native-controller-verification.json
+            build/tested-source.zip
+          retention-days: 30
