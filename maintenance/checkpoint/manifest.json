@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "reference_revision": "8a9a43bea0f5d19b3f4d6c294c8c376650184d62",
+  "before": {
+    "README.md": "cbc1d49a5aa84c596426c7d198df13c010bfd4a3472320243e165216866b9815",
+    "docs/safe-address-verification.json": null,
+    "docs/safe-addresses-2026-09-25.md": null,
+    "docs/status.md": "eeb14bf38fb164afbb3537ec20978d138685666ffb5365610050cabfaffba01c",
+    "snes/src/native_direct.inc": "7b9bea050ddc9a50bce40f42cf29d4264961ce8e468ea4ac72ebe0cbc589d91e",
+    "tests/test_native_safe.py": null,
+    "tools/build_native.py": "cf77a9ce8586e3efa083ebb0995e39729ea965761d3279517bba2b54e2abd50d",
+    "tools/direct_calls.py": "bb5c9c6d01c409f9218ce6bca917c0ce5526d72112d83c7a9d94488fe65b5de7",
+    "tools/native_safe.py": null,
+    "tools/safe_address_fixture.py": null,
+    "tools/verify_native_cpu.py": "e6aafcdbd2f8d7f2bc0fef240675dc0517d229e1aa1da8f4e46305d86bd2c47b"
+  },
+  "after": {
+    "README.md": "ff17ed156436535b9ccf5b00045053b4bba90a8209ca16fae44371495e18eb28",
+    "docs/safe-address-verification.json": "8d6153a4a154f1e2850d0ce50ce2a55a6c690e56bdb5fe241e6e251dbf729900",
+    "docs/safe-addresses-2026-09-25.md": "b5eabf81cdb212d839794482587b02873c6ace0cf8e1b529dbbfe11f4d3b1f26",
+    "docs/status.md": "cc77127ea84861b36359c460f97c6ccc45c7adeb34f6b89b555267a32a7ae5df",
+    "snes/src/native_direct.inc": "becd9c8caf7d4212ead8876c1bf0545e83a318376c44fec1d1d1091a5dcf3344",
+    "tests/test_native_safe.py": "269b0494148079ed8977a3f50733c9adac2dc55a23479e64e9179b94382d5169",
+    "tools/build_native.py": "8d1d78bbe8f971f74b34cd8a6c1a09b2bf0fdecf3997745733690071524ca9ea",
+    "tools/direct_calls.py": "681e022cf4e8ecc1cc3b7a61ceddd20ecc61eb3f432059c19d7046573a200503",
+    "tools/native_safe.py": "f2d1cce3af5d5f50750e01b05a8ac539cb2e91fe32a7297419731b7767d0dd3b",
+    "tools/safe_address_fixture.py": "cc946c52a698af4f66ae0be7fbb9c61de6dc1d39ea27f5c601bdd97060713e0c",
+    "tools/verify_native_cpu.py": "aae343f02c5f0ec726d19d5f2b5c91e97e111b284370905300169dfe741455f8"
+  },
+  "patch_sha256": "3bb4ebdb5db3155108ccc6b2f3c4cdef6354562c0dabadc122402b0f13e799f3",
+  "message": "Verify conservative native RAM substitutions and lighter simple-I/O paths"
+}
