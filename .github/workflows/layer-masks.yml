@@ -1,0 +1,81 @@
+name: Layer masks and reference diagnostics
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/layer-masks.yml'
+      - 'snes/src/native*'
+      - 'tools/build_native.py'
+      - 'tools/mask_fixture.py'
+      - 'tools/verify_masks.py'
+      - 'tools/probe_mask_oracles.py'
+      - 'tests/test_mask_fixture.py'
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install assembler and test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Unit tests
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: Build three pinned unmodified emulator cores
+        run: |
+          mkdir -p build
+          git clone https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2
+          git clone https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2
+          git clone https://github.com/libretro/nestopia.git build/nestopia
+          git -C build/nestopia checkout 8f00f500912a847062de432e38765c7285483e62
+          make -C build/nestopia/libretro -j2
+      - name: Full steady images, settled mask changes, and qualified split checks
+        run: |
+          /usr/bin/python3 tools/verify_masks.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/layer-masks
+      - name: Record unresolved rendering-disable disagreement (not an accuracy pass)
+        run: |
+          /usr/bin/python3 tools/probe_mask_oracles.py \
+            --fceumm build/fceumm/fceumm_libretro.so \
+            --nestopia build/nestopia/libretro/nestopia_libretro.so \
+            --snes build/snes9x/libretro/snes9x_libretro.so \
+            --out build/layer-disable-diagnostic
+      - name: Raster regression with partial rows explicitly counted
+        run: |
+          /usr/bin/python3 tools/verify_raster.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/raster-regression
+      - name: Archive the exact tested source
+        run: |
+          git archive --format=zip --output=build/tested-source.zip HEAD
+          git rev-parse HEAD > build/tested-revision.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: layer-masks-and-diagnostics
+          path: |
+            build/layer-masks/**/mask-verification.json
+            build/layer-masks/**/mask-split-verification.json
+            build/layer-masks/**/cycle-verification.json
+            build/layer-masks/**/verification.json
+            build/layer-masks/**/nes.png
+            build/layer-masks/**/snes.png
+            build/layer-disable-diagnostic/oracle-disagreement.json
+            build/layer-disable-diagnostic/*/samples.json
+            build/layer-disable-diagnostic/*/frame-*.png
+            build/raster-regression/raster-verification.json
+            build/tested-source.zip
+            build/tested-revision.txt
+          retention-days: 30
