@@ -30,6 +30,8 @@ def create(out: Path, block: int = 0, seed: int = 0,
     p.op('LDA', 'imm', 0); p.op('STA', 'zp', 0x7E)
     p.op('STA', 'abs', 0x02F0)
     p.op('STA', 'abs', 0x2000); p.op('STA', 'abs', 0x2001)
+    # Explicit CIRAM mapping: mapper power-on state is not a fixture oracle.
+    p.op('STA', 'abs', 0x5104); p.op('STA', 'abs', 0x5105)
     p.op('LDA', 'imm', 2); p.label('raw_instruction'); p.op('STA', 'abs', 0x5100)
     p.op('LDA', 'imm', 0x80); p.op('STA', 'abs', 0x5115)
     p.op('LDA', 'imm', 0x9E); p.op('STA', 'abs', 0x5116)
