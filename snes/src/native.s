@@ -41,6 +41,8 @@ OPER=$081E
 MODE=$081F
 PTR=$20
 PADDR=$0824
+INDEXBASE=$082C
+DUMMYADDR=$082E
 
 SLOT=$0900
 RAWBANK=$0901
@@ -295,15 +297,19 @@ ModeByte:
     bra AddressReady
 ModeAbsx:
     lda EA
+    sta INDEXBASE
     clc
     adc SX
     sta EA
+    jsr IndexedDummyRead
     bra AddressReady
 ModeAbsy:
     lda EA
+    sta INDEXBASE
     clc
     adc SY
     sta EA
+    jsr IndexedDummyRead
     bra AddressReady
 ModeIx:
     lda EA
@@ -319,9 +325,11 @@ ModeIy:
     tax
     jsr ReadZeroPointer
     lda EA
+    sta INDEXBASE
     clc
     adc SY
     sta EA
+    jsr IndexedDummyRead
     bra AddressReady
 ReadZeroPointer:
     sep #$20
@@ -803,6 +811,8 @@ QuickIndirectHandler QuickAND_IY, and
 QuickIndirectHandler QuickORA_IY, ora
 QuickIndirectHandler QuickEOR_IY, eor
 
+.include "native_indexed.inc"
+
 ; Narrow I/O fast paths implement exactly the existing supported semantics.
 ; Any other absolute address returns to the generic compatibility handler.
 QuickLDA_ABS:
@@ -1095,6 +1105,66 @@ QuickZpxDone:
     pla
     rti
 .endif
+
+; NMOS indexed bus accesses perform an intermediate read before every
+; store/RMW, and before page-crossing reads. Reads of PPU/joypad/IRQ registers
+; can have effects even when their value is discarded. Ignore ordinary RAM/ROM
+; dummy reads here: this bridge has no cycle-accurate bus or MMC5 PCM-read mode.
+; Called only for abs,X / abs,Y / (zp),Y after INDEXBASE and EA are known.
+IndexedDummyRead:
+.a16
+.i16
+    lda OPER
+    and #$00FF
+    cmp #$0004
+    bcc @read
+    cmp #$0007
+    bcc @dummy              ; STA/STX/STY (only legal modes can reach here)
+    cmp #$0010
+    bcs @dummy              ; read-modify-write
+@read:
+    lda EA
+    eor INDEXBASE
+    and #$FF00
+    beq @done
+@dummy:
+    lda EA
+    and #$00FF
+    sta DUMMYADDR
+    lda INDEXBASE
+    and #$FF00
+    ora DUMMYADDR
+    cmp #$2000
+    bcc @done
+    cmp #$4000
+    bcc @effect
+    cmp #$4015
+    beq @effect
+    cmp #$4016
+    beq @effect
+    cmp #$4017
+    beq @effect
+    cmp #$5204
+    bne @done
+@effect:
+    pha
+    lda EA
+    pha
+    lda 3,s
+    sta EA
+    inc $0998
+    bne :+
+    inc $099A
+:
+    jsr ReadValue
+    rep #$30
+.a16
+.i16
+    pla
+    sta EA
+    pla
+@done:
+    rts
 
 ; Read a guest address, with no read of real SNES registers by guest code.
 ReadValue:

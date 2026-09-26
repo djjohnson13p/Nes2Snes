@@ -1,11 +1,14 @@
 # Nes2Snes
 
-Latest tested implementation: [optional pulse sweeps](docs/pulse-sweep.md).
-170 unit tests and independent event checks pass; the port remains unfinished
-and approximately half speed. Sound is not cycle-accurate.
+Latest tested implementation: [indexed memory and NES dummy-read side effects](docs/indexed-bus.md).
+178 unit tests and 1,425 new independent comparison records pass. A PPU side-effect
+bug is fixed; walking improves modestly from 239 to 235 display frames per 120
+game updates. This remains an unfinished, approximately half-speed port.
+
+The following entries are historical checkpoints, not current test totals.
 
 
-## Current: independent left-edge masks and HUD layer control
+## Previous: independent left-edge masks and HUD layer control
 
 The renderer now clips background and sprites independently in the leftmost
 eight pixels and uses the HUD's own layer-enable snapshot. 150 unit tests and

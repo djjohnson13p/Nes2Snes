@@ -1,6 +1,16 @@
 # Verified status — 2026-09-25
 
-## Current: optional pulse sweeps
+## Current: indexed memory and PPU dummy-read correction
+
+The runtime now preserves tested side effects of intermediate indexed NES reads.
+The previous runtime fails 60 of the new bus fixture's 131 records; the corrected
+runtime matches all of them. 178 unit tests and 1,425 records across 11 new
+independent configurations pass. Selected gameplay images and the 57 staircase
+endpoints still match the preceding checkpoint. Walking takes 235 display frames
+per 120 game updates (previously 239): a small gain, still near half speed.
+See [changes, evidence and limitations](indexed-bus.md).
+
+## Previous: optional pulse sweeps
 
 The opt-in audio sweep module passes 170 unit tests, 54 independent period
 cases, 486 length/status/store-flag records and 420 quantized audio updates.

@@ -1,0 +1,399 @@
+{
+  "reference_revision": "9437d881220456d269fa96bbaa8150e0a2ab1dfb",
+  "unit_tests_passed": 178,
+  "new_indexed_matrix": {
+    "configurations": 11,
+    "records_checked": 1425,
+    "bytes_checked": 5700,
+    "mismatch_count": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "results": [
+      {
+        "name": "seed-0",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 246,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 122,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 58,
+          "quick_indexed_apu_calls": 11,
+          "indexed_dummy_io_reads": 8
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "seed-1",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 246,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 121,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 59,
+          "quick_indexed_apu_calls": 11,
+          "indexed_dummy_io_reads": 8
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "seed-2",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 248,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 117,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 65,
+          "quick_indexed_apu_calls": 11,
+          "indexed_dummy_io_reads": 8
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "seed-3",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 246,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 123,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 57,
+          "quick_indexed_apu_calls": 11,
+          "indexed_dummy_io_reads": 8
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "c0",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 247,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 108,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 71,
+          "quick_indexed_apu_calls": 11,
+          "indexed_dummy_io_reads": 8
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "generic",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 346,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 207,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 0,
+          "quick_indexed_apu_calls": 0,
+          "indexed_dummy_io_reads": 11
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "no-direct",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 460,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 333,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 0,
+          "quick_indexed_memory_calls": 59,
+          "quick_indexed_apu_calls": 11,
+          "indexed_dummy_io_reads": 8
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "no-native-ram",
+        "records_checked": 129,
+        "bytes_checked": 516,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 248,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 104,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 78,
+          "quick_indexed_apu_calls": 11,
+          "indexed_dummy_io_reads": 8
+        },
+        "oam_copy": {
+          "bytes_checked": 256,
+          "mismatch_count": 0
+        },
+        "scope": "Indexed RAM/ROM boundaries, flags, hardware fallback and APU write events; not full-game coverage."
+      },
+      {
+        "name": "bus",
+        "records_checked": 131,
+        "bytes_checked": 524,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 181,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 0,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 281,
+          "simple_direct_write_calls": 241,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 0,
+          "quick_indexed_apu_calls": 0,
+          "indexed_dummy_io_reads": 36
+        },
+        "oam_copy": null,
+        "scope": "NMOS indexed PPU dummy reads, page crossings and RMW bus side effects; not cycle accuracy."
+      },
+      {
+        "name": "bus-generic",
+        "records_checked": 131,
+        "bytes_checked": 524,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 181,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 0,
+          "quick_ppu_calls": 0,
+          "direct_write_calls": 281,
+          "simple_direct_write_calls": 241,
+          "direct_bank_calls": 2,
+          "quick_indexed_memory_calls": 0,
+          "quick_indexed_apu_calls": 0,
+          "indexed_dummy_io_reads": 36
+        },
+        "oam_copy": null,
+        "scope": "NMOS indexed PPU dummy reads, page crossings and RMW bus side effects; not cycle accuracy."
+      },
+      {
+        "name": "bus-no-direct",
+        "records_checked": 131,
+        "bytes_checked": 524,
+        "mismatch_count": 0,
+        "mismatches": [],
+        "native_execution_counters": {
+          "cop_calls": 1404,
+          "quick_zp_calls": 0,
+          "quick_indirect_calls": 0,
+          "quick_io_calls": 1223,
+          "quick_ppu_calls": 522,
+          "direct_write_calls": 0,
+          "simple_direct_write_calls": 0,
+          "direct_bank_calls": 0,
+          "quick_indexed_memory_calls": 0,
+          "quick_indexed_apu_calls": 0,
+          "indexed_dummy_io_reads": 36
+        },
+        "oam_copy": null,
+        "scope": "NMOS indexed PPU dummy reads, page crossings and RMW bus side effects; not cycle accuracy."
+      }
+    ],
+    "scope": "Procedural indexed addressing/ALU flags and PPU dummy-read side effects; not CPU-cycle timing, open-bus fidelity or whole-game validation."
+  },
+  "negative_control": {
+    "reference_revision": "9437d881220456d269fa96bbaa8150e0a2ab1dfb",
+    "records_checked": 131,
+    "mismatch_count": 60,
+    "purpose": "Prior runtime must fail the new PPU dummy-read fixture; this is not a shipping build"
+  },
+  "replay": {
+    "baseline_rom_sha256": "342c6144d3ded90a9c766e060607483f5fa835b9f149e731d5de85e3f4ef93bf",
+    "candidate_rom_sha256": "a419539fb4d332cd1f2a525af03ac715cae05485d370027fd110cecc8871b989",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "input_sha256": "f36a673766aa43646efbc9890fa0900c14d858684dc442ea441ccfd47fbe966c",
+    "pixels_checked": 286720,
+    "pixel_mismatches": 0,
+    "samples": [
+      {
+        "name": "stage-idle",
+        "render_frame": 916,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "walk-right",
+        "render_frame": 1036,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "jump-right",
+        "render_frame": 1061,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "attack",
+        "render_frame": 1086,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      },
+      {
+        "name": "settle",
+        "render_frame": 1146,
+        "pixels_checked": 57344,
+        "pixel_mismatches": 0
+      }
+    ],
+    "intervals": [
+      {
+        "ending_sample": "walk-right",
+        "logical_frames": 120,
+        "baseline_snes_frames": 239,
+        "candidate_snes_frames": 235,
+        "speed_ratio": 1.0170212765957447,
+        "candidate_snes_frames_per_logical_frame": 1.9583333333333333
+      },
+      {
+        "ending_sample": "jump-right",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "attack",
+        "logical_frames": 25,
+        "baseline_snes_frames": 50,
+        "candidate_snes_frames": 50,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      },
+      {
+        "ending_sample": "settle",
+        "logical_frames": 60,
+        "baseline_snes_frames": 120,
+        "candidate_snes_frames": 120,
+        "speed_ratio": 1.0,
+        "candidate_snes_frames_per_logical_frame": 2.0
+      }
+    ],
+    "scope": "Selected fixed-input, render-aligned captures only; not frame-by-frame or full-game equivalence."
+  },
+  "staircase": {
+    "passed": true,
+    "endpoints_checked": 57,
+    "fields": [
+      "game_state",
+      "candidate_player_x",
+      "candidate_player_y"
+    ],
+    "mismatches": [],
+    "scope": "Selected game-state and candidate player X/Y endpoints versus 9437d88; not full-state NES equivalence or complete game."
+  },
+  "live_audio": {
+    "seconds": 15.424594257178526,
+    "sample_rate": 32040.0,
+    "peak": 14274,
+    "rms": 2819.6380694555187,
+    "clipped_samples": 0,
+    "spc_ready": 1,
+    "spc_fault": 0,
+    "dsp_commands": 2282,
+    "scope": "Live four-voice approximation during ordinary-controller benchmark; not a fidelity comparison."
+  },
+  "candidate_rom_sha256": "273a270e4a751209a747d15ecde71377c635e6df5a365e62d0926c8f14584189",
+  "complete_game_port": false,
+  "sweep_regression": {
+    "passed": true,
+    "length_records": 486,
+    "independent_period_oracle": {
+      "passed": true,
+      "cases": 54,
+      "period_values_checked": 108,
+      "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+      "scope": "Explicit sweep events versus unmodified FCEUmm periods; not cycle-accurate sound equivalence."
+    },
+    "scope": "Sweep event semantics and bounded audio output; not exact APU timing or whole-game fidelity."
+  }
+}
