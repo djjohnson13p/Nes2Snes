@@ -11,8 +11,12 @@ on:
       - 'tools/audio*.py'
       - 'tools/direct*.py'
       - 'tools/verify_audio*.py'
+      - 'tools/native_safe.py'
+      - 'tools/safe_address_fixture.py'
       - 'tools/build_native.py'
+      - 'tools/verify_native_cpu.py'
       - 'tests/test_direct_audio.py'
+      - 'tests/test_native_safe.py'
 permissions:
   contents: read
 jobs:
@@ -41,6 +45,18 @@ jobs:
           /usr/bin/python3 tools/direct_fixture.py --out build/direct-fixture
           /usr/bin/python3 tools/build_native.py --rom build/direct-fixture/fixture.nes --trace build/direct-fixture --out build/direct-fixture/snes
           /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture build/direct-fixture --out build/direct-fixture/verification
+      - name: Native RAM boundary cases and legacy fallback
+        run: |
+          for variant in native legacy; do
+            out="build/safe-address-$variant"
+            /usr/bin/python3 tools/safe_address_fixture.py --out "$out"
+            extra=()
+            if [ "$variant" = legacy ]; then
+              extra=(--no-safe-addresses --no-simple-direct)
+            fi
+            /usr/bin/python3 tools/build_native.py --rom "$out/fixture.nes" --trace "$out" --out "$out/snes" "${extra[@]}"
+            /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture "$out" --out "$out/verification"
+          done
       - name: Four-voice PCM, mute, legacy path and nested-NMI stress
         run: |
           /usr/bin/python3 tools/verify_audio_matrix.py --core build/snes9x/libretro/snes9x_libretro.so --out build/audio-matrix
@@ -51,6 +67,7 @@ jobs:
           name: native-audio-and-direct-verification
           path: |
             build/direct-fixture/verification/
+            build/safe-address-*/verification/
             build/audio-matrix/*/verification/
             build/audio-matrix/matrix-verification.json
             build/tested-source.zip
