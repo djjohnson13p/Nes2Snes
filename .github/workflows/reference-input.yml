@@ -1,0 +1,54 @@
+name: Recover reference controller input
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/reference-input.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - name: Fetch only the published controller-input recording
+        run: |
+          mkdir -p reference
+          python3 - <<'PY'
+          import hashlib, io, json, urllib.request, zipfile
+          from pathlib import Path
+          source = 'https://tasvideos.org/6974M?handler=Download'
+          request = urllib.request.Request(source, headers={'User-Agent': 'Nes2Snes-development-reference/1.0'})
+          with urllib.request.urlopen(request, timeout=45) as response:
+              payload = response.read(2 * 1024 * 1024 + 1)
+          if len(payload) > 2 * 1024 * 1024:
+              raise ValueError('Reference download exceeds the bounded input size')
+          archive = zipfile.ZipFile(io.BytesIO(payload))
+          accepted = {'Input Log.txt', 'Header.txt', 'SyncSettings.json', 'Comments.txt'}
+          selected = {}
+          for item in archive.infolist():
+              if item.filename in accepted:
+                  if item.filename in selected or item.file_size > 8 * 1024 * 1024:
+                      raise ValueError('Duplicate or oversized reference member')
+                  selected[item.filename] = archive.read(item).decode('utf-8-sig')
+          if 'Input Log.txt' not in selected or 'Header.txt' not in selected:
+              raise ValueError('Expected text-only movie members were not found')
+          for name, text in selected.items():
+              Path('reference', name).write_text(text, encoding='utf-8')
+          report = {
+              'publication': 'https://tasvideos.org/6974M',
+              'authors': ['zggzdydp', 'scrimpeh'],
+              'description': 'Tool-assisted speedrun input; reference experiment, not a port correctness result',
+              'download_sha256': hashlib.sha256(payload).hexdigest(),
+              'members': {name: hashlib.sha256(text.encode()).hexdigest() for name, text in selected.items()},
+              'limitations': 'Movie sync is not established. Only input/metadata are retained; no ROM, save state, video or audio is downloaded into this artifact.'
+          }
+          Path('reference/provenance.json').write_text(json.dumps(report, indent=2) + '\n')
+          print(json.dumps(report, indent=2))
+          print(selected['Header.txt'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reference-controller-input
+          path: reference/
+          retention-days: 30
