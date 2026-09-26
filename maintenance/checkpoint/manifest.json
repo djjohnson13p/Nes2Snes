@@ -1,0 +1,33 @@
+{
+  "format": 1,
+  "part_count": 3,
+  "reference_revision": "0e1bb3d913bf6777fb59d9c656a3b7775b54f610",
+  "before": {
+    "README.md": "3a57b9a894b1d6030abd322c28808be43927461744471ed49059ed1fa661dc08",
+    "docs/memory-followup-verification.json": null,
+    "docs/memory-followup.md": null,
+    "docs/status.md": "20d122f593c6a20ea126cd893fbc800bd8b9ec75e20b2c65d94fddaf117886f5",
+    "snes/src/native.s": "4968f8c6f5aab01dbbd2d7fe44f59f817c15879d732d9b7f57117aeb09aa148f",
+    "tests/test_memory_completion.py": null,
+    "tools/build_native.py": "20d61eda34d07e1533b868903a2dc484fdb75b7574cf3b95a8f0cc19edcb8416",
+    "tools/oam_copy_fixture.py": null,
+    "tools/verify_memory_completion.py": null,
+    "tools/verify_native_cpu.py": "7a7dd1b3ba72d537ebca5e0e3f971b2e9fa4d1f70a663a7f40b5befee6bd1ea4",
+    "tools/zero_page_store_fixture.py": null
+  },
+  "after": {
+    "README.md": "2eb9d9c15eb5b0226c0ad470da8fd9e3f138dfdf099acb40a4b0c521dfca93c9",
+    "docs/memory-followup-verification.json": "3af0dcd44f2de9f5b4b0bcd06efcbf277bc2dcf454a4fff80ae3fae826f0a8fd",
+    "docs/memory-followup.md": "1622ceab702c023f00a9e0f6191a796b3deb9b318322e29f14ac6993b53b1b2b",
+    "docs/status.md": "2536913ef9a9cdf9b807b4b981356a1d56842507177b174d39795ebbff4c0eaa",
+    "snes/src/native.s": "54d39e6facd78fc2ec3b9db6e925947e2be7053d17d9f1c536bc206eb303079f",
+    "tests/test_memory_completion.py": "066a08fc6a801a5faa65deca39f7f2ce35cd2c7dfe5625c46226fe3f594ad760",
+    "tools/build_native.py": "1cc74e41c720cebde2e5498908bca562bb5892d3690afeb6720cbac28103c444",
+    "tools/oam_copy_fixture.py": "189e592ae7ad87b5070421fdc45a4608cf35d80730712d5d655699dc3c2b8e8b",
+    "tools/verify_memory_completion.py": "4dffb776e8b89dfae0334e817bbca635d08348dec3ba4448fa8161dc02fec897",
+    "tools/verify_native_cpu.py": "d21cc1546fd30167b8b3ec22d0273cf240a1c1c89b83f30c7e4ec2bba2c2d50b",
+    "tools/zero_page_store_fixture.py": "b0ff94d08253ff5e8e439b86c9a1dbfa8fa1a6fa91144a279237ca33d360c89c"
+  },
+  "patch_sha256": "8308f1f43e7a917ed9db1645ac91eea2af61df1cb60259b3d01ea0f6e082d538",
+  "message": "Accelerate zero-page stores and indirect reads; fix and independently verify sprite-DMA latch behavior"
+}
