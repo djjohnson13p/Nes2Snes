@@ -1,0 +1,83 @@
+name: Indexed memory and NES bus effects
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/indexed-memory.yml'
+      - 'snes/src/native.s'
+      - 'snes/src/native*.inc'
+      - 'tools/build_native.py'
+      - 'tools/indexed*.py'
+      - 'tools/verify_indexed_matrix.py'
+      - 'tools/verify_native_cpu.py'
+      - 'tests/test_indexed_paths.py'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install build and test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Unit tests
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: Build pinned independent emulators
+        run: |
+          mkdir -p build
+          git clone https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2
+          git clone https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2
+      - name: Eleven independent indexed-memory and dummy-read configurations
+        run: |
+          /usr/bin/python3 tools/verify_indexed_matrix.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/indexed-matrix
+      - name: Confirm the previous runtime fails the new bus-side-effect test
+        run: |
+          mkdir -p build/previous-source
+          git archive 9437d881220456d269fa96bbaa8150e0a2ab1dfb | tar -x -C build/previous-source
+          /usr/bin/python3 build/previous-source/tools/build_native.py \
+            --rom "$PWD/build/indexed-matrix/bus/fixture.nes" \
+            --trace "$PWD/build/indexed-matrix/bus" \
+            --out "$PWD/build/previous-bus/snes"
+          /usr/bin/python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          command = [
+              '/usr/bin/python3', 'tools/verify_native_cpu.py',
+              '--nes-core', 'build/fceumm/fceumm_libretro.so',
+              '--snes-core', 'build/snes9x/libretro/snes9x_libretro.so',
+              '--fixture', 'build/indexed-matrix/bus',
+              '--sfc', 'build/previous-bus/snes/native-prototype.sfc',
+              '--out', 'build/previous-bus/verification',
+          ]
+          result = subprocess.run(command, check=False)
+          report = json.loads(Path('build/previous-bus/verification/cpu-verification.json').read_text())
+          assert result.returncode != 0, 'Negative control unexpectedly succeeded'
+          assert report['records_checked'] == 131, report
+          assert report['mismatch_count'] == 60, report
+          print('Expected negative control: 60 of 131 records fail in previous runtime.')
+          PY
+      - name: Archive exact tested source
+        run: git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: indexed-memory-and-bus-verification
+          path: |
+            build/indexed-matrix/indexed-matrix.json
+            build/indexed-matrix/*/verification/
+            build/previous-bus/verification/
+            build/tested-source.zip
+          retention-days: 30
