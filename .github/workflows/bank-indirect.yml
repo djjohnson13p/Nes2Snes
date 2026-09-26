@@ -1,0 +1,72 @@
+name: Bank returns and indirect-load verification
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bank-indirect.yml'
+      - 'snes/src/native.s'
+      - 'snes/src/native_direct.inc'
+      - 'tools/build_native.py'
+      - 'tools/direct_calls.py'
+      - 'tools/bank_switch_fixture.py'
+      - 'tools/indirect_load_fixture.py'
+      - 'tools/verify_native_cpu.py'
+      - 'tests/test_bank_indirect.py'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+      - name: Unit tests
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: Build pinned independent emulators
+        run: |
+          mkdir -p build
+          git clone https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2
+          git clone https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2
+      - name: Bank changes and wrapped indirect reads
+        run: |
+          for fixture in bank_switch indirect_load; do
+            for seed in 0 1 7; do
+              out="build/${fixture}-${seed}"
+              /usr/bin/python3 "tools/${fixture}_fixture.py" --out "$out" --seed "$seed"
+              /usr/bin/python3 tools/build_native.py --rom "$out/fixture.nes" --trace "$out" --out "$out/snes"
+              /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture "$out" --out "$out/verification"
+            done
+          done
+      - name: Interrupted bank-return window
+        run: |
+          out=build/bank-stress
+          /usr/bin/python3 tools/bank_switch_fixture.py --out "$out" --enable-nmi
+          /usr/bin/python3 tools/build_native.py --rom "$out/fixture.nes" --trace "$out" --out "$out/snes" --stress-bank-switch
+          /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture "$out" --out "$out/verification"
+      - name: Legacy interception remains available
+        run: |
+          out=build/bank-legacy
+          /usr/bin/python3 tools/bank_switch_fixture.py --out "$out"
+          /usr/bin/python3 tools/build_native.py --rom "$out/fixture.nes" --trace "$out" --out "$out/snes" --no-bank-direct --no-specialized-indirect
+          /usr/bin/python3 tools/verify_native_cpu.py --nes-core build/fceumm/fceumm_libretro.so --snes-core build/snes9x/libretro/snes9x_libretro.so --fixture "$out" --out "$out/verification"
+      - name: Archive tested source
+        run: git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bank-and-indirect-verification
+          path: |
+            build/bank_switch-*/verification/
+            build/indirect_load-*/verification/
+            build/bank-stress/verification/
+            build/bank-legacy/verification/
+            build/tested-source.zip
+          retention-days: 14
