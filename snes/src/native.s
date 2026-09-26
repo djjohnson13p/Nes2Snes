@@ -807,6 +807,7 @@ QuickIndirectHandler QuickAND_IY, and
 QuickIndirectHandler QuickORA_IY, ora
 QuickIndirectHandler QuickEOR_IY, eor
 
+.include "native_indirect_x.inc"
 .include "native_indexed.inc"
 
 ; Narrow I/O fast paths implement exactly the existing supported semantics.
