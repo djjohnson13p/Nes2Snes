@@ -45,10 +45,11 @@ jobs:
             --out build/indexed-matrix
       - name: Confirm the previous runtime fails the new bus-side-effect test
         run: |
-          mkdir -p build/previous-source
+          mkdir -p build/previous-source build/previous-bus
           git archive 9437d881220456d269fa96bbaa8150e0a2ab1dfb | tar -x -C build/previous-source
+          cp build/indexed-matrix/bus/fixture.nes build/indexed-matrix/bus/trace-summary.json build/previous-bus/
           /usr/bin/python3 build/previous-source/tools/build_native.py \
-            --rom "$PWD/build/indexed-matrix/bus/fixture.nes" \
+            --rom "$PWD/build/previous-bus/fixture.nes" \
             --trace "$PWD/build/indexed-matrix/bus" \
             --out "$PWD/build/previous-bus/snes"
           /usr/bin/python3 - <<'PY'
@@ -59,8 +60,7 @@ jobs:
               '/usr/bin/python3', 'tools/verify_native_cpu.py',
               '--nes-core', 'build/fceumm/fceumm_libretro.so',
               '--snes-core', 'build/snes9x/libretro/snes9x_libretro.so',
-              '--fixture', 'build/indexed-matrix/bus',
-              '--sfc', 'build/previous-bus/snes/native-prototype.sfc',
+              '--fixture', 'build/previous-bus',
               '--out', 'build/previous-bus/verification',
           ]
           result = subprocess.run(command, check=False)
