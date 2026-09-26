@@ -1,0 +1,39 @@
+{
+  "format": 1,
+  "part_count": 6,
+  "reference_revision": "65c371bfce6cc08d5402d07af7e24a5dcb02ff29",
+  "before": {
+    "README.md": "b4e65eabe896f0884dd0ca38d610270f1a6c616f89ea14719168afb656205111",
+    "docs/pulse-sweep-verification.json": null,
+    "docs/pulse-sweep.md": null,
+    "docs/status.md": "f7dd68369b572435a8accfd5de1953c4d183c4ede5a6e8e7a411e5b399ebbb1a",
+    "snes/src/native_apu.inc": "1cdbb9b3ad876deeb00714aebdf06f70b42d4f43a8d6fe0c55e0f9206b9e6577",
+    "snes/src/native_audio.inc": "5b1945f5323e0bed33b00ab2532d57e6822a0ad89b6c1b7bd601e0499e8893c0",
+    "snes/src/native_sweep.inc": null,
+    "tests/test_apu_sweep.py": null,
+    "tools/apu_sweep_fixture.py": null,
+    "tools/apu_sweep_model.py": null,
+    "tools/build_native.py": "7fa2026bb292a6856d4615bee85475afb0e398e6b3cbc01cc9910d20e0fdd56b",
+    "tools/verify_apu_sweep.py": null,
+    "tools/verify_sweep_matrix.py": null,
+    "tools/verify_sweep_oracle.py": null
+  },
+  "after": {
+    "README.md": "dc5161e28dada3716f54c88ed39f00f04b3110a77a21e80921c04e8c26a0ebf0",
+    "docs/pulse-sweep-verification.json": "f89de1689683a15486a669c5a63843ea014cbb4f810e5106e7728bb3ba7fb409",
+    "docs/pulse-sweep.md": "e4af4d9f9fb07969529894e324dee46039c07b805adda3f20ffd27ddc2358e4f",
+    "docs/status.md": "7430d1ef374c7640d5f54e0ea10fa7819ff21a216ce4574c81076d61f81ed667",
+    "snes/src/native_apu.inc": "1bdc7494b63b5cd3a605b673c09aa0822e2b40aa3d0fe920923ca9332e3b8927",
+    "snes/src/native_audio.inc": "01c3ca0d99f07e6ccebc8ab2d947ad308e2ba0f8d301a2e48c76633c4ca085da",
+    "snes/src/native_sweep.inc": "5a547a533aae8c49922332b35abcd517ea54267e9051d94d4c8c540e9293bdec",
+    "tests/test_apu_sweep.py": "4d4a6e48f441033461269037aa3a8b1e77b33f09eb57005f2ee87a221ea0595a",
+    "tools/apu_sweep_fixture.py": "5e85936f1d91289c48421a86afe6e20abe8ba12b99e738c6666d3a68261cc31e",
+    "tools/apu_sweep_model.py": "84ce76f0af03cb92b9e7a48eec931b42c99e127e1c70b52682d2a5a47a2c0871",
+    "tools/build_native.py": "fcef71e4d30713be49e715c3ce7141d4e29c8b1f2e24b669db6c0dab609f114b",
+    "tools/verify_apu_sweep.py": "d656731baa0413d4993c0b5697a5842d4acef9092e079687cf0c2e3931455e40",
+    "tools/verify_sweep_matrix.py": "0b4b287416f48ad4bb51938f55eade5db379253d3ec3629e9da3a9423ad8856b",
+    "tools/verify_sweep_oracle.py": "2b9353c5c5daf4a4b8ab4cc205ebf385a8da058e369e461ed8d400ae650018e3"
+  },
+  "patch_sha256": "e85fec7286b245afc6579d0ab0f97a41eb58af32eb4d9a9ebd5b73b4924b93ff",
+  "message": "Add optional pulse sweep with independent NES event oracle and gameplay regression checks"
+}
