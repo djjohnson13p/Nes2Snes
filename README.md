@@ -1,5 +1,15 @@
 # Nes2Snes
 
+## Current checkpoint: palette-read correctness and recovery
+
+The [palette-read report](docs/palette-reads.md) records the correction, independent
+negative control, fresh regressions, and what was actually recovered. This is a
+correctness change, not a speed milestone or completed port. The exact previously
+reported 117-action Block 1-03 script was not found in the checked saved sources;
+it is not substituted for the reproducible 84-action route.
+
+The entries below are historical performance and compatibility checkpoints.
+
 Latest performance work: **[guarded native controller polling](docs/native-controller.md)**.
 A complete recognized routine can now use a native replacement with checked
 fallbacks. Controlled walking improves from 191 to 149 display frames per 120
