@@ -47,9 +47,13 @@ def apply() -> None:
                     'native_poll=a.native_controller,quick_indirect_x=a.quick_indirect_x);')
     compile(s, 'tools/build_native.py', 'exec')
     source['tools/build_native.py'] = s
+    fixture = (ROOT/'tools/indirect_x_fixture.py').read_text()
+    source['tools/indirect_x_fixture.py'] = replace_once(fixture,
+        'cbank = 7 if (i + op_i + block) & 1 else 30',
+        'cbank = 7 if (block + op_i) & 1 else 30')
     for name, text in source.items():
         (ROOT/name).write_text(text, encoding='utf-8')
-    print('Applied two checked source edits; option remains disabled by default.')
+    print('Applied checked source edits; option remains disabled by default.')
 
 if __name__ == '__main__':
     apply()
