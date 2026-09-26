@@ -16,6 +16,7 @@ import direct_calls
 import audio_program
 import native_safe
 import native_controller
+import native_dispatch
 
 OPERATIONS = {'LDA':1,'LDX':2,'LDY':3,'STA':4,'STX':5,'STY':6,
               'AND':7,'ORA':8,'EOR':9,'ADC':10,'SBC':11,'CMP':12,
@@ -57,7 +58,7 @@ def classify_patch(prg:bytes, counts:list[int]):
         'classified_code_bytes':sum(covered),'trap_sites':sites,'reset_txs_nop_offsets':skipped,
         'unclassified_execution':'BRK fail-closed trap; raw data remains intact'}
 
-def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True,quick_ppu:bool=True,object_cache:bool=True,pipelined_video:bool=True,replay_input:Path|None=None,direct:bool=True,unrolled_objects:bool=True,experimental_audio:bool=False,stress_nmi_restore:bool=False,safe_addresses:bool=True,simple_direct:bool=True,bank_direct:bool=True,stress_bank_switch:bool=False,specialized_indirect:bool=True,audio_counters:bool=False,raster_scroll:bool=False,layer_masks:bool=True,audio_sweep:bool=False,quick_indexed:bool=True,word_oam:bool=True,runtime_counters:bool=True,native_poll:bool=False,quick_indirect_x:bool=False,coalesced_nt_dma:bool=False,fill_cache_fix:bool=False):
+def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True,quick_indirect:bool=True,quick_io:bool=True,quick_ppu:bool=True,object_cache:bool=True,pipelined_video:bool=True,replay_input:Path|None=None,direct:bool=True,unrolled_objects:bool=True,experimental_audio:bool=False,stress_nmi_restore:bool=False,safe_addresses:bool=True,simple_direct:bool=True,bank_direct:bool=True,stress_bank_switch:bool=False,specialized_indirect:bool=True,audio_counters:bool=False,raster_scroll:bool=False,layer_masks:bool=True,audio_sweep:bool=False,quick_indexed:bool=True,word_oam:bool=True,runtime_counters:bool=True,native_poll:bool=False,quick_indirect_x:bool=False,coalesced_nt_dma:bool=False,fill_cache_fix:bool=False,native_inline_dispatch:bool=False):
     if audio_counters and not experimental_audio:
         raise ValueError("--audio-counters requires --experimental-audio")
     if audio_sweep and not audio_counters:
@@ -90,7 +91,8 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     (assets/'blank-chr.bin').write_bytes(bytes(not any(rom.chr[i:i+1024]) for i in range(0,len(rom.chr),1024)))
     direct_sites, direct_source = direct_calls.plan(rom.prg, info['trap_sites'] if direct else [], simple=simple_direct, bank_switches=bank_direct, stress_banks=stress_bank_switch,audio_counters=audio_counters)
     poll_sites, poll_source = native_controller.plan(rom.prg, counts) if native_poll and direct else ([], '')
-    (assets/'direct-stubs.inc').write_text(direct_source + poll_source)
+    dispatch_sites, dispatch_source = native_dispatch.plan(rom.prg, counts) if native_inline_dispatch and direct else ([], '')
+    (assets/'direct-stubs.inc').write_text(direct_source + poll_source + dispatch_source)
     audio_info=audio_program.write_assets(assets) if experimental_audio else None
     if audio_counters:
         audio_info["scope"]="Approximate four-voice DSP output with frame-quantized envelopes/lengths/linear counter; no sweep, DMC or cycle-accurate APU timing."
@@ -137,6 +139,7 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
             symbols[fields[2].lstrip('.')] = int(fields[1],16)
     direct_code = direct_calls.apply(code, direct_sites, symbols)
     direct_code = native_controller.apply(direct_code, poll_sites, symbols)
+    direct_code = native_dispatch.apply(direct_code, dispatch_sites, symbols)
     # All 16 main 16 KiB banks x the two observed C000 banks (30 and 7).
     # Raw data banks $81-$A0; independently patched executable banks $A1-$C0.
     images=[]
@@ -152,7 +155,7 @@ def build(rom_path:Path,trace:Path,out:Path,fastrom:bool=True,quick_zp:bool=True
     (out/'native-prototype.sfc').write_bytes(raw)
     info.update(validate_sfc(raw));info.update({'rom_sha256':rom.metadata()['sha256'],
        'specialized_indirect_lda':specialized_indirect and quick_indirect,'direct_bank_switches':bank_direct and direct,'test_bank_switch_stress':stress_bank_switch,'direct_calls':direct,'direct_call_sites':len(direct_sites),'direct_call_banks':'$A1-$BF; $C0 retains COP','renderer':'experimental live PPU bridge','experimental_raster_scroll':raster_scroll,'layer_masks':layer_masks,'audio_counters':audio_counters,'audio_sweep':audio_sweep,'audio_timing':'four quarter-clock opportunities per guest frame' if audio_counters else None,'audio_implemented':experimental_audio,'audio_preview':audio_info,'test_nmi_restore_stress':stress_nmi_restore,
-       'fill_cache_fix':fill_cache_fix,'coalesced_nametable_dma':coalesced_nt_dma,'native_controller_poll':bool(poll_sites),'native_controller_sites':poll_sites,'runtime_counters':runtime_counters,'complete_game_port':False,'prg_mode':2,'supported_c000_banks':[30,7],
+       'fill_cache_fix':fill_cache_fix,'coalesced_nametable_dma':coalesced_nt_dma,'native_inline_dispatch':bool(dispatch_sites),'native_dispatch_sites':dispatch_sites,'native_controller_poll':bool(poll_sites),'native_controller_sites':poll_sites,'runtime_counters':runtime_counters,'complete_game_port':False,'prg_mode':2,'supported_c000_banks':[30,7],
        'native_execution_banks':32,'fastrom':fastrom,'word_oam_copy':word_oam,'quick_indexed_memory':quick_indexed,'quick_zero_page':quick_zp,'quick_indirect_reads':quick_indirect,'quick_indirect_x':bool(quick_indirect_x and quick_indirect),'quick_io':quick_io,'quick_ppu_writes':quick_ppu and quick_io,'object_cache':object_cache,'unrolled_objects':unrolled_objects and object_cache,'simple_direct_writes':simple_direct and direct,'pipelined_video':pipelined_video,'test_input_replay_sha256':hashlib.sha256(replay).hexdigest() if replay_input else None,'notes':'Unclassified code traps; compatibility and timing require validation.'})
     (out/'native-build.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
@@ -163,6 +166,7 @@ if __name__=='__main__':
     p.add_argument('--fix-fill-cache',action='store_true',help='Invalidate cached fill backgrounds when the mapper tile or color changes')
     p.add_argument('--coalesced-nametable-dma',action='store_true',help='Group contiguous changed background rows without copying clean rows')
     p.add_argument('--quick-indirect-x',action='store_true',help='Opt-in range-checked (zero-page,X) reads; --no-quick-indirect disables it')
+    p.add_argument('--native-inline-dispatch',action='store_true',help='Guarded whole inline-table dispatch replacement')
     p.add_argument('--native-controller',action='store_true',help='Opt-in recognized whole-routine controller polling replacement with guarded fallback')
     p.add_argument('--no-runtime-counters',action='store_true',help='Remove per-access profiling increments; retain frame IDs, faults and all compatibility checks')
     p.add_argument('--no-specialized-indirect',action='store_true',help='Use shared load/arithmetic indirect context path')
@@ -191,4 +195,4 @@ if __name__=='__main__':
     video.add_argument('--pipelined-video',dest='pipelined_video',action='store_true',help='Queue prepared frames for the following host NMI (default)')
     video.add_argument('--synchronous-video',dest='pipelined_video',action='store_false',help='Retain the previous blocking upload for regression comparisons')
     p.set_defaults(pipelined_video=True)
-    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io,quick_ppu=not a.no_quick_ppu,object_cache=not a.no_object_cache,pipelined_video=a.pipelined_video,replay_input=a.input_replay,direct=not a.no_direct_calls,unrolled_objects=not a.no_unrolled_objects,experimental_audio=a.experimental_audio,stress_nmi_restore=a.stress_nmi_restore,safe_addresses=not a.no_safe_addresses,simple_direct=not a.no_simple_direct,bank_direct=not a.no_bank_direct,stress_bank_switch=a.stress_bank_switch,specialized_indirect=not a.no_specialized_indirect,audio_counters=a.audio_counters,raster_scroll=a.experimental_raster_scroll,layer_masks=not a.no_layer_masks,audio_sweep=a.audio_sweep,quick_indexed=not a.no_quick_indexed,word_oam=not a.no_word_oam,runtime_counters=not a.no_runtime_counters,native_poll=a.native_controller,quick_indirect_x=a.quick_indirect_x,coalesced_nt_dma=a.coalesced_nametable_dma,fill_cache_fix=a.fix_fill_cache);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))
+    a=p.parse_args();s=build(a.rom,a.trace,a.out,fastrom=not a.slowrom,quick_zp=not a.no_quick_zp,quick_indirect=not a.no_quick_indirect,quick_io=not a.no_quick_io,quick_ppu=not a.no_quick_ppu,object_cache=not a.no_object_cache,pipelined_video=a.pipelined_video,replay_input=a.input_replay,direct=not a.no_direct_calls,unrolled_objects=not a.no_unrolled_objects,experimental_audio=a.experimental_audio,stress_nmi_restore=a.stress_nmi_restore,safe_addresses=not a.no_safe_addresses,simple_direct=not a.no_simple_direct,bank_direct=not a.no_bank_direct,stress_bank_switch=a.stress_bank_switch,specialized_indirect=not a.no_specialized_indirect,audio_counters=a.audio_counters,raster_scroll=a.experimental_raster_scroll,layer_masks=not a.no_layer_masks,audio_sweep=a.audio_sweep,quick_indexed=not a.no_quick_indexed,word_oam=not a.no_word_oam,runtime_counters=not a.no_runtime_counters,native_poll=a.native_controller,native_inline_dispatch=a.native_inline_dispatch,quick_indirect_x=a.quick_indirect_x,coalesced_nt_dma=a.coalesced_nametable_dma,fill_cache_fix=a.fix_fill_cache);print(json.dumps({k:v for k,v in s.items() if k!='trap_sites'},indent=2))
