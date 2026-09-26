@@ -123,7 +123,19 @@ def load_route(folder: Path) -> tuple[dict, list[dict]]:
     return report, rows
 
 
-def compare_routes(reference: Path, candidate: Path) -> dict:
+def validate_ram_addresses(value: tuple[int, ...]) -> tuple[int, ...]:
+    """Only explicit, unique common-NES-RAM bytes may extend comparison scope."""
+    if not isinstance(value, (list, tuple)) or len(value) > 32 or any(
+            type(x) is not int or not 0 <= x < 2048 for x in value):
+        raise ValueError('Require at most 32 common-RAM byte addresses in 0..2047')
+    if len(set(value)) != len(value):
+        raise ValueError('Duplicate RAM byte address')
+    return tuple(value)
+
+
+def compare_routes(reference: Path, candidate: Path,
+                   ram_addresses: tuple[int, ...] = ()) -> dict:
+    ram_addresses = validate_ram_addresses(ram_addresses)
     a, ar = load_route(reference)
     b, br = load_route(candidate)
     for key in ('tail_actions', 'steps_requested', 'pattern'):
@@ -133,14 +145,33 @@ def compare_routes(reference: Path, candidate: Path) -> dict:
         raise ValueError('Incompatible update-clock policies')
     common = min(len(ar), len(br))
     mismatches = []
+    ram_mismatches = []
     for i, (x, y) in enumerate(zip(ar, br)):
         differences = {name: {'reference': x['state'][name], 'candidate': y['state'][name]}
                        for name in FIELDS if x['state'][name] != y['state'][name]}
         if differences:
             mismatches.append({'index': i, 'name': x['name'], 'fields': differences})
+        if ram_addresses:
+            memories = [(folder / ('tail-'+x['name']+'.ram')).read_bytes()
+                        for folder in (reference, candidate)]
+            if any(len(m) <= max(ram_addresses) for m in memories):
+                raise ValueError('Insufficient captured RAM for requested bytes')
+            changed = {f'{address:04x}': {'reference': memories[0][address],
+                                         'candidate': memories[1][address]}
+                       for address in ram_addresses
+                       if memories[0][address] != memories[1][address]}
+            if changed:
+                ram_mismatches.append({'index': i, 'name': x['name'], 'bytes': changed})
     complete = (a['status'] == b['status'] == 'completed_budget'
                 and common == len(a['tail_actions']) and common > 0)
-    return {'passed': complete and not mismatches, 'complete_routes': complete,
+    fault_free = a.get('fault') is None and b.get('fault') is None
+    return {'passed': complete and fault_free and not mismatches and not ram_mismatches,
+            'complete_routes': complete, 'fault_free': fault_free,
+            'reference_fault': a.get('fault'),
+            'ram_addresses': list(ram_addresses),
+            'ram_bytes_checked': common * len(ram_addresses),
+            'ram_mismatched_checkpoints': len(ram_mismatches),
+            'ram_mismatches': ram_mismatches,
             'clock_mode': a.get('clock_mode', 'legacy'),
             'reference_platform': a['platform'], 'candidate_platform': b['platform'],
             'reference_status': a['status'], 'candidate_status': b['status'],
@@ -154,7 +185,7 @@ def compare_routes(reference: Path, candidate: Path) -> dict:
             'candidate_report_sha256': hashlib.sha256((candidate/'route-report.json').read_bytes()).hexdigest(),
             'reference_rom_sha256': a.get('rom_sha256'), 'candidate_rom_sha256': b.get('rom_sha256'),
             'reference_core_sha256': a.get('core_sha256'), 'candidate_core_sha256': b.get('core_sha256'),
-            'scope': 'Selected area, camera and player fields at named input endpoints. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence.'}
+            'scope': 'Selected area, camera and player fields plus explicitly requested common-RAM bytes at named input endpoints. Non-null faults reject acceptance. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence.'}
 
 
 if __name__ == '__main__':
@@ -162,8 +193,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('reference', 'candidate', 'out'):
         parser.add_argument('--'+name, type=Path, required=True)
+    parser.add_argument('--ram-byte', type=lambda value: int(value, 0), action='append', default=[],
+                        help='Additional common RAM byte to compare; repeat up to 32 times')
     args = parser.parse_args()
-    result = compare_routes(args.reference, args.candidate)
+    result = compare_routes(args.reference, args.candidate, tuple(args.ram_byte))
     atomic_json(args.out, result)
     print(json.dumps({k: v for k, v in result.items() if k != 'mismatches'}, indent=2))
     raise SystemExit(not result['passed'])

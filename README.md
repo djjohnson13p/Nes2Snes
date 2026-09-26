@@ -1,5 +1,13 @@
 # Nes2Snes
 
+## Current: idle-state diagnosis and fault-aware evidence
+
+A calibrated read-only observer now exposes the random-state timing divergence:
+matching update counts and player coordinates do not establish matching RNG state.
+The 133-action entrance route remains reproducible; no runtime timing fix, speedup
+or new boss clear is claimed. Matching captures can no longer override a recorded
+fault. See [scope, reproduction, and recovery status](docs/idle-state-audit.md).
+
 ## New coverage: clean-boot Block 1-03 entry
 
 A newly authored **133-action route** now reaches Block 1-03 on NES and SNES,

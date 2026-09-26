@@ -1,0 +1,91 @@
+name: Idle-state observer and fail-closed route evidence
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/idle-state-audit-20260926]
+    paths:
+      - '.github/workflows/idle-observer.yml'
+      - 'tools/**'
+      - 'tests/**'
+      - 'snes/**'
+  pull_request:
+    paths:
+      - '.github/workflows/idle-observer.yml'
+      - 'tools/idle*'
+      - 'tools/instrument_idle_observer.py'
+      - 'tools/observe_route_idle.py'
+      - 'tools/verify_idle_observer.py'
+      - 'tools/route_evidence.py'
+      - 'tools/verify_reference_route.py'
+      - 'tests/test_idle*'
+      - 'tests/test_route_faults.py'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+          mkdir -p build
+      - name: Unit tests and compiled C/C++ observer checks
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Build pinned plain and observed cores
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/nes-plain-build.log 2>&1
+          cp build/fceumm/fceumm_libretro.so build/nes-plain.so
+          /usr/bin/python3 tools/instrument_idle_observer.py build/fceumm --platform nes
+          make -C build/fceumm -f Makefile.libretro -j2 > build/nes-observed-build.log 2>&1
+          cp build/fceumm/fceumm_libretro.so build/nes-observed.so
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes-plain-build.log 2>&1
+          cp build/snes9x/libretro/snes9x_libretro.so build/snes-plain.so
+          /usr/bin/python3 tools/instrument_idle_observer.py build/snes9x --platform snes
+          make -C build/snes9x/libretro -j2 > build/snes-observed-build.log 2>&1
+          cp build/snes9x/libretro/snes9x_libretro.so build/snes-observed.so
+      - name: Independent authored-log and plain-core calibration
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_idle_observer.py \
+            --nes-plain build/nes-plain.so --nes-probe build/nes-observed.so \
+            --snes-plain build/snes-plain.so --snes-probe build/snes-observed.so \
+            --out build/idle-observer 2>&1 | tee build/idle-observer.log
+      - name: Retain independent runtime safety
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_runtime_counters.py \
+            --nes-core build/nes-plain.so --snes-core build/snes-plain.so \
+            --out build/runtime-safety 2>&1 | tee build/runtime-safety.log
+      - name: Archive exact tested source
+        run: |
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: idle-observer-verification
+          path: |
+            build/*.log
+            build/idle-observer/idle-observer-verification.json
+            build/idle-observer/nes-plain.json
+            build/idle-observer/nes-probe.json
+            build/idle-observer/snes-plain.json
+            build/idle-observer/snes-probe.json
+            build/runtime-safety/runtime-counter-verification.json
+            build/tested-revision.txt
+            build/tested-source.zip
+          retention-days: 30

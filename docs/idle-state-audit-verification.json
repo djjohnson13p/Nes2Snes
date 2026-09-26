@@ -1,0 +1,93 @@
+{
+  "base_revision": "ad442ebb320ee079001090135e1d3449d6d19623",
+  "base_tree": "3c513142e19975a1a76133212159cc53f53f4445",
+  "origin": "fresh local execution; private gameplay is not public CI evidence",
+  "unit_tests": 351,
+  "previous_local_b175_commit_recovered": false,
+  "previous_298_action_route_recovered": false,
+  "runtime_modified": false,
+  "boss_clear_claimed": false,
+  "speed_gain_claimed": false,
+  "observer_calibration": {
+    "passed": true,
+    "platforms": 2,
+    "samples_verified": 64,
+    "results": [
+      {
+        "platform": "nes",
+        "passed": true,
+        "samples": 32,
+        "records_verified": 32,
+        "ram_bytes_compared": 2048,
+        "core_sha256": {
+          "plain": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+          "probe": "a8e4e29b01cabe5c16196915f6538cd665d073e34a17c8d40273ea01c4d97507"
+        }
+      },
+      {
+        "platform": "snes",
+        "passed": true,
+        "samples": 32,
+        "records_verified": 32,
+        "ram_bytes_compared": 131072,
+        "core_sha256": {
+          "plain": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+          "probe": "fde7b24949cb44155abe470d3fbc562fb7a639ca72e4b57bbe581926443f579b"
+        }
+      }
+    ],
+    "scope": "Each observed core matches its unmodified counterpart and authored in-ROM log. Cross-platform RNG parity, cycle accuracy and game completion are not claimed."
+  },
+  "private_route": {
+    "actions": 133,
+    "selected_state_passed": true,
+    "selected_fields": 665,
+    "selected_bytes": 1197,
+    "extra_ram_comparison_passed": false,
+    "random_byte_mismatched_endpoints": 131,
+    "health_byte_mismatched_endpoints": 0,
+    "aligned_guarded_samples": 11174,
+    "mismatches_by_ram_address": {
+      "001f": 11129,
+      "001a": 0,
+      "0018": 0,
+      "0051": 0,
+      "003c": 0
+    },
+    "platforms": {
+      "nes": {
+        "passed": true,
+        "source_route_passed": true,
+        "source_fault": null,
+        "checkpoints": 133,
+        "pixel_positions_compared": 7626752,
+        "ram_bytes_compared": 272384,
+        "core_sha256": "a8e4e29b01cabe5c16196915f6538cd665d073e34a17c8d40273ea01c4d97507",
+        "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+        "source_report_sha256": "8e71a8f40724395aa5513448e17cdb4d0d8f1f63da5a1f668aa31e2448e81d34",
+        "measurement_sha256": "67c89bf5e1d71ddb2978d7f5d38cb112a7d1f69bc019cbc36f10e2be13ede872",
+        "samples": 11174,
+        "loop_visits_between_first_and_last": 9889410,
+        "median_visits_per_interval": 884,
+        "zero_visit_intervals": 0
+      },
+      "snes": {
+        "passed": true,
+        "source_route_passed": true,
+        "source_fault": null,
+        "checkpoints": 133,
+        "pixel_positions_compared": 7626752,
+        "ram_bytes_compared": 17432576,
+        "core_sha256": "fde7b24949cb44155abe470d3fbc562fb7a639ca72e4b57bbe581926443f579b",
+        "rom_sha256": "0f4ac141190f4b7e0c3bbc1a691938c21872b133560e33bb4256f57c5b66f0ac",
+        "source_report_sha256": "55d4c355fc979aa5d95e44d326be405a3867b74a9a2f2b09a2e35dbbf9764d84",
+        "measurement_sha256": "e0ec82273b2363e92b506877bec6d9b1508bc236ca94d1a502c7501914343b9b",
+        "samples": 11174,
+        "loop_visits_between_first_and_last": 17470785,
+        "median_visits_per_interval": 1823,
+        "zero_visit_intervals": 5
+      }
+    }
+  },
+  "private_route_scope": "Selected states, health and RNG compared separately. Observer noninterference checks each platform against its own captured execution; not NES/SNES pixel equivalence."
+}
