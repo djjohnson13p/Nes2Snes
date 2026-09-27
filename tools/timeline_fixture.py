@@ -51,7 +51,7 @@ def cases() -> list[dict]:
 
 def create_nes(out: Path,plan: dict) -> Path:
     validate_plan(plan)
-    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'],ram=memory_bytes(plan)==2048);validate_events(plan['events'])
+    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'],ram=memory_bytes(plan)==2048,rom=plan.get('memory_model')=='nrom-32k');validate_events(plan['events'])
     out.mkdir(parents=True,exist_ok=True)
     boot=Program(0xE000);boot.op('SEI');boot.op('CLD');boot.op('LDX','imm',255);boot.op('TXS')
     boot.op('LDA','imm',0)
@@ -67,6 +67,10 @@ def create_nes(out: Path,plan: dict) -> Path:
     boot.op('LDA','imm',0x24);boot.op('PHA');boot.op('LDA','imm',plan['a']);boot.op('PLP')
     boot.op('JMP','abs',plan['origin'])
     memory=bytearray([0xEA])*32768;memory[0x6000:0x6000+len(boot.data)]=boot.finish()
+    if plan.get('memory_model')=='nrom-32k':
+        for patch in plan['rom_data']:
+            begin=patch['address']-0x8000;raw=bytes.fromhex(patch['bytes'])
+            memory[begin:begin+len(raw)]=raw
     pos=plan['origin']-0x8000;memory[pos:pos+len(code)]=code
     struct.pack_into('<HHH',memory,0x7FFA,plan['nmi'],0xE000,plan['irq'])
     path=out/'fixture.nes';path.write_bytes(b'NES\x1a\x02\x01'+bytes(10)+memory+bytes(8192));return path

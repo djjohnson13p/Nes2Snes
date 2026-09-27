@@ -144,3 +144,10 @@ Read `ram-timeline.md` for the opt-in full 2-KiB RAM profile, indexed/indirect
 address resolution, original cycle costs, complete-memory captures and actual
 before-access fault guards. Host NMI protection remains enabled in its tests.
 Production CV3 scheduling is unchanged; ROM/I/O and physical timing remain open.
+
+## Latest immutable cartridge-read profile
+
+Read `rom-timeline.md` for the separate `nrom-32k` prototype profile, original-ROM
+versus translated-code separation, guarded writes, independent comparisons and
+preserved prior profiles. This is fixed NROM mapping, not MMC5 integration or a
+production CV3 timing fix. No fresh commercial-game replay is claimed there.
