@@ -16,13 +16,14 @@ import sys
 from libretro_runner import Runner
 from route_evidence import atomic_json
 from timeline_fixture import cases,create_nes,expected_initial
-from timeline_program import create_native,validate_events,generate,validate_plan
+from timeline_program import create_native,validate_events,generate,validate_plan,memory_bytes
 
 class Event(C.Structure):
     _fields_=[('cycle',C.c_uint32),('irq',C.c_uint8),('nmi',C.c_uint8),('reserved',C.c_uint8*2)]
 
 
 def sample_nes(core: Path,folder: Path,plan: dict,probe: bool) -> dict:
+    size=32+memory_bytes(plan)
     rom=create_nes(folder,plan);r=Runner(core,rom)
     try:
         if probe:
@@ -30,7 +31,7 @@ def sample_nes(core: Path,folder: Path,plan: dict,probe: bool) -> dict:
             lib.retro_n2s_timeline_configure.argtypes=[C.c_uint,C.c_uint,C.POINTER(Event),C.c_uint];lib.retro_n2s_timeline_configure.restype=C.c_int
             lib.retro_n2s_timeline_status.argtypes=[C.c_uint];lib.retro_n2s_timeline_status.restype=C.c_uint
             lib.retro_n2s_timeline_data.argtypes=[];lib.retro_n2s_timeline_data.restype=C.c_void_p
-            if lib.retro_n2s_timeline_status(2)!=544 or lib.retro_n2s_timeline_status(5)!=8:raise RuntimeError('Timeline harness ABI mismatch')
+            if lib.retro_n2s_timeline_status(2)!=size or lib.retro_n2s_timeline_status(5)!=8:raise RuntimeError('Timeline harness ABI mismatch')
             events=(Event*len(plan['events']))(*[Event(e['cycle'],e['irq'],e['nmi'],(C.c_uint8*2)(0,0)) for e in validate_events(plan['events'])])
             if not lib.retro_n2s_timeline_configure(plan['origin'],plan['steps'],events,len(events)):raise RuntimeError('Timeline harness refused configuration')
         r.run(1)
@@ -39,14 +40,17 @@ def sample_nes(core: Path,folder: Path,plan: dict,probe: bool) -> dict:
             if lib.retro_n2s_timeline_status(1) or lib.retro_n2s_timeline_status(3):raise RuntimeError('Incomplete or erroneous reference timeline')
             count=lib.retro_n2s_timeline_status(0)
             if count!=plan['steps']+1:raise RuntimeError('Missing reference steps')
-            raw=C.string_at(lib.retro_n2s_timeline_data(),count*544)
-            report['records']=[raw[i*544:(i+1)*544].hex() for i in range(count)]
+            raw=C.string_at(lib.retro_n2s_timeline_data(),count*size)
+            report['records']=[raw[i*size:(i+1)*size].hex() for i in range(count)]
         report['complete']=True
         atomic_json(folder/'capture.json',report);return report
     finally:r.close()
 
 
-def sample_native(core: Path,rom: Path,out: Path,steps: int) -> dict:
+def sample_native(core: Path,rom: Path,out: Path,steps: int, *, ram_bytes: int=512) -> dict:
+    if type(ram_bytes) is not int or ram_bytes not in (512,2048) or type(steps) is not int or not 1<=steps<=65536//(32+ram_bytes):
+        raise ValueError('Capture shape exceeds native output bank')
+    size=32+ram_bytes
     r=Runner(core,rom)
     try:
         # Completion is marker-based, not a guessed one-frame runtime allowance.
@@ -56,7 +60,7 @@ def sample_native(core: Path,rom: Path,out: Path,steps: int) -> dict:
         if ram[0x1FFF]!=0x5A:
             atomic_json(out,dict(passed=False,marker=ram[0x1FFF],status=ram[0x18CE],completed_steps=int.from_bytes(ram[0x18D0:0x18D2],'little'),pc=ram[0x18C4:0x18C6].hex()))
             raise RuntimeError('Native timeline fault or missing completion')
-        report=dict(complete=True,marker=0x5A,status=0,completed_steps=steps,records=[ram[0x10000+544*i:0x10000+544*(i+1)].hex() for i in range(steps)],host_frames=r.frames)
+        report=dict(complete=True,marker=0x5A,status=0,completed_steps=steps,records=[ram[0x10000+size*i:0x10000+size*(i+1)].hex() for i in range(steps)],host_frames=r.frames)
         atomic_json(out,report);return report
     finally:r.close()
 
@@ -74,7 +78,7 @@ def compare(plan: dict,original: dict,native: dict) -> dict:
     entries={'irq':0,'nmi':0};ops={};latest=0;crossings=0
     for i,(a,b) in enumerate(zip(expected[1:],actual),1):
         one,two=bytes.fromhex(a),bytes.fromhex(b)
-        if len(one)!=544 or len(two)!=544:raise ValueError('Malformed timeline row')
+        if len(one)!=32+memory_bytes(plan) or len(two)!=32+memory_bytes(plan):raise ValueError('Malformed timeline row')
         if one!=two:
             mismatch=[j for j,(x,y) in enumerate(zip(one,two)) if x!=y]
             raise RuntimeError(f"{plan['name']} step {i}: {len(mismatch)} differences; offsets {mismatch[:16]}; expected header {one[:32].hex()}, actual {two[:32].hex()}")
@@ -86,7 +90,7 @@ def compare(plan: dict,original: dict,native: dict) -> dict:
         if one[16]:entries['irq' if one[16]==1 else 'nmi']+=1
         latest=now;ops[f'{one[17]:02x}']=ops.get(f'{one[17]:02x}',0)+1
     if one[13]!=len(plan['events']):raise ValueError('The test stopped before exercising every declared event')
-    return dict(name=plan['name'],steps=plan['steps'],cycles=latest,entries=entries,branch_page_crossings=crossings,executed_opcodes=ops,record_bytes=plan['steps']*544,passed=True)
+    return dict(name=plan['name'],steps=plan['steps'],cycles=latest,entries=entries,branch_page_crossings=crossings,executed_opcodes=ops,record_bytes=plan['steps']*(32+memory_bytes(plan)),passed=True)
 
 
 
@@ -98,7 +102,7 @@ def compare_rebased(plan: dict,original: dict,native: dict,epoch: int) -> dict:
     rebased=copy.deepcopy(native)
     for i,text in enumerate(native.get('records',[])):
         row=bytearray.fromhex(text)
-        if len(row)!=544:raise ValueError('Malformed rebased record')
+        if len(row)!=32+memory_bytes(plan):raise ValueError('Malformed rebased record')
         now=int.from_bytes(row[:4],'little')
         if now<epoch:raise ValueError('Native clock wrapped or lost its epoch')
         row[:4]=(now-epoch).to_bytes(4,'little');rebased['records'][i]=row.hex()
@@ -108,7 +112,7 @@ def compare_rebased(plan: dict,original: dict,native: dict,epoch: int) -> dict:
 
 def run_one(core: Path,folder: Path,plan: dict,*,retirement: str|None=None,program_text: str|None=None) -> dict:
     rom=create_native(folder,plan,expected_initial(plan),retirement=retirement,program_text=program_text)
-    subprocess.run([sys.executable,__file__,'--sample','native','--core',str(core),'--rom',str(rom),'--steps',str(plan['steps']),'--out',str(folder/'capture.json')],check=True,timeout=60,stdout=subprocess.DEVNULL)
+    subprocess.run([sys.executable,__file__,'--sample','native','--core',str(core),'--rom',str(rom),'--steps',str(plan['steps']),'--ram-bytes',str(memory_bytes(plan)),'--out',str(folder/'capture.json')],check=True,timeout=60,stdout=subprocess.DEVNULL)
     return json.loads((folder/'capture.json').read_text())
 
 
@@ -171,9 +175,9 @@ def verify(plain: Path,probe: Path,snes: Path,out: Path) -> dict:
     atomic_json(summary,result);return result
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--sample',choices=['plain','probe','native']);p.add_argument('--steps',type=int)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--sample',choices=['plain','probe','native']);p.add_argument('--steps',type=int);p.add_argument('--ram-bytes',type=int,choices=(512,2048),default=512)
     for k in ('core','rom','plan','out','nes-plain','nes-probe','snes-core'):p.add_argument('--'+k,type=Path)
     a=p.parse_args()
-    if a.sample=='native':sample_native(a.core,a.rom,a.out,a.steps)
+    if a.sample=='native':sample_native(a.core,a.rom,a.out,a.steps,ram_bytes=a.ram_bytes)
     elif a.sample:sample_nes(a.core,a.out,json.loads(a.plan.read_text()),a.sample=='probe')
     else:print(json.dumps(verify(a.nes_plain.resolve(),a.nes_probe.resolve(),a.snes_core.resolve(),a.out.resolve()),indent=2))

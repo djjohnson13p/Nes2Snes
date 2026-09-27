@@ -1,0 +1,342 @@
+{
+  "base_revision": "7dd453c215804a273128644a4797f0beda863d0a",
+  "unit_tests": {
+    "passed": true,
+    "count": 467,
+    "skipped": 0
+  },
+  "ram_timeline": {
+    "passed": true,
+    "memory_model": "internal-2k",
+    "scenarios": 244,
+    "no_request_plain_comparisons": 232,
+    "host_scenarios": 268,
+    "dependent_boundaries": 15872,
+    "guest_ram_bytes": 32505856,
+    "header_bytes": 507904,
+    "matched_bytes": 33013760,
+    "host_interrupts": 9764,
+    "nested_interruptions": 372,
+    "deliberate_interruptions": 584,
+    "irq_entries": 21,
+    "nmi_entries": 12,
+    "exercised_opcodes": [
+      "01",
+      "05",
+      "06",
+      "08",
+      "0d",
+      "0e",
+      "11",
+      "15",
+      "16",
+      "18",
+      "19",
+      "1d",
+      "1e",
+      "21",
+      "24",
+      "25",
+      "26",
+      "28",
+      "2c",
+      "2d",
+      "2e",
+      "31",
+      "35",
+      "36",
+      "38",
+      "39",
+      "3d",
+      "3e",
+      "40",
+      "41",
+      "45",
+      "46",
+      "48",
+      "49",
+      "4c",
+      "4d",
+      "4e",
+      "51",
+      "55",
+      "56",
+      "58",
+      "59",
+      "5d",
+      "5e",
+      "61",
+      "65",
+      "66",
+      "68",
+      "6c",
+      "6d",
+      "6e",
+      "71",
+      "75",
+      "76",
+      "79",
+      "7d",
+      "7e",
+      "81",
+      "84",
+      "85",
+      "86",
+      "8c",
+      "8d",
+      "8e",
+      "91",
+      "94",
+      "95",
+      "96",
+      "99",
+      "9d",
+      "a1",
+      "a4",
+      "a5",
+      "a6",
+      "a9",
+      "ac",
+      "ad",
+      "ae",
+      "b1",
+      "b4",
+      "b5",
+      "b6",
+      "b9",
+      "bc",
+      "bd",
+      "be",
+      "c1",
+      "c4",
+      "c5",
+      "c6",
+      "cc",
+      "cd",
+      "ce",
+      "d1",
+      "d5",
+      "d6",
+      "d9",
+      "dd",
+      "de",
+      "e1",
+      "e4",
+      "e5",
+      "e6",
+      "ec",
+      "ed",
+      "ee",
+      "f1",
+      "f5",
+      "f6",
+      "f8",
+      "f9",
+      "fd",
+      "fe"
+    ],
+    "memory_opcode_variants": 100,
+    "negative_controls": [
+      {
+        "name": "unwrapped-pointer",
+        "rejected": true,
+        "marker": 90,
+        "status": 0
+      },
+      {
+        "name": "wrong-mirror",
+        "rejected": true,
+        "marker": 90,
+        "status": 0
+      },
+      {
+        "name": "stale-pointer-cost",
+        "rejected": true,
+        "marker": 90,
+        "status": 0
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "guard-cross-ppu",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      },
+      {
+        "name": "guard-wrapped-read",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      },
+      {
+        "name": "guard-indirect-ppu",
+        "rejected": true,
+        "completed_steps": 6,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      },
+      {
+        "name": "guard-indirect-rom",
+        "rejected": true,
+        "completed_steps": 6,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      }
+    ],
+    "cores": {
+      "nes_plain": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "nes_ram_stimulus": "0233212bd054ac8b7ad4078d6c03e1ee01bdf7ff3adf51231e6bb299ef225e62",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "guest_event_policy_changed": false,
+    "scope": "Dependent internal-RAM addressing, 2-KiB aliases, original instruction costs and sampled guest interrupts under real host NMIs. Not bus-cycle accuracy, mapper observation, DMA/DMC, physical NES polling, live CV3 scheduling or performance."
+  },
+  "default_binary_identity": {
+    "passed": true,
+    "base_revision": "7dd453c215804a273128644a4797f0beda863d0a",
+    "byte_identical_builds": 18,
+    "results": [
+      {
+        "name": "8000-none",
+        "sha256": "f6420babbe46c0c54c4cd75482fb86c76dcb5853ca1f421d3e39b7a8fbb31245"
+      },
+      {
+        "name": "8000-irq",
+        "sha256": "d0a9c758eb36993bc1d1161a30d943d17562f9eec4158ccd20f55d25d31226a1"
+      },
+      {
+        "name": "8000-nmi",
+        "sha256": "abaee9f41a0851b415a1b9a4cf905a8f0ef014108e02a0228ea9446009336781"
+      },
+      {
+        "name": "8000-both",
+        "sha256": "ebc11db3630b2d6628a3495b9d62fb5cb87dd99fbbab63a1c2ea409a344a624b"
+      },
+      {
+        "name": "8000-pulse",
+        "sha256": "6bf1fdca3e394bbac4837a24536798db349994a859ad7e4bd96fd2fca052e750"
+      },
+      {
+        "name": "8000-entry-window",
+        "sha256": "451d1a8c86af6f010f915d3d0f18ed6baca1abae3abb94b9b2cae142fa82cc15"
+      },
+      {
+        "name": "80ec-none",
+        "sha256": "c2ef0702b9c37234d2be68cb0a8cc6954894775e3617126d7744cd7b338bda5a"
+      },
+      {
+        "name": "80ec-irq",
+        "sha256": "f036aa945e30011e9856e757a209481d0158dc93b5893bc6f700a3e26d9345b1"
+      },
+      {
+        "name": "80ec-nmi",
+        "sha256": "e69af6d9ca6417023abba6802077a37b549dec71ce23d9e07cfae53de850765a"
+      },
+      {
+        "name": "80ec-both",
+        "sha256": "24411bda13afb78ae50745bd3c016babc1fd54cee16ea0e94bb7cc7945a532e9"
+      },
+      {
+        "name": "80ec-pulse",
+        "sha256": "ceee859539e704a89b25e87bd0b3660352e4cc166b22004153939a07c82862b6"
+      },
+      {
+        "name": "80ec-entry-window",
+        "sha256": "921c45bd80dc2a0f7e29bbb92196a7f4828698bb3354112fb02ddebc8ca3d69f"
+      },
+      {
+        "name": "80e2-none",
+        "sha256": "7222d67ef2d4d0487147231a97efffcd4f2ee3d9f203861457e5d7027eb5d8cd"
+      },
+      {
+        "name": "80e2-irq",
+        "sha256": "d4a9ae171952292de7f6a24832e70422ed363e9fa95636d4c2899e2e118a66c1"
+      },
+      {
+        "name": "80e2-nmi",
+        "sha256": "6d1f06222f823c63bdd496d44f100d749b52ea21482ffdc7cd0ff224933b9e38"
+      },
+      {
+        "name": "80e2-both",
+        "sha256": "d57e8060017c817351e561dc2afb72f9debfe0b4ea9eb593e3a52065aa5d0cbe"
+      },
+      {
+        "name": "80e2-pulse",
+        "sha256": "1efb19b2526fd69cf85e1150ff59d0e6345dae5d8b7335e8355d3b9508e182a2"
+      },
+      {
+        "name": "80e2-entry-window",
+        "sha256": "99e0f47825c73e9907cb8244716ee12e6ac8a073202be4954926ca46bfce7e3c"
+      }
+    ]
+  },
+  "retained_host": {
+    "passed": true,
+    "scenarios": 65,
+    "dependent_boundaries": 7280,
+    "compared_guest_state_bytes": 3960320,
+    "final_protected_bytes": 8580,
+    "host_interrupts": 5542,
+    "deliberate_interruptions": 3944,
+    "nested_interruptions": 672,
+    "register_cases": 1024,
+    "register_bytes": 13312,
+    "register_scratch_bytes": 135168,
+    "epoch_boundaries": 224,
+    "production_runtime_changed": false,
+    "guest_event_policy_changed": false,
+    "scope": "Hardware-emulated SNES vblank context preservation, with explicit native WAI stress and nested host NMI. Guest request policy remains authored after-instruction stimulation. Not a CV3 scheduler, physical-console validation, DMA/DMC model or speedup."
+  },
+  "retained_runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0
+  },
+  "private_route": {
+    "passed": true,
+    "checkpoints_compared": 133,
+    "state_fields_checked": 665,
+    "state_bytes_checked": 1197,
+    "ram_bytes_checked": 133,
+    "ram_mismatched_checkpoints": 0,
+    "candidate_rom_sha256": "0f4ac141190f4b7e0c3bbc1a691938c21872b133560e33bb4256f57c5b66f0ac"
+  },
+  "private_destinations": {
+    "passed": true,
+    "milestones_checked": 3
+  },
+  "private_nes_probe": {
+    "passed": true,
+    "checkpoints": 133,
+    "pixels_checked": 7626752,
+    "ram_bytes_checked": 272384,
+    "pixel_mismatches": 0,
+    "ram_mismatches": 0
+  },
+  "preserved_rng_failure": {
+    "passed": false,
+    "mismatched_endpoints": 131
+  },
+  "production_source_hashes": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  },
+  "evidence_sha256": {
+    "ram-final/ram-timeline-verification.json": "6c412c22e57caa988aba1dfd7a8ba7eaae41e0df6e24e4e51afbce794d239655",
+    "retained-host/host-nmi-verification.json": "9d19667fdf611dfbb287f3b55540f5e49fdf33f6f0875b6ef7e3cab1745ae20f",
+    "runtime-safety/runtime-counter-verification.json": "e5effacd4963495f70dfff35d35c5a0d959a79ec44eecdbf41399c126e3b94c6",
+    "clean-tests.log": "9c9a05e55d3ba911e9e16df0f7a1b3153cc519e1ef7d6d24927b5da8b66f9e24"
+  },
+  "scope": "Fresh local execution. Public CI must verify the exact published commit separately. No physical NES bus/polling, live CV3 scheduling, RNG correction, performance or boss-clear claim."
+}

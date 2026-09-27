@@ -1,5 +1,13 @@
 # Nes2Snes
 
+## Current: guarded indexed and indirect RAM execution
+
+The composed native timeline now executes indexed and indirect RAM instructions,
+resolves all internal-RAM aliases before access, and compares the entire 2 KiB of
+guest RAM under real host NMIs. Unsupported I/O/ROM accesses stop before execution.
+This remains an opt-in prototype profile, not the CV3 scheduler or an RNG fix.
+See [results, limits and resumption](docs/ram-timeline.md).
+
 ## Current: hardware host NMI context protection
 
 The composed native timeline now survives real SNES vblank NMIs, deliberate

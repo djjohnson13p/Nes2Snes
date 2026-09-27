@@ -9,6 +9,12 @@
 #include <string.h>
 #define TL_EXPORT __attribute__((visibility("default")))
 #define TL_MAX_ROWS 113
+#ifndef TL_RAM_BYTES
+#define TL_RAM_BYTES 512
+#endif
+#if TL_RAM_BYTES != 512 && TL_RAM_BYTES != 2048
+#error Unsupported timeline capture size
+#endif
 #define TL_MAX_EVENTS 64
 typedef struct { uint32_t cycle; uint8_t irq, nmi, reserved[2]; } tl_event;
 typedef struct {
@@ -17,7 +23,7 @@ typedef struct {
     uint8_t a,x,y,p,s,irq,nmi,event_index,cost,entry,kind,opcode;
     uint16_t ordinal;
     uint8_t reserved[12];
-    uint8_t ram[512];
+    uint8_t ram[TL_RAM_BYTES];
 } tl_row;
 static tl_row tl_rows[TL_MAX_ROWS];
 static tl_event tl_events[TL_MAX_EVENTS];
@@ -63,7 +69,7 @@ static void tl_before(uint16_t pc,uint8_t a,uint8_t x,uint8_t y,uint8_t p,uint8_
         r->kind=gap ? ((pc==(uint16_t)(Page[0xFFFA>>11][0xFFFA]|(Page[0xFFFB>>11][0xFFFB]<<8)))?2:1) : 0;
         r->opcode=tl_opcode;
     }
-    memcpy(r->ram,ram,512);tl_count++;tl_pending=0;tl_before_time=time;
+    memcpy(r->ram,ram,TL_RAM_BYTES);tl_count++;tl_pending=0;tl_before_time=time;
     if(tl_count==tl_limit)tl_active=0;
 }
 static void tl_after(uint8_t opcode,uint64_t time) {

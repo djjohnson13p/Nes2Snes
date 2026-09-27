@@ -12,18 +12,21 @@ import subprocess
 import sys
 from libretro_runner import Runner
 from route_evidence import atomic_json
-from timeline_program import create_native, REGULAR, BRANCHES
+from timeline_program import create_native, REGULAR, BRANCHES, memory_bytes
 from timeline_fixture import cases, expected_initial
 from timeline_host import PROTECTED, MODES
 from opcodes6502 import OPS
 from verify_timeline import compare
 
 
-def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True) -> dict:
+def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512) -> dict:
     if type(host_expected) is not bool:
         raise ValueError('Host expectation must be boolean')
     if type(steps) is not int or not 1 <= steps <= 112:
         raise ValueError('Invalid dependent step count')
+    if type(ram_bytes) is not int or ram_bytes not in (512,2048) or steps*(32+ram_bytes)>65536:
+        raise ValueError('Capture shape exceeds native output bank')
+    size=32+ram_bytes
     out.unlink(missing_ok=True)
     r = Runner(core, rom)
     try:
@@ -37,7 +40,7 @@ def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=
         def u32(address): return int.from_bytes(ram[address:address+4], 'little')
         report = dict(complete=ram[0x1FFF] == 0x5A, marker=ram[0x1FFF], host_nmi_enabled=host_expected,
                       status=ram[0x18CE], completed_steps=u16(0x18D0),
-                      records=[ram[0x10000+544*i:0x10000+544*(i+1)].hex() for i in range(steps)],
+                      records=[ram[0x10000+size*i:0x10000+size*(i+1)].hex() for i in range(steps)],
                       protected_memory=b''.join(ram[a:a+n] for a,n in PROTECTED).hex(),
                       host_frames=r.frames, host=dict(count=u32(0x1D00), depth=ram[0x1D04],
                           peak=ram[0x1D05], fault=ram[0x1D06], wait_hits=u16(0x1D08),
@@ -45,6 +48,9 @@ def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=
                           low_canary=ram[0x1E80], high_canary=ram[0x1FF1], min_sp=u16(0x1D1E)),
                       core_sha256=hashlib.sha256(core.read_bytes()).hexdigest(),
                       rom_sha256=hashlib.sha256(rom.read_bytes()).hexdigest())
+        if ram_bytes==2048:
+            report['final_guest_ram']=ram[:2048].hex()
+            report['final_guest_context']=ram[0x18C0:0x18E0].hex()
         atomic_json(out, report)
         return report
     finally:
@@ -89,9 +95,9 @@ def check_host(plan: dict, reference: dict, native: dict, mode: str) -> dict:
     return dict(mode=mode,host=h,**result)
 
 
-def execute(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True) -> dict:
+def execute(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512) -> dict:
     subprocess.run([sys.executable,__file__,'--sample','timeline','--core',str(core),'--rom',str(rom),
-                    '--out',str(out),'--steps',str(steps)]+([] if host_expected else ['--baseline']),check=True,timeout=90,
+                    '--out',str(out),'--steps',str(steps),'--ram-bytes',str(ram_bytes)]+([] if host_expected else ['--baseline']),check=True,timeout=90,
                    stdout=subprocess.DEVNULL)
     return json.loads(out.read_text())
 
@@ -149,9 +155,9 @@ def check_registers(report: dict, *, nested: bool, mirror: bool) -> dict:
 
 if __name__ == '__main__':
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--sample',choices=['timeline','registers']);p.add_argument('--steps',type=int,default=112)
+    p.add_argument('--sample',choices=['timeline','registers']);p.add_argument('--steps',type=int,default=112);p.add_argument('--ram-bytes',type=int,choices=(512,2048),default=512)
     p.add_argument('--baseline',action='store_true',help='Only for a no-host baseline; host metadata is uninitialized and is not acceptance evidence')
     for key in ('core','rom','out'):p.add_argument('--'+key,type=Path,required=True)
     a=p.parse_args()
-    report=sample_registers(a.core,a.rom,a.out) if a.sample=='registers' else sample(a.core,a.rom,a.out,a.steps,host_expected=not a.baseline)
+    report=sample_registers(a.core,a.rom,a.out) if a.sample=='registers' else sample(a.core,a.rom,a.out,a.steps,host_expected=not a.baseline,ram_bytes=a.ram_bytes)
     print(json.dumps({k:v for k,v in report.items() if k!='records'},indent=2))
