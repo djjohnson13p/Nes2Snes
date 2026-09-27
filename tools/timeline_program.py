@@ -36,12 +36,14 @@ def memory_bytes(plan: dict) -> int:
     """Explicit ABI selection; the omitted profile preserves the prior prototype."""
     if 'memory_model' not in plan:
         return 512
-    if plan['memory_model'] not in ('internal-2k', 'nrom-32k'):
+    if plan['memory_model'] not in ('internal-2k', 'nrom-32k', 'mmc5-prg-rom'):
         raise ValueError('Unknown timeline memory model')
     return 2048
 
 
-def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False) -> list[tuple]:
+def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False, mapper: bool=False, static_targets: set[int]|None=None) -> list[tuple]:
+    if type(mapper) is not bool or (mapper and not rom) or (static_targets is not None and (not mapper or not isinstance(static_targets,set) or any(type(v) is not int or not 0x8000<=v<=0xFFFF for v in static_targets))):
+        raise ValueError('Banked targets require the explicit mapper gate')
     if type(ram) is not bool or type(rom) is not bool or (rom and not ram):
         raise ValueError('ROM extension requires explicit boolean RAM and ROM gates')
     if not isinstance(code,bytes) or not 1<=len(code)<=2048 or type(origin) is not int or not 0x8000<=origin<=0xFFF0 or origin+len(code)>0xFFFA:
@@ -66,17 +68,23 @@ def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: b
         if rom:
             allowed |= name in REGULAR and mode == 'abs' and operand >= 0x8000
             allowed |= name == 'JMP' and mode == 'ind' and operand >= 0x8000
+        if mapper:
+            from mmc5_timeline import REGISTERS
+            allowed |= name == 'STA' and mode == 'abs' and operand in REGISTERS
         if not allowed:raise ValueError('Instruction is outside the procedural translator contract')
         rows.append((pc,name,mode,raw,operand));pos+=size
     if [r[0] for r in rows]!=starts:raise ValueError('Missing or overlapping original instruction entries')
     for pc,name,mode,raw,operand in rows:
         target=operand if name in ('JMP','JSR') and mode=='abs' else (pc+2+(operand if operand<128 else operand-256))&65535 if mode=='rel' else None
-        if target is not None and target not in starts:raise ValueError('Static control target is not an observed entry')
+        if target is not None and target not in (starts if static_targets is None else static_targets):raise ValueError('Static control target is not an observed entry')
     return rows
 
 
 
 def validate_plan(plan: object) -> dict:
+    if isinstance(plan,dict) and plan.get('memory_model')=='mmc5-prg-rom':
+        from mmc5_timeline import validate
+        return validate(plan)
     keys={'name','origin','code','starts','irq','nmi','steps','stack','a','x','y','seed','counter','events'}
     if not isinstance(plan,dict) or set(plan)-{'memory_model','rom_data'}!=keys:
         raise ValueError('Unknown or missing timeline plan fields')
@@ -100,8 +108,8 @@ def validate_plan(plan: object) -> dict:
     return plan
 
 
-def generate(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False) -> str:
-    rows=decode(code,origin,starts,ram=ram,rom=rom);out=[]
+def generate(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False, mapper: bool=False, static_targets: set[int]|None=None) -> str:
+    rows=decode(code,origin,starts,ram=ram,rom=rom,mapper=mapper,static_targets=static_targets);out=[]
     for pc,name,mode,raw,operand in rows:
         out.append(f'''.a16
 .i16
@@ -131,15 +139,22 @@ ins_{pc:04x}:
     sta GT+4
     jmp retire
 '''
-        if ram and name in REGULAR and mode not in ('imp','imm','acc'):
+        if mapper and name=='STA' and mode=='abs' and operand in (0x5100,0x5114,0x5115,0x5116,0x5117):
+            from mmc5_timeline import write_code
+            out.append(write_code(operand)+resume(pc+len(raw)))
+        elif ram and name in REGULAR and mode not in ('imp','imm','acc'):
             from timeline_ram import access
             if rom:
                 from timeline_rom import access
+            if mapper:
+                from mmc5_timeline import access
             out.append(access(name,mode,operand)+resume(pc+len(raw)))
         elif ram and name=='JMP' and mode=='ind':
             from timeline_ram import jump
             if rom:
                 from timeline_rom import jump
+            if mapper:
+                from mmc5_timeline import jump
             out.append(jump(operand))
         elif name in REGULAR:
             out.append('    jsr load_guest\n.a8\n.i8\n    .byte '+','.join(f'${v:02X}' for v in raw)+'\n    jsr save_guest\n'+resume(pc+len(raw)))
@@ -388,6 +403,9 @@ InitialRegisters: .incbin "initial-registers.bin"
 
 def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=None,program_text: str|None=None,host_mode: str|None=None) -> Path:
     validate_plan(plan)
+    if plan.get('memory_model')=='mmc5-prg-rom':
+        from mmc5_timeline import create_native as banked
+        return banked(out,plan,initial,retirement=retirement,program_text=program_text,host_mode=host_mode)
     if host_mode is not None:
         from timeline_host import MODES
         if not isinstance(host_mode,str) or host_mode not in MODES:

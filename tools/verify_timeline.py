@@ -82,8 +82,12 @@ def compare(plan: dict,original: dict,native: dict) -> dict:
         if one!=two:
             mismatch=[j for j,(x,y) in enumerate(zip(one,two)) if x!=y]
             raise RuntimeError(f"{plan['name']} step {i}: {len(mismatch)} differences; offsets {mismatch[:16]}; expected header {one[:32].hex()}, actual {two[:32].hex()}")
+        if plan.get('memory_model')=='mmc5-prg-rom':
+            pc=int.from_bytes(one[4:6],'little')
+            if any(v>=plan['prg_banks'] for v in one[20:25]) or pc<0x8000 or one[24]!=one[20+((pc-0x8000)//8192)]:
+                raise ValueError('Invalid physical mapper or execution-bank capture')
         now=int.from_bytes(one[:4],'little')
-        if int.from_bytes(one[18:20],'little')!=i or now!=latest+one[14]+one[15] or any(one[20:32]):raise ValueError('Nonclosing or unordered timeline record')
+        if int.from_bytes(one[18:20],'little')!=i or now!=latest+one[14]+one[15] or any(one[25 if plan.get('memory_model')=='mmc5-prg-rom' else 20:32]):raise ValueError('Nonclosing or unordered timeline record')
         if one[16] not in (0,1,2) or one[15]!=(7 if one[16] else 0):raise ValueError('Invalid interrupt cost/decision')
         if one[13]!=sum(e['cycle']<=now-one[15] for e in plan['events']):raise ValueError('Event cursor does not match the declared instruction-boundary policy')
         if one[17] in (0x10,0x30,0x50,0x70,0x90,0xB0,0xD0,0xF0) and one[14]==4:crossings+=1

@@ -1,0 +1,258 @@
+{
+  "base_revision": "4c255f9754d8d1033223535a4cfd7003054b42a8",
+  "base_tree": "16393811c94834b37aed8fab72ab73cb86cd8b5d",
+  "unit_tests": {
+    "passed": true,
+    "count": 508,
+    "skipped": 0,
+    "clean_source_passed": true
+  },
+  "mmc5_matrix": {
+    "passed": true,
+    "plans": 322,
+    "scenarios": 656,
+    "dependent_boundaries": 20336,
+    "compared_bytes": 42298880,
+    "no_request_plain_comparisons": 319,
+    "host_scenarios": 334,
+    "host_interrupts": 11878,
+    "admitted_prg_modes": [
+      1,
+      2,
+      3
+    ],
+    "read_opcode_forms": 42,
+    "physical_rom_banks_observed": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      62,
+      63,
+      126,
+      127
+    ],
+    "physical_execution_banks_observed": [
+      0,
+      3,
+      4,
+      5,
+      7,
+      15,
+      31,
+      63,
+      127
+    ],
+    "observed_slot_changes": 827,
+    "negative_controls": [
+      {
+        "name": "pc-without-bank",
+        "rejected": true,
+        "marker": 90,
+        "status": 0
+      },
+      {
+        "name": "unaligned-pair",
+        "rejected": true,
+        "marker": 90,
+        "status": 0
+      },
+      {
+        "name": "stale-vector",
+        "rejected": true,
+        "marker": 238,
+        "status": 225
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "m5-guard-mode-zero",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      },
+      {
+        "name": "m5-guard-ram-bank",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      },
+      {
+        "name": "m5-guard-rom-write",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      },
+      {
+        "name": "m5-guard-unobserved-bank",
+        "rejected": true,
+        "completed_steps": 3,
+        "status": 225,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      }
+    ],
+    "mode_zero_reference_disagreement": {
+      "reference_noninterference": true,
+      "observed_slots": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "documented_slots": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "disagreement_preserved": true,
+      "accepted_as_correct_mapping": false,
+      "scope": "Pinned FCEUmm mode-0 register selection disagreement; native profile rejects mode 0."
+    },
+    "cores": {
+      "nes_plain": "3a0ec0f753a7f29b81c2603fd0d14893855efb363922fa234c66a2da3ae3b61d",
+      "nes_mmc5_stimulus": "dbd6896c7ab81ecbeaebd97e9ca1de5b4456a7c49f2c2c7581ba32e831a89474",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "new_cv3_replay_performed": false,
+    "scope": "Authored MMC5 PRG-ROM modes 1/2/3, bank-qualified code, raw data and current vectors on the protected timeline. Not PRG RAM, CHR, mapper IRQ/audio, bus cycles, physical event scheduling, DMA/DMC, CV3 integration or speed."
+  },
+  "retained_rom": {
+    "passed": true,
+    "plans": 97,
+    "scenarios": 206,
+    "dependent_boundaries": 6386,
+    "compared_bytes": 13282880,
+    "host_interrupts": 4037
+  },
+  "retained_ram": {
+    "passed": true,
+    "scenarios": 244,
+    "host_scenarios": 268,
+    "dependent_boundaries": 15872,
+    "matched_bytes": 33013760,
+    "host_interrupts": 9764
+  },
+  "retained_runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0
+  },
+  "earlier_profile_binary_identity": {
+    "passed": true,
+    "default": 18,
+    "internal_2k": 244,
+    "nrom_32k": 97,
+    "total": 359
+  },
+  "final_source_capture_revalidation": {
+    "passed": true,
+    "scenarios": 656,
+    "boundaries": 20336,
+    "bytes": 42298880,
+    "host_interrupts": 11878,
+    "no_request_controls": 319,
+    "mode_zero_disagreement_preserved": true,
+    "mutants_rejected": 3,
+    "guards_rejected": 4
+  },
+  "clean_source_replays": {
+    "passed": true,
+    "scenarios": 4,
+    "results": [
+      {
+        "name": "m5-code-bank-identity",
+        "host_mode": null,
+        "passed": true,
+        "steps": 31,
+        "bytes": 64480,
+        "same_reference": true,
+        "same_native": true,
+        "byte_identical_binary": true
+      },
+      {
+        "name": "m5-self-remap-vector",
+        "host_mode": "nested",
+        "passed": true,
+        "steps": 31,
+        "bytes": 64480,
+        "same_reference": true,
+        "same_native": true,
+        "byte_identical_binary": true
+      },
+      {
+        "name": "m5-read-bd-m3-r85-b128",
+        "host_mode": null,
+        "passed": true,
+        "steps": 31,
+        "bytes": 64480,
+        "same_reference": true,
+        "same_native": true,
+        "byte_identical_binary": true
+      },
+      {
+        "name": "m5-read-b1-m2-r85-b32-irq",
+        "host_mode": "free",
+        "passed": true,
+        "steps": 31,
+        "bytes": 64480,
+        "same_reference": true,
+        "same_native": true,
+        "byte_identical_binary": true
+      }
+    ]
+  },
+  "production_source_sha256": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  },
+  "production_runtime_changed": false,
+  "new_cv3_replay_performed": false,
+  "prior_rng_failure_fixed": false,
+  "new_boss_clear_claimed": false,
+  "gameplay_speedup_claimed": false,
+  "ci_status": "Local evidence. Verify the published revision and actual workflow results separately."
+}
