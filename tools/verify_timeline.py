@@ -34,8 +34,8 @@ def sample_nes(core: Path,folder: Path,plan: dict,probe: bool) -> dict:
             if lib.retro_n2s_timeline_status(2)!=size or lib.retro_n2s_timeline_status(5)!=8:raise RuntimeError('Timeline harness ABI mismatch')
             events=(Event*len(plan['events']))(*[Event(e['cycle'],e['irq'],e['nmi'],(C.c_uint8*2)(0,0)) for e in validate_events(plan['events'])])
             if not lib.retro_n2s_timeline_configure(plan['origin'],plan['steps'],events,len(events)):raise RuntimeError('Timeline harness refused configuration')
-        wram=plan.get('memory_model')=='mmc5-prg-ram32'
-        r.run(16 if wram else 1)
+        wram=plan.get('memory_model') in ('mmc5-prg-ram32','mmc5-cpu-io')
+        r.run(20 if plan.get('memory_model')=='mmc5-cpu-io' else 16 if wram else 1)
         report=dict(name=plan['name'],ram_sha256=hashlib.sha256(r.memory()).hexdigest(),image_sha256=hashlib.sha256(r.rgb().tobytes()).hexdigest(),video_callbacks=r.frames,audio_frames=r.audio_frames)
         if probe:
             if lib.retro_n2s_timeline_status(1) or lib.retro_n2s_timeline_status(3):raise RuntimeError('Incomplete or erroneous reference timeline')
@@ -49,6 +49,14 @@ def sample_nes(core: Path,folder: Path,plan: dict,probe: bool) -> dict:
             if lib.retro_n2s_wram_size()!=32768:raise RuntimeError('Cartridge snapshot ABI mismatch')
             report['initial_cartridge_ram']=C.string_at(lib.retro_n2s_wram_data(0),32768).hex()
             report['cartridge_ram']=C.string_at(lib.retro_n2s_wram_data(1),32768).hex()
+        if probe and plan.get('memory_model')=='mmc5-cpu-io':
+            lib.retro_n2s_exram_size.restype=C.c_uint
+            lib.retro_n2s_exram_data.argtypes=[C.c_uint];lib.retro_n2s_exram_data.restype=C.c_void_p
+            if lib.retro_n2s_exram_size()!=1024:raise RuntimeError('ExRAM snapshot ABI mismatch')
+            for key,final in [('initial_exram',0),('exram',1)]:
+                pointer=lib.retro_n2s_exram_data(final)
+                if not pointer:raise RuntimeError('Missing ExRAM snapshot')
+                report[key]=C.string_at(pointer,1024).hex()
         report['complete']=True
         atomic_json(folder/'capture.json',report);return report
     finally:r.close()
@@ -89,15 +97,17 @@ def compare(plan: dict,original: dict,native: dict) -> dict:
         if one!=two:
             mismatch=[j for j,(x,y) in enumerate(zip(one,two)) if x!=y]
             raise RuntimeError(f"{plan['name']} step {i}: {len(mismatch)} differences; offsets {mismatch[:16]}; expected header {one[:32].hex()}, actual {two[:32].hex()}")
-        if plan.get('memory_model')=='mmc5-prg-ram32':
+        if plan.get('memory_model') in ('mmc5-prg-ram32','mmc5-cpu-io'):
             from verify_wram_timeline import check_header
             check_header(plan,one)
         if plan.get('memory_model')=='mmc5-prg-rom':
             pc=int.from_bytes(one[4:6],'little')
             if any(v>=plan['prg_banks'] for v in one[20:25]) or pc<0x8000 or one[24]!=one[20+((pc-0x8000)//8192)]:
                 raise ValueError('Invalid physical mapper or execution-bank capture')
+        if plan.get('memory_model')=='mmc5-cpu-io' and one[28] not in (2,3):
+            raise ValueError('Unsupported ExRAM mode in completed record')
         now=int.from_bytes(one[:4],'little')
-        if int.from_bytes(one[18:20],'little')!=i or now!=latest+one[14]+one[15] or any(one[28 if plan.get('memory_model')=='mmc5-prg-ram32' else 25 if plan.get('memory_model')=='mmc5-prg-rom' else 20:32]):raise ValueError('Nonclosing or unordered timeline record')
+        if int.from_bytes(one[18:20],'little')!=i or now!=latest+one[14]+one[15] or any(one[31 if plan.get('memory_model')=='mmc5-cpu-io' else 28 if plan.get('memory_model')=='mmc5-prg-ram32' else 25 if plan.get('memory_model')=='mmc5-prg-rom' else 20:32]):raise ValueError('Nonclosing or unordered timeline record')
         if one[16] not in (0,1,2) or one[15]!=(7 if one[16] else 0):raise ValueError('Invalid interrupt cost/decision')
         if one[13]!=sum(e['cycle']<=now-one[15] for e in plan['events']):raise ValueError('Event cursor does not match the declared instruction-boundary policy')
         if one[17] in (0x10,0x30,0x50,0x70,0x90,0xB0,0xD0,0xF0) and one[14]==4:crossings+=1

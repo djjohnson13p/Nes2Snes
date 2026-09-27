@@ -1,0 +1,266 @@
+{
+  "base_revision": "85105e09229783cb4535f36db2053f15db42d6d0",
+  "base_tree": "145b399839485d0de3456cffda7a699d60d85fa3",
+  "unit_tests": {
+    "passed": true,
+    "count": 551,
+    "skipped": 0,
+    "clean_source_passed": true
+  },
+  "cpu_io_matrix": {
+    "passed": true,
+    "profile": "mmc5-cpu-io",
+    "plans": 251,
+    "scenarios": 514,
+    "boundaries": 15934,
+    "internal_state_bytes": 33142720,
+    "final_exram_bytes": 526336,
+    "final_cartridge_bytes": 16842752,
+    "access_forms": 61,
+    "multiplier_pairs": 320,
+    "no_request_controls": 250,
+    "host_scenarios": 263,
+    "host_interrupts": 9324,
+    "negative_controls": [
+      {
+        "name": "readonly-write",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "mirrored-exram",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "stale-product",
+        "rejected": true,
+        "completed": true
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "ex-guard-mode-00",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-mode-01",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-mode-fc",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-mode-fd",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-preliminary-5bff",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-preliminary-5204",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      }
+    ],
+    "cores": {
+      "nes_plain": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "nes_io_probe": "195580e3b55c883de8c9b4e0cc1633fc4f84ff65b111f712f7dfb6de9c5c82a7",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "new_game_replay": false,
+    "scope": "CPU ExRAM modes 2/3 and absolute LDA/STA multiplier I/O on the sampled timeline. No rendering modes, PPU behavior, open bus, physical bus/event timing, CV3 scheduling or speed claim."
+  },
+  "retained_cartridge_ram": {
+    "passed": true,
+    "profile": "mmc5-prg-ram32",
+    "plans": 196,
+    "scenarios": 404,
+    "boundaries": 12524,
+    "internal_state_bytes": 26049920,
+    "final_cartridge_bytes": 13238272,
+    "access_opcode_forms": 61,
+    "no_request_controls": 195,
+    "host_scenarios": 208,
+    "host_interrupts": 7401,
+    "production_runtime_changed": false,
+    "new_game_replay": false
+  },
+  "retained_runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0
+  },
+  "older_profile_build_samples": {
+    "passed": true,
+    "count": 15,
+    "scope": "Three representative builds per prior profile, not every old fixture",
+    "results": [
+      {
+        "profile": "default",
+        "name": "8000-none",
+        "sha256": "f6420babbe46c0c54c4cd75482fb86c76dcb5853ca1f421d3e39b7a8fbb31245"
+      },
+      {
+        "profile": "default",
+        "name": "80ec-both",
+        "sha256": "24411bda13afb78ae50745bd3c016babc1fd54cee16ea0e94bb7cc7945a532e9"
+      },
+      {
+        "profile": "default",
+        "name": "80e2-entry-window",
+        "sha256": "99e0f47825c73e9907cb8244716ee12e6ac8a073202be4954926ca46bfce7e3c"
+      },
+      {
+        "profile": "ram",
+        "name": "ram-01-0",
+        "sha256": "c5c592de5506c9a7d995da665618216944711c3b23efb9d5248035c303bbd38c"
+      },
+      {
+        "profile": "ram",
+        "name": "ram-91-1",
+        "sha256": "5c9b8e6954101063409dc910b0d8ad125609556ae12746c82c06f87eb2cbfa64"
+      },
+      {
+        "profile": "ram",
+        "name": "ram-jmp-1fff",
+        "sha256": "d66eefd949853c00446802121da7be0e4562ddb183b2c586cda4da985d09ed85"
+      },
+      {
+        "profile": "rom",
+        "name": "rom-01-0-9010-00",
+        "sha256": "2771d438dfa9cbf206ac8e1029e3b367bf7c60ab17c25d22c19e08192aad011c"
+      },
+      {
+        "profile": "rom",
+        "name": "rom-ae-0-9010-00",
+        "sha256": "32ced4b3975af5c24e2d127c55fad2e905ef61f64cc26c281112356317b60ade"
+      },
+      {
+        "profile": "rom",
+        "name": "rom-jmp-92ff",
+        "sha256": "290c2bd94320e5e1984e5cb32108111588702f604b50c3e8a5ecee73ae000599"
+      },
+      {
+        "profile": "mapper",
+        "name": "m5-read-01-m1-r85-b32",
+        "sha256": "1677ebda4a8151f973f84a3e8d90e1129740d86e2745f4d49dee2f6e56e7a7cc"
+      },
+      {
+        "profile": "mapper",
+        "name": "m5-read-bd-m2-ra4-b32",
+        "sha256": "280b53670fde575fe3ad9876a845e8a49dd6968b60fa057a5e054536c7dc8b31"
+      },
+      {
+        "profile": "mapper",
+        "name": "m5-read-bd-m3-r85-b128",
+        "sha256": "ca4006e508b8c8684c0a8dd013426a23502de26c27b1c8d2f2109ec05fd9bdaa"
+      },
+      {
+        "profile": "wram",
+        "name": "cw-access-01-l0-x3",
+        "sha256": "7e0a68162d113802f5716d1aac14f35f199d2a140bc130563ef69ed553ad2c2b"
+      },
+      {
+        "profile": "wram",
+        "name": "cw-access-d1-l0-x3",
+        "sha256": "edb77831361c6da4ea1f921ecc426a220c8923cbac1ff9c6147090b2c78ec1a4"
+      },
+      {
+        "profile": "wram",
+        "name": "cw-access-9d-l0-x255",
+        "sha256": "fae70a30358c3bd7ce50b38c0bc53ff4443436ed56301ebfe0a03c29d9cc51e3"
+      }
+    ]
+  },
+  "clean_source_replays": {
+    "passed": true,
+    "scenarios": 3,
+    "results": [
+      {
+        "name": "ex-access-9d-m03-x3-5cff",
+        "host_mode": null,
+        "passed": true,
+        "steps": 31,
+        "internal_state_bytes": 64480,
+        "final_exram_bytes": 1024,
+        "final_cartridge_bytes": 32768,
+        "identical_capture": true,
+        "identical_binary": true
+      },
+      {
+        "name": "ex-mul-immediate",
+        "host_mode": "nested",
+        "passed": true,
+        "steps": 31,
+        "internal_state_bytes": 64480,
+        "final_exram_bytes": 1024,
+        "final_cartridge_bytes": 32768,
+        "identical_capture": true,
+        "identical_binary": true
+      },
+      {
+        "name": "ex-jump-wrap",
+        "host_mode": null,
+        "passed": true,
+        "steps": 31,
+        "internal_state_bytes": 64480,
+        "final_exram_bytes": 1024,
+        "final_cartridge_bytes": 32768,
+        "identical_capture": true,
+        "identical_binary": true
+      }
+    ]
+  },
+  "current_checker_revalidation": {
+    "passed": true,
+    "scenarios": 514,
+    "boundaries": 15934,
+    "mutants": 3,
+    "guards": 6
+  },
+  "production_hashes": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  },
+  "production_runtime_changed": false,
+  "new_cv3_replay": false,
+  "rng_correction_claimed": false,
+  "graphics_rendering_claimed": false,
+  "ci_status": "Fresh local evidence. Verify actual published commit and CI run separately."
+}
