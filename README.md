@@ -1,5 +1,13 @@
 # Nes2Snes
 
+## Current: original-instruction cycle accounting
+
+A separately tested native cycle accountant covers all 151 documented NES opcodes.
+Independent execution checks, a complete instruction-window ledger, and explicit
+DMA-stall rejection now provide the next scheduling component. It is **not yet
+connected to the game runtime**; the RNG mismatch remains failing. See
+[results, boundaries and resumption](docs/guest-cycles.md).
+
 ## Current: idle-state diagnosis and fault-aware evidence
 
 A calibrated read-only observer now exposes the random-state timing divergence:

@@ -109,3 +109,10 @@ its independent calibration, and the newly reproduced random-state divergence.
 The local-only first-boss checkpoint reported in the conversation was not recovered
 in that continuation. Do not infer its route or test results from the restored
 Block 1-03 source. No runtime scheduling fix or new boss-clear claim is made.
+
+## Latest original-cycle accounting
+
+Read `guest-cycles.md` for the isolated native instruction-cost primitive, independent
+NES timing measurements and separate observed interrupt accounting. This is not a
+live scheduler or a recovered copy of the previously unpublished idle-budget work.
+The production runtime remains unchanged and the private RNG comparison still fails.
