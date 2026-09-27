@@ -43,11 +43,17 @@ def nes_sample(core,rom,out,stop_pc=None):
     finally:r.close()
 
 
-def native_sample(core,rom,out,steps,host):
+def native_sample(core,rom,out,steps,host,extra_ranges=None):
     # Use one core/session only; the existing capture helper returns after
     # completion. Palette RAM is sampled via a dedicated small wrapper below.
     if type(steps) is not int or not 1<=steps<=31 or type(host) is not bool:
         raise ValueError('Invalid native capture shape or host gate')
+    if extra_ranges is not None:
+        if not isinstance(extra_ranges,dict) or any(
+                not isinstance(k,str) or not isinstance(v,tuple) or len(v)!=2 or
+                any(type(n) is not int for n in v) or v[0]<0 or v[1]<1 or
+                v[0]+v[1]>131072 for k,v in extra_ranges.items()):
+            raise ValueError('Invalid extra read-only snapshot ranges')
     r=Runner(core,rom)
     try:
         for _ in range(2048):
@@ -70,6 +76,10 @@ def native_sample(core,rom,out,steps,host):
                   nested_wait_hits=int.from_bytes(ram[0x1D0A:0x1D0C],'little'),work=int.from_bytes(ram[0x1D0C:0x1D10],'little'),
                   min_sp=int.from_bytes(ram[0x1D1E:0x1D20],'little'),low_canary=ram[0x1E80],high_canary=ram[0x1FF1]),
              core_sha256=hashlib.sha256(core.read_bytes()).hexdigest(),rom_sha256=hashlib.sha256(rom.read_bytes()).hexdigest())
+        for key,(address,length) in (extra_ranges or {}).items():
+            if key in result or address+length>len(ram):
+                raise ValueError('Extra snapshot collides with existing fields or memory bounds')
+            result[key]=ram[address:address+length].hex()
         atomic_json(out,result)
     finally:r.close()
 
