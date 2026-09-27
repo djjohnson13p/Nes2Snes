@@ -166,3 +166,11 @@ Read `mmc5-cartridge-ram.md` for the explicit 32-KiB PRG-RAM profile, aliasing,
 protection-register semantics, exact initial/final cartridge snapshots, and
 host-interrupted tests. Other RAM-board wiring and RAM code execution remain
 unsupported. This does not change production CV3 or fix physical event timing.
+
+## Latest CPU-only ExRAM and multiplier profile
+
+Read `mmc5-cpu-io.md` for ExRAM modes 2/3, absolute multiplier-register execution,
+read-only endpoint observation and real emulated host-NMI tests. External memories
+are checked at the final recorded boundary, not every instruction. Rendering modes
+0/1, PPU integration and physical event/stall timing remain unsupported. No new
+CV3 replay or production timing correction is claimed by this checkpoint.
