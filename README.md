@@ -1,5 +1,13 @@
 # Nes2Snes
 
+## Current: blanked PPU nametable transfers
+
+The protected prototype now executes CPU PPU-address/scroll latches, buffered
+nametable reads/writes, and CIRAM/fill routing with rendering disabled. Independent
+PPU snapshots complement CPU and final-memory comparisons. This is not rendering
+or the live CV3 scheduler; see [scope and resumption](docs/ppu-blank.md). The
+preceding [CPU ExRAM/multiplier profile](docs/mmc5-cpu-io.md) remains supported.
+
 ## Current: protected MMC5 cartridge RAM
 
 The experimental timeline now supports an explicit 32-KiB cartridge-RAM profile,

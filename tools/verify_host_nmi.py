@@ -19,7 +19,9 @@ from opcodes6502 import OPS
 from verify_timeline import compare
 
 
-def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512, cartridge_bytes: int=0, exram: bool=False) -> dict:
+def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512, cartridge_bytes: int=0, exram: bool=False, ppu_blank: bool=False) -> dict:
+    if type(ppu_blank) is not bool or (ppu_blank and (not exram or ram_bytes!=2048 or cartridge_bytes!=32768)):
+        raise ValueError('Blank PPU snapshot requires full external-memory profile')
     if type(exram) is not bool:raise ValueError('ExRAM capture gate must be boolean')
     if type(cartridge_bytes) is not int or cartridge_bytes not in (0,32768):
         raise ValueError('Unsupported cartridge snapshot size')
@@ -58,6 +60,10 @@ def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=
             report['cartridge_ram']=ram[0x8000:0x8000+cartridge_bytes].hex()
         if exram:
             report['exram']=ram[0x4000:0x4400].hex()
+        if ppu_blank:
+            report['ciram']=ram[0x4800:0x5000].hex()
+            report['ppu_state']=(ram[0x1C20:0x1C2D]+bytes(3)).hex()
+            report['ppu_records']=[ram[0x5000+16*i:0x5010+16*i].hex() for i in range(steps)]
         atomic_json(out, report)
         return report
     finally:
@@ -102,9 +108,9 @@ def check_host(plan: dict, reference: dict, native: dict, mode: str) -> dict:
     return dict(mode=mode,host=h,**result)
 
 
-def execute(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512, cartridge_bytes: int=0, exram: bool=False) -> dict:
+def execute(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512, cartridge_bytes: int=0, exram: bool=False, ppu_blank: bool=False) -> dict:
     subprocess.run([sys.executable,__file__,'--sample','timeline','--core',str(core),'--rom',str(rom),
-                    '--out',str(out),'--steps',str(steps),'--ram-bytes',str(ram_bytes),'--cartridge-bytes',str(cartridge_bytes)]+([] if host_expected else ['--baseline'])+(['--exram'] if exram else []),check=True,timeout=90,
+                    '--out',str(out),'--steps',str(steps),'--ram-bytes',str(ram_bytes),'--cartridge-bytes',str(cartridge_bytes)]+([] if host_expected else ['--baseline'])+(['--exram'] if exram else [])+(['--ppu-blank'] if ppu_blank else []),check=True,timeout=90,
                    stdout=subprocess.DEVNULL)
     return json.loads(out.read_text())
 
@@ -163,9 +169,9 @@ def check_registers(report: dict, *, nested: bool, mirror: bool) -> dict:
 if __name__ == '__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--sample',choices=['timeline','registers']);p.add_argument('--steps',type=int,default=112);p.add_argument('--ram-bytes',type=int,choices=(512,2048),default=512)
-    p.add_argument('--cartridge-bytes',type=int,choices=(0,32768),default=0);p.add_argument('--exram',action='store_true')
+    p.add_argument('--cartridge-bytes',type=int,choices=(0,32768),default=0);p.add_argument('--exram',action='store_true');p.add_argument('--ppu-blank',action='store_true')
     p.add_argument('--baseline',action='store_true',help='Only for a no-host baseline; host metadata is uninitialized and is not acceptance evidence')
     for key in ('core','rom','out'):p.add_argument('--'+key,type=Path,required=True)
     a=p.parse_args()
-    report=sample_registers(a.core,a.rom,a.out) if a.sample=='registers' else sample(a.core,a.rom,a.out,a.steps,host_expected=not a.baseline,ram_bytes=a.ram_bytes,cartridge_bytes=a.cartridge_bytes,exram=a.exram)
+    report=sample_registers(a.core,a.rom,a.out) if a.sample=='registers' else sample(a.core,a.rom,a.out,a.steps,host_expected=not a.baseline,ram_bytes=a.ram_bytes,cartridge_bytes=a.cartridge_bytes,exram=a.exram,ppu_blank=a.ppu_blank)
     print(json.dumps({k:v for k,v in report.items() if k!='records'},indent=2))

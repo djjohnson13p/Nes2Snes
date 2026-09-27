@@ -1,0 +1,341 @@
+{
+  "base_revision": "1b3213a0d4fdbaaed35ef560f7dbc87d75d21142",
+  "unit_tests": {
+    "passed": true,
+    "count": 575,
+    "skipped": 0,
+    "clean_source_passed": true
+  },
+  "ppu_matrix": {
+    "passed": true,
+    "profile": "mmc5-ppu-blank",
+    "plans": 184,
+    "scenarios": 380,
+    "boundaries": 11780,
+    "internal_state_bytes": 24502400,
+    "ppu_register_bytes": 188480,
+    "final_ciram_bytes": 778240,
+    "final_exram_bytes": 389120,
+    "final_cartridge_bytes": 12451840,
+    "no_request_controls": 183,
+    "host_scenarios": 196,
+    "host_interrupts": 7186,
+    "negative_controls": [
+      {
+        "name": "unbuffered",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "wrong-mirror",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "fill-write",
+        "rejected": true,
+        "completed": true
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "pv-guard-2000-80",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-2000-40",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-2001-08",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-2001-10",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-5105-02",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-5105-80",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-5107-04",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-data-1fff",
+        "rejected": true,
+        "completed_steps": 4,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-data-3f00",
+        "rejected": true,
+        "completed_steps": 4,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-read-2002",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      },
+      {
+        "name": "pv-guard-read-2004",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16
+      }
+    ],
+    "cores": {
+      "nes_plain": "c9d7c47eee144d7b7ba311d56f28b948acd3e8279a8f8e340265c7e51477c29e",
+      "ppu_probe": "4025ebdf11bfaf464f8584af2cb4afa4b2cb5b2fc8c3237e060645ef7bd2333f",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "new_game_replay": false,
+    "scope": "Blanked PPU CPU-port state and CIRAM/fill nametables on sampled guest timeline. No CHR, palettes, OAM, ExRAM nametables, rendering, physical event deadlines, DMA/DMC, CV3 speed or boss-clear claim.",
+    "reference_disagreement": {
+      "reference_accuracy_passed": false,
+      "diagnostic_reproduced": true,
+      "no_request_plain_matches": true,
+      "register": 20743,
+      "written": 4,
+      "documented_attribute": 0,
+      "observed_attribute": 84,
+      "comparison_address": 1666,
+      "native_behavior": "Guarded before register mutation; excluded from supported mapping passes.",
+      "scope": "One authored upper-bit fill-register diagnostic against the pinned original core; not physical hardware verification."
+    }
+  },
+  "retained_cpu_io": {
+    "passed": true,
+    "profile": "mmc5-cpu-io",
+    "plans": 251,
+    "scenarios": 514,
+    "boundaries": 15934,
+    "internal_state_bytes": 33142720,
+    "final_exram_bytes": 526336,
+    "final_cartridge_bytes": 16842752,
+    "access_forms": 61,
+    "multiplier_pairs": 320,
+    "no_request_controls": 250,
+    "host_scenarios": 263,
+    "host_interrupts": 9324,
+    "negative_controls": [
+      {
+        "name": "readonly-write",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "mirrored-exram",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "stale-product",
+        "rejected": true,
+        "completed": true
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "ex-guard-mode-00",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-mode-01",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-mode-fc",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-mode-fd",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-preliminary-5bff",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      },
+      {
+        "name": "ex-guard-preliminary-5204",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024
+      }
+    ],
+    "cores": {
+      "nes_plain": "c9d7c47eee144d7b7ba311d56f28b948acd3e8279a8f8e340265c7e51477c29e",
+      "nes_io_probe": "4025ebdf11bfaf464f8584af2cb4afa4b2cb5b2fc8c3237e060645ef7bd2333f",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "new_game_replay": false,
+    "scope": "CPU ExRAM modes 2/3 and absolute LDA/STA multiplier I/O on the sampled timeline. No rendering modes, PPU behavior, open bus, physical bus/event timing, CV3 scheduling or speed claim."
+  },
+  "retained_runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0
+  },
+  "preserved_profile_builds": {
+    "byte_identical": true,
+    "representative_samples": 18,
+    "samples_per_profile": 3,
+    "all_old_fixtures_claimed": false
+  },
+  "clean_source_replays": {
+    "passed": true,
+    "scenarios": 3,
+    "results": [
+      {
+        "name": "pv-transfer-2fff-32-44-0",
+        "host_mode": null,
+        "passed": true,
+        "steps": 31,
+        "cpu_bytes": 64480,
+        "ppu_bytes": 496,
+        "ciram_bytes": 2048,
+        "identical_full_captures": true,
+        "identical_binary": true
+      },
+      {
+        "name": "pv-buffer-write-retains",
+        "host_mode": "nested",
+        "passed": true,
+        "steps": 31,
+        "cpu_bytes": 64480,
+        "ppu_bytes": 496,
+        "ciram_bytes": 2048,
+        "identical_full_captures": true,
+        "identical_binary": true
+      },
+      {
+        "name": "pv-guest-nmi",
+        "host_mode": "time",
+        "passed": true,
+        "steps": 31,
+        "cpu_bytes": 64480,
+        "ppu_bytes": 496,
+        "ciram_bytes": 2048,
+        "identical_full_captures": true,
+        "identical_binary": true
+      }
+    ]
+  },
+  "production_source_hashes": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  },
+  "new_commercial_game_replay": false,
+  "production_runtime_changed": false,
+  "prior_rng_discrepancy_fixed": false,
+  "ci_status": "Completed local evidence. Verify the final published revision and actual workflow result separately."
+}
