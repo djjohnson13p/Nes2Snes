@@ -40,13 +40,14 @@ def fragments(plan: dict) -> list[dict]:
                  starts=plan['starts'])] + plan['bank_code']
 
 
-def validate(plan: dict, *, cartridge_ram: bool=False, cpu_io: bool=False) -> dict:
+def validate(plan: dict, *, cartridge_ram: bool=False, cpu_io: bool=False, ppu_blank: bool=False) -> dict:
+    if type(ppu_blank) is not bool or (ppu_blank and not cpu_io):raise ValueError('Blank PPU requires CPU I/O')
     if type(cpu_io) is not bool or (cpu_io and not cartridge_ram):raise ValueError('CPU I/O requires cartridge RAM')
     if type(cartridge_ram) is not bool:raise ValueError('Cartridge RAM gate must be boolean')
     from timeline_program import validate_events, decode
     keys = {'name','origin','code','starts','irq','nmi','steps','stack','a','x','y',
             'seed','counter','events','memory_model','prg_banks','bank_code','bank_data'}
-    if not isinstance(plan, dict) or set(plan) != keys or plan['memory_model'] != ('mmc5-cpu-io' if cpu_io else 'mmc5-prg-ram32' if cartridge_ram else PROFILE):
+    if not isinstance(plan, dict) or set(plan) != keys or plan['memory_model'] != ('mmc5-ppu-blank' if ppu_blank else 'mmc5-cpu-io' if cpu_io else 'mmc5-prg-ram32' if cartridge_ram else PROFILE):
         raise ValueError('Unknown or missing banked timeline fields')
     if not isinstance(plan['name'], str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}', plan['name']):
         raise ValueError('Unsafe fixture name')
@@ -85,7 +86,7 @@ def validate(plan: dict, *, cartridge_ram: bool=False, cpu_io: bool=False) -> di
     targets={pc for _,pc in entries}
     for part in fragments(plan):
         decode(bytes.fromhex(part['code']),part['origin'],part['starts'],ram=True,rom=True,
-               mapper=True,static_targets=targets,cartridge_ram=cartridge_ram,cpu_io=cpu_io)
+               mapper=True,static_targets=targets,cartridge_ram=cartridge_ram,cpu_io=cpu_io,ppu_blank=ppu_blank)
     for k in ('irq','nmi'):
         if type(plan[k]) is not int or (plan['prg_banks']-1,plan[k]) not in entries:
             raise ValueError('Initial vectors must identify declared final-bank code')
@@ -107,6 +108,9 @@ def validate(plan: dict, *, cartridge_ram: bool=False, cpu_io: bool=False) -> di
         reserved |= {(plan['prg_banks']-1,i) for i in range(0x1FFA,0x2000)}
         if cells & (occupied|reserved): raise ValueError('Bank data overlaps code, boot or final vectors')
         occupied |= cells
+    if ppu_blank:
+        reserved={(plan['prg_banks']-1,i) for i in range(0x1000,0x1200)}
+        if occupied & reserved:raise ValueError('Code/data overlaps blank-PPU boot helper')
     return plan
 
 
@@ -143,9 +147,9 @@ def jump(operand: int) -> str:
     return rom_jump(operand).replace('TimelineReadMapped','MapperRead')
 
 
-def create_nes(out: Path, plan: dict, *, cartridge_ram: bool=False, cpu_io: bool=False) -> Path:
+def create_nes(out: Path, plan: dict, *, cartridge_ram: bool=False, cpu_io: bool=False, ppu_blank: bool=False) -> Path:
     from native_fixture import Program
-    validate(plan,cartridge_ram=cartridge_ram,cpu_io=cpu_io);out.mkdir(parents=True,exist_ok=True)
+    validate(plan,cartridge_ram=cartridge_ram,cpu_io=cpu_io,ppu_blank=ppu_blank);out.mkdir(parents=True,exist_ok=True)
     banks=plan['prg_banks']
     # Independent per-bank signatures; original authored data, not expected state.
     raw=bytearray(((b*37+i*13+(i>>8)*7)^0x5A)&255 for b in range(banks) for i in range(8192))
@@ -156,6 +160,7 @@ def create_nes(out: Path, plan: dict, *, cartridge_ram: bool=False, cpu_io: bool
     for a,v in zip(REGISTERS,INITIAL):store(a,v)
     if cartridge_ram:boot.op('JSR','abs','init_cart')
     if cpu_io:boot.op('JSR','abs','init_exram')
+    if ppu_blank:boot.op('JSR','abs',0xF000)
     boot.op('LDA','imm',0);boot.op('LDX','imm',0);boot.label('clear')
     for a in range(0,2048,256):boot.op('STA','absx',a)
     boot.op('INX');boot.op('BNE','rel','clear')
@@ -175,6 +180,10 @@ def create_nes(out: Path, plan: dict, *, cartridge_ram: bool=False, cpu_io: bool
         start=part['bank']*8192+(part['origin'] & 8191);code=bytes.fromhex(part['code']);raw[start:start+len(code)]=code
     for patch in plan['bank_data']:
         start=patch['bank']*8192+patch['offset'];data=bytes.fromhex(patch['bytes']);raw[start:start+len(data)]=data
+    if ppu_blank:
+        from mmc5_ppu_blank import boot_code
+        helper=boot_code();start=(banks-1)*8192+0x1000
+        raw[start:start+len(helper)]=helper
     struct.pack_into('<HHH',raw,len(raw)-6,plan['nmi'],0xE000,plan['irq'])
     header=b'NES\x1a'+bytes((banks//2,1,0x50,0))+bytes(8)
     if cartridge_ram:
@@ -183,23 +192,23 @@ def create_nes(out: Path, plan: dict, *, cartridge_ram: bool=False, cpu_io: bool
     return path
 
 
-def create_native(out: Path, plan: dict, initial: bytes, *, retirement=None, program_text=None, host_mode=None, cartridge_ram: bool=False, cpu_io: bool=False) -> Path:
+def create_native(out: Path, plan: dict, initial: bytes, *, retirement=None, program_text=None, host_mode=None, cartridge_ram: bool=False, cpu_io: bool=False, ppu_blank: bool=False) -> Path:
     from timeline_program import DRIVER, generate
     from timeline_fixture import expected_initial
     from guest_cycles import tables
     from interrupt_boundary import native_tables
-    validate(plan,cartridge_ram=cartridge_ram,cpu_io=cpu_io)
+    validate(plan,cartridge_ram=cartridge_ram,cpu_io=cpu_io,ppu_blank=ppu_blank)
     if not isinstance(initial,bytes) or initial != expected_initial(plan):raise ValueError('Only the declared authored boot state is accepted')
     if retirement is not None or program_text is not None:raise ValueError('Use explicit generated-source mutations for this profile')
     out.mkdir(parents=True,exist_ok=True)
-    raw=create_nes(out/'original',plan,cartridge_ram=cartridge_ram,cpu_io=cpu_io).read_bytes()[16:16+plan['prg_banks']*8192]
+    raw=create_nes(out/'original',plan,cartridge_ram=cartridge_ram,cpu_io=cpu_io,ppu_blank=ppu_blank).read_bytes()[16:16+plan['prg_banks']*8192]
     (out/'original-prg.bin').write_bytes(raw)
     (out/'initial-ram.bin').write_bytes(initial[32:]);(out/'initial-registers.bin').write_bytes(initial[4:11])
     (out/'events.bin').write_bytes(b''.join(struct.pack('<IBBBB',e['cycle'],e['irq'],e['nmi'],0,0) for e in plan['events']))
     (out/'tables.inc').write_text(tables()+native_tables())
     targets={pc for p in fragments(plan) for pc in p['starts']};program=[];entries=[]
     for part in fragments(plan):
-        text=generate(bytes.fromhex(part['code']),part['origin'],part['starts'],ram=True,rom=True,mapper=True,static_targets=targets,cartridge_ram=cartridge_ram,cpu_io=cpu_io)
+        text=generate(bytes.fromhex(part['code']),part['origin'],part['starts'],ram=True,rom=True,mapper=True,static_targets=targets,cartridge_ram=cartridge_ram,cpu_io=cpu_io,ppu_blank=ppu_blank)
         text=text.split('PCs:\n')[0]
         text=re.sub(r'(ins_|taken_)([0-9a-f]{4})',lambda m:f'{m[1]}b{part["bank"]}_{m[2]}',text)
         program.append(text);entries += [(part['bank'],pc) for pc in part['starts']]
@@ -262,9 +271,15 @@ write_header:''')
     if cpu_io:
         from mmc5_cpu_io import prepare_native
         driver=prepare_native(out,driver)
+    if ppu_blank:
+        from mmc5_ppu_blank import prepare_native
+        driver=prepare_native(out,driver)
     if host_mode is not None:
         from timeline_host import prepare
         driver=prepare(out,driver,host_mode)
+        if ppu_blank:
+            from mmc5_ppu_blank import extend_host
+            driver=extend_host(out,driver)
     prefix=f"MapperBankMask={plan['prg_banks']-1}\nTimelineSteps={plan['steps']}\nTimelineInstructions={len(entries)}\nTimelineEventCount={len(plan['events'])}\nTimelineIRQ=${plan['irq']:04X}\nTimelineNMI=${plan['nmi']:04X}\n"
     (out/'fixture.s').write_text(prefix+driver)
     return reassemble(out)

@@ -174,3 +174,11 @@ read-only endpoint observation and real emulated host-NMI tests. External memori
 are checked at the final recorded boundary, not every instruction. Rendering modes
 0/1, PPU integration and physical event/stall timing remain unsupported. No new
 CV3 replay or production timing correction is claimed by this checkpoint.
+
+## Latest blanked PPU nametable profile
+
+Read `ppu-blank.md` for the shared scroll/address latch, buffered CPU transfers,
+CIRAM/fill routing, extended host-context protection and independent PPU snapshots.
+Rendering, CHR/palettes/OAM, status timing and ExRAM nametables remain guarded.
+An upper-bit fill-attribute reference disagreement is retained separately. This
+profile is not installed in production CV3 and has no fresh commercial-game replay.
