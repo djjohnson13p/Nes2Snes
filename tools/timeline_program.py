@@ -355,8 +355,12 @@ InitialRegisters: .incbin "initial-registers.bin"
 '''
 
 
-def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=None,program_text: str|None=None) -> Path:
+def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=None,program_text: str|None=None,host_mode: str|None=None) -> Path:
     validate_plan(plan)
+    if host_mode is not None:
+        from timeline_host import MODES
+        if not isinstance(host_mode,str) or host_mode not in MODES:
+            raise ValueError('Unknown host NMI mode')
     code=bytes.fromhex(plan['code']);rows=decode(code,plan['origin'],plan['starts']);events=validate_events(plan['events'])
     if type(plan['steps']) is not int or not 1<=plan['steps']<=112:raise ValueError('Require 1..112 dependent steps')
     if not isinstance(initial,bytes) or len(initial)!=544 or any(initial[:4]) or int.from_bytes(initial[4:6],'little')!=plan['origin']:
@@ -375,7 +379,11 @@ def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=Non
         if name=='guest_timeline.inc' and retirement is not None:text=retirement
         (out/name).write_text(text)
     prefix=f"TimelineSteps={plan['steps']}\nTimelineInstructions={len(rows)}\nTimelineEventCount={len(events)}\nTimelineIRQ=${plan['irq']:04X}\nTimelineNMI=${plan['nmi']:04X}\n"
-    (out/'fixture.s').write_text(prefix+DRIVER)
+    driver=DRIVER
+    if host_mode is not None:
+        from timeline_host import prepare
+        driver=prepare(out,driver,host_mode)
+    (out/'fixture.s').write_text(prefix+driver)
     subprocess.run([tool('ca65'),'-g','-I',str(out),'--bin-include-dir',str(out),'-o',str(out/'fixture.o'),str(out/'fixture.s')],check=True)
     subprocess.run([tool('ld65'),'-C',str(ROOT/'snes/linker/viewer.cfg'),'-o',str(out/'fixture.bin'),str(out/'fixture.o')],check=True)
     data=finalize_rom((out/'fixture.bin').read_bytes(),b'');validate_sfc(data)
