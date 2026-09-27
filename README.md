@@ -1,5 +1,12 @@
 # Nes2Snes
 
+## Current: sampled IRQ/NMI entry
+
+Native interrupt selection and three-byte NES stack entry now have independent
+execution tests, including delayed IRQ masking and all stack positions. This
+component is **not installed in the game scheduler**; the RNG discrepancy remains
+unresolved. See [results and resumption](docs/interrupt-boundary.md).
+
 ## Current: original-instruction cycle accounting
 
 A separately tested native cycle accountant covers all 151 documented NES opcodes.
