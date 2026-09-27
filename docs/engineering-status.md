@@ -101,3 +101,11 @@ Read `block103-entry.md` first for the newly authored 133-action clean-boot rout
 explicit destination contract, recovered trace provenance and the post-merge
 indirect-CI repair. The older missing 117-action route is still not recovered.
 The new route proves Block 1-03 entry, not a boss clear or full-speed completion.
+
+## Latest idle-state measurement
+
+Read `idle-state-audit.md` for fault-aware route comparisons, the read-only observer,
+its independent calibration, and the newly reproduced random-state divergence.
+The local-only first-boss checkpoint reported in the conversation was not recovered
+in that continuation. Do not infer its route or test results from the restored
+Block 1-03 source. No runtime scheduling fix or new boss-clear claim is made.

@@ -16,8 +16,8 @@ from gameplay_route import validate_actions
 
 def verify(core:Path,rom:Path,source:Path,out:Path)->dict:
     report=json.loads((source/'route-report.json').read_text())
-    if report.get('platform')!='nes' or report.get('status')!='completed_budget':
-        raise ValueError('Require a completed NES trace route')
+    if report.get('platform')!='nes' or report.get('status')!='completed_budget' or report.get('fault') is not None:
+        raise ValueError('Require a completed, fault-free NES trace route')
     if hashlib.sha256(rom.read_bytes()).hexdigest()!=report['rom_sha256']:
         raise ValueError('Recorded input belongs to another ROM')
     actions=validate_actions(report['tail_actions']);markers=report['tail_records']
