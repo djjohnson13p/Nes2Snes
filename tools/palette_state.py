@@ -43,3 +43,25 @@ def decode(data: bytes) -> dict:
                 cpu_registers=bytes((cr[0],cr[1],cr[3],cr[4],cr[5],cr[6]|0x30,cr[2])).hex(),
                 ppu_state=state.hex(),palette_storage=palette.hex(),
                 palette=bytes(v&63 for v in palette).hex(),ciram=unpack(ppu.get(b'NMT\0',b''),2048).hex())
+
+
+def decode_mmc5(data: bytes) -> dict:
+    """Decode stored MMC5 fields, not a simulated mapping or expected result.
+
+    NstBoardMmc5::SubSave packs ExRAM mode in REG[0], NT routing in REG[6],
+    fill tile in REG[23], and color in REG[24]'s low two bits (other bits belong
+    to split-screen state). Original raw NST bytes are retained by the caller.
+    """
+    decode(data)  # enforce the complete bounded NST and blanked-PPU contract
+    end=8+int.from_bytes(data[4:8],'little')
+    root=_chunks(data[8:end])
+    image=_chunks(root.get(b'IMG\0',b''))
+    mapper=_chunks(image.get(b'MPR\0',b''))
+    mmc5=_chunks(mapper.get(b'MM5\0',b''))
+    reg=mmc5.get(b'REG\0',b'')
+    if len(reg)!=32 or reg[0]&0xC0:
+        raise ValueError('Missing or malformed serialized MMC5 registers')
+    mode=(reg[0]>>4)&3
+    if mode<2:raise ValueError('Rendering-dependent ExRAM mode outside profile')
+    return dict(nametable_registers=bytes((mode,reg[6],reg[23],reg[24]&3)).hex(),
+                exram=unpack(mmc5.get(b'RAM\0',b''),1024).hex())

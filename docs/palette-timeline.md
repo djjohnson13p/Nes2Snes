@@ -1,3 +1,7 @@
+> Nametable continuation: [full-byte fill-color writes and CPU-mode zero reads](nametable-readback.md).
+> That report extends this adapter and documents the still-guarded, conflicting
+> source-2 write behavior. The original palette checkpoint is described below.
+
 # Blanked palette transfers with an unmodified NES oracle
 
 ## Source and integration boundary

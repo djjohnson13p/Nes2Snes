@@ -62,4 +62,6 @@ def create_native(out,plan,initial,**options):
     program=out/'program.inc';text=program.read_text()
     text=text.replace('    jsr PpuDataRead','    jsr PaletteDataRead').replace('    jsr PpuDataWrite','    jsr PaletteDataWrite')
     program.write_text(text)
+    from palette_nametables import prepare_native
+    prepare_native(out)
     return reassemble(out)
