@@ -1,5 +1,12 @@
 # Nes2Snes
 
+## Current: hardware host NMI context protection
+
+The composed native timeline now survives real SNES vblank NMIs, deliberate
+interruptions during partial state updates, and nested host entry. The new
+feature is opt-in in the procedural prototype; the CV3 runtime remains unchanged.
+See [verification, worker contract and resumption](docs/host-nmi.md).
+
 ## Current: composed native execution and interrupt timeline
 
 The timing components now run together in an authored native execution prototype:

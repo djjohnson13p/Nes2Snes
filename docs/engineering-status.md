@@ -130,3 +130,10 @@ Read `integrated-timeline.md` for the native instruction/cycle/interrupt integra
 dependent stream comparisons, exact clock-origin checks and actual fault guards.
 The authored request policy is not physical pin sampling or the live CV3 scheduler.
 The production game binary is unchanged and the explicit RNG test still fails.
+
+## Latest host NMI context integration
+
+Read `host-nmi.md` for real SNES vblank interruption of the composed prototype,
+register/scratch preservation, nested entry, actual corruption controls, and the
+bounded worker contract. This does not change the authored guest request policy
+or install a physical-event scheduler in CV3. The RNG comparison remains failing.
