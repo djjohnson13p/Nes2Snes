@@ -1,5 +1,12 @@
 # Nes2Snes
 
+## Current: composed native execution and interrupt timeline
+
+The timing components now run together in an authored native execution prototype:
+real instructions advance one cycle clock, service scheduled test requests, and
+return through IRQ/NMI handlers without injected intermediate state. This is not
+yet the CV3 scheduler or a gameplay speedup. See [evidence and integration limits](docs/integrated-timeline.md).
+
 ## Current: sampled IRQ/NMI entry
 
 Native interrupt selection and three-byte NES stack entry now have independent
