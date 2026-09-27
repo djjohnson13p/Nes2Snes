@@ -2,7 +2,7 @@ name: Blanked palette transfers and independent Nestopia endpoints
 on:
   workflow_dispatch:
   push:
-    branches: [main, development/palette-timeline-20260927]
+    branches: [main, development/palette-timeline-20260927, development/nametable-readback-20260927]
     paths: ['.github/workflows/palette-timeline.yml', 'tools/**', 'tests/**', 'snes/**']
   pull_request:
     paths: ['.github/workflows/palette-timeline.yml', 'tools/*palette*', 'tests/test_palette_timeline.py', 'snes/src/palette_timeline.inc']
@@ -59,6 +59,17 @@ jobs:
             --nes-core build/nestopia/libretro/nestopia_libretro.so \
             --snes-core build/snes9x/libretro/snes9x_libretro.so --fce-core build/nes-plain.so \
             --out build/palette-controls 2>&1 | tee build/palette-controls.log
+      - name: Complete nametable selectors, fill bits and isolated reference diagnostics
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_nametable_palette.py \
+            --nes-core build/nestopia/libretro/nestopia_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/nametable-palette 2>&1 | tee build/nametable-palette.log
+          /usr/bin/python3 tools/verify_nametable_palette.py --controls \
+            --nes-core build/nestopia/libretro/nestopia_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so --fce-core build/nes-plain.so \
+            --out build/nametable-controls 2>&1 | tee build/nametable-controls.log
       - name: Retain complete independent CHR execution
         run: |
           set -euo pipefail
@@ -76,7 +87,7 @@ jobs:
         if: always()
         run: |
           roots=()
-          for d in build/palette-timeline build/palette-controls; do
+          for d in build/palette-timeline build/palette-controls build/nametable-palette build/nametable-controls; do
             if test -d "$d"; then roots+=("$d"); fi
           done
           if ((${#roots[@]})); then
@@ -94,6 +105,8 @@ jobs:
             build/palette-evidence.tar.gz
             build/palette-timeline/palette-timeline-verification.json
             build/palette-controls/palette-controls.json
+            build/nametable-palette/nametable-palette-verification.json
+            build/nametable-controls/nametable-palette-controls.json
             build/retained-chr/chr-blank-verification.json
             build/runtime-safety/runtime-counter-verification.json
           retention-days: 30

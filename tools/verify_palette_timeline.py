@@ -17,7 +17,7 @@ from libretro_runner import Runner
 from palette_timeline import create_native,create_nes,underlying,PALETTE_ADDRESS
 from palette_timeline_fixture import cases
 from timeline_fixture import expected_initial
-from palette_state import decode
+from palette_state import decode,decode_mmc5
 from route_evidence import atomic_json
 from verify_ppu_blank import exact_hex
 from timeline_host import PROTECTED
@@ -36,6 +36,7 @@ def nes_sample(core,rom,out,stop_pc=None):
                 break
         else:raise RuntimeError('Original program did not complete')
         raw=r.state();out.with_suffix('.nst').write_bytes(raw);state=decode(raw)
+        state.update(decode_mmc5(raw))
         if bytes.fromhex(state['cpu_ram'])!=r.memory()[:2048]:raise RuntimeError('Serialized CPU RAM differs')
         state.update(core_sha256=hashlib.sha256(core.read_bytes()).hexdigest(),rom_sha256=hashlib.sha256(rom.read_bytes()).hexdigest(),frames=r.frames)
         atomic_json(out,state)
@@ -57,7 +58,7 @@ def native_sample(core,rom,out,steps,host):
         result=dict(complete=ram[0x1FFF]==0x5A,marker=ram[0x1FFF],status=context[14],
              completed_steps=int.from_bytes(context[16:18],'little'),cpu_ram=ram[:2048].hex(),
              cpu_registers=(context[4:9]+bytes((context[9]|0x30,))+context[10:11]).hex(),
-             ppu_state=pstate.hex(),palette=ram[PALETTE_ADDRESS:PALETTE_ADDRESS+32].hex(),
+             ppu_state=pstate.hex(),nametable_registers=(ram[0x18D8:0x18D9]+ram[0x1C2A:0x1C2D]).hex(),palette=ram[PALETTE_ADDRESS:PALETTE_ADDRESS+32].hex(),
              ciram=ram[0x4800:0x5000].hex(),records=[ram[0x10000+2080*i:0x10000+2080*(i+1)].hex() for i in range(steps)],
              ppu_records=[ram[0x5000+16*i:0x5010+16*i].hex() for i in range(steps)],
              chr_records=[ram[0x5200+48*i:0x5230+48*i].hex() for i in range(steps)],

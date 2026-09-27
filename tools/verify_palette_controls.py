@@ -27,7 +27,7 @@ def guard_cases():
     rows=[]
     for name,op,operand,value in (('rendering','STA',0x2001,0x18),('nmi','STA',0x2000,0x80),
                                  ('status','LDA',0x2002,0),('oam','LDA',0x2004,0),
-                                 ('exram-map','STA',0x5105,0xAA),('chr-mode','STA',0x5101,0)):
+                                 ('rendering-exram','STA',0x5104,0),('chr-mode','STA',0x5101,0)):
         p=Program(0xE100);address(p,0x3F14);put(p,0x2007,0xED)
         if op=='STA':p.op('LDA','imm',value)
         stop=p.pc;retired=len(p.starts);p.op(op,'abs',operand)
