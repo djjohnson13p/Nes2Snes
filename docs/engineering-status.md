@@ -190,3 +190,12 @@ CHR separation, independent physical-map snapshots and compact host context.
 All four bank sizes are tested separately; live size changes and set B remain
 guarded. This is not rendering or production CV3 integration. No new private
 gameplay replay, RNG fix or speed improvement is claimed.
+
+## Latest blanked palette-transfer profile
+
+Read `palette-timeline.md` for palette aliases, immediate grayscale/latch reads,
+shadow-buffer refill and an unmodified Nestopia endpoint oracle. These are final
+program-state comparisons, not per-instruction NES timing claims. Raw serialized
+palette storage is retained separately from its six-bit hardware representation.
+The known FCEUmm discrepancy remains a non-passing diagnostic. No rendering or
+production CV3 timing correction is claimed.

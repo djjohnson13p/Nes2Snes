@@ -1,5 +1,13 @@
 # Nes2Snes
 
+## Current: palette transfers against an unmodified NES oracle
+
+The explicit palette profile extends blanked CHR/nametable transfers with aliases,
+grayscale, I/O-latch bits and shadow-buffer refill. An unmodified Nestopia core
+supplies stable program endpoints; the known FCEUmm disagreement remains visible.
+This is not rendering, per-instruction timing equivalence or a production CV3
+change. See [scope and reproduction](docs/palette-timeline.md).
+
 ## Current: blanked PPU nametable transfers
 
 The protected prototype now executes CPU PPU-address/scroll latches, buffered
