@@ -1,5 +1,13 @@
 # Nes2Snes
 
+## Current: bank-qualified MMC5 PRG execution
+
+The protected prototype now executes MMC5 PRG-ROM bank writes, selects code by
+physical bank plus original PC, and reads data and interrupt vectors through the
+current mapping. Modes 1/2/3 are covered; a pinned-reference mode-0 discrepancy
+is preserved, not accepted. This is not yet the production CV3 scheduler. See
+[scope, tests and resumption](docs/mmc5-timeline.md).
+
 ## Current: guarded indexed and indirect RAM execution
 
 The composed native timeline now executes indexed and indirect RAM instructions,

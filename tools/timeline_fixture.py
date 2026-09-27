@@ -51,6 +51,9 @@ def cases() -> list[dict]:
 
 def create_nes(out: Path,plan: dict) -> Path:
     validate_plan(plan)
+    if plan.get('memory_model')=='mmc5-prg-rom':
+        from mmc5_timeline import create_nes as banked
+        return banked(out,plan)
     code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'],ram=memory_bytes(plan)==2048,rom=plan.get('memory_model')=='nrom-32k');validate_events(plan['events'])
     out.mkdir(parents=True,exist_ok=True)
     boot=Program(0xE000);boot.op('SEI');boot.op('CLD');boot.op('LDX','imm',255);boot.op('TXS')
@@ -82,4 +85,7 @@ def expected_initial(plan: dict) -> bytes:
     data=bytearray(32+memory_bytes(plan));struct.pack_into('<H',data,4,plan['origin'])
     data[6:11]=bytes((plan['a'],plan['x'],plan['y'],0x24,plan['stack']))
     data[32+0x20]=plan['seed'];data[32+0x21]=plan['counter'];data[32+0x100+plan['stack']]=0x24
+    if plan.get('memory_model')=='mmc5-prg-rom':
+        from mmc5_timeline import slots,INITIAL
+        data[20:24]=bytes(slots(INITIAL,plan['prg_banks']));data[24]=data[23]
     return bytes(data)

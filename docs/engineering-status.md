@@ -151,3 +151,11 @@ Read `rom-timeline.md` for the separate `nrom-32k` prototype profile, original-R
 versus translated-code separation, guarded writes, independent comparisons and
 preserved prior profiles. This is fixed NROM mapping, not MMC5 integration or a
 production CV3 timing fix. No fresh commercial-game replay is claimed there.
+
+## Latest bank-qualified MMC5 PRG profile
+
+Read `mmc5-timeline.md` for modes 1/2/3 program-bank writes, bank-qualified code
+selection, raw data/current vectors, independent mapping captures and guarded
+unsupported operations. Mode 0 has a preserved reference disagreement. This
+profile does not implement PRG RAM, CHR/ExRAM/mapper IRQ/audio or physical event
+timing and is not enabled in production CV3. No new game replay is claimed.

@@ -1,0 +1,93 @@
+name: Bank-qualified MMC5 program execution and data reads
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/mmc5-prg-timeline-20260926]
+    paths: ['.github/workflows/mmc5-timeline.yml', 'tools/**', 'tests/**', 'snes/**']
+  pull_request:
+    paths: ['.github/workflows/mmc5-timeline.yml', 'tools/*timeline*', 'tests/test_mmc5_timeline.py', 'snes/src/mmc5_prg.inc']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies and exact source
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+          mkdir -p build
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - name: Unit, assembler and compiled observation tests
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Build pinned plain, ordinary-timeline and mapper-observation cores
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/nes-plain-build.log 2>&1
+          cp build/fceumm/fceumm_libretro.so build/nes-plain.so
+          /usr/bin/python3 tools/instrument_timeline_probe.py build/fceumm --ram-bytes 2048
+          make -C build/fceumm -f Makefile.libretro -j2 > build/nes-timeline-build.log 2>&1
+          cp build/fceumm/fceumm_libretro.so build/nes-timeline.so
+          /usr/bin/python3 tools/instrument_mmc5_timeline.py build/fceumm
+          make -C build/fceumm -f Makefile.libretro -j2 > build/nes-mmc5-build.log 2>&1
+          cp build/fceumm/fceumm_libretro.so build/nes-mmc5.so
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes-build.log 2>&1
+      - name: Independent mapper transitions, bank-qualified execution and guards
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_mmc5_timeline.py \
+            --nes-plain build/nes-plain.so --nes-probe build/nes-mmc5.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/mmc5-timeline 2>&1 | tee build/mmc5-timeline.log
+      - name: Retain fixed-cartridge and full-RAM profiles
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_rom_timeline.py \
+            --nes-plain build/nes-plain.so --nes-probe build/nes-timeline.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/rom-timeline 2>&1 | tee build/rom-timeline.log
+          /usr/bin/python3 tools/verify_ram_timeline.py \
+            --nes-plain build/nes-plain.so --nes-probe build/nes-timeline.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/ram-timeline 2>&1 | tee build/ram-timeline.log
+      - name: Retain runtime safety and unknown-code guards
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_runtime_counters.py \
+            --nes-core build/nes-plain.so --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/runtime-safety 2>&1 | tee build/runtime-safety.log
+      - name: Archive complete authored mapper evidence
+        if: always()
+        run: |
+          if test -d build/mmc5-timeline; then
+            find build/mmc5-timeline -type f \( -name '*.json' -o -name '*.inc' -o -name '*.s' -o -name '*prg.bin' \) -print0 | \
+              tar --null -T - -czf build/mmc5-evidence.tar.gz
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mmc5-timeline-verification
+          path: |
+            build/*.log
+            build/tested-revision.txt
+            build/tested-source.zip
+            build/mmc5-evidence.tar.gz
+            build/mmc5-timeline/mmc5-timeline-verification.json
+            build/mmc5-timeline/progress.json
+            build/rom-timeline/rom-timeline-verification.json
+            build/ram-timeline/ram-timeline-verification.json
+            build/runtime-safety/runtime-counter-verification.json
+          retention-days: 30
