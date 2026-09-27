@@ -159,3 +159,10 @@ selection, raw data/current vectors, independent mapping captures and guarded
 unsupported operations. Mode 0 has a preserved reference disagreement. This
 profile does not implement PRG RAM, CHR/ExRAM/mapper IRQ/audio or physical event
 timing and is not enabled in production CV3. No new game replay is claimed.
+
+## Latest single-chip cartridge-RAM profile
+
+Read `mmc5-cartridge-ram.md` for the explicit 32-KiB PRG-RAM profile, aliasing,
+protection-register semantics, exact initial/final cartridge snapshots, and
+host-interrupted tests. Other RAM-board wiring and RAM code execution remain
+unsupported. This does not change production CV3 or fix physical event timing.

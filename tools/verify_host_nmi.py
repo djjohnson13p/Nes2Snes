@@ -19,7 +19,9 @@ from opcodes6502 import OPS
 from verify_timeline import compare
 
 
-def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512) -> dict:
+def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512, cartridge_bytes: int=0) -> dict:
+    if type(cartridge_bytes) is not int or cartridge_bytes not in (0,32768):
+        raise ValueError('Unsupported cartridge snapshot size')
     if type(host_expected) is not bool:
         raise ValueError('Host expectation must be boolean')
     if type(steps) is not int or not 1 <= steps <= 112:
@@ -51,6 +53,8 @@ def sample(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=
         if ram_bytes==2048:
             report['final_guest_ram']=ram[:2048].hex()
             report['final_guest_context']=ram[0x18C0:0x18E0].hex()
+        if cartridge_bytes:
+            report['cartridge_ram']=ram[0x8000:0x8000+cartridge_bytes].hex()
         atomic_json(out, report)
         return report
     finally:
@@ -95,9 +99,9 @@ def check_host(plan: dict, reference: dict, native: dict, mode: str) -> dict:
     return dict(mode=mode,host=h,**result)
 
 
-def execute(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512) -> dict:
+def execute(core: Path, rom: Path, out: Path, steps: int, *, host_expected: bool=True, ram_bytes: int=512, cartridge_bytes: int=0) -> dict:
     subprocess.run([sys.executable,__file__,'--sample','timeline','--core',str(core),'--rom',str(rom),
-                    '--out',str(out),'--steps',str(steps),'--ram-bytes',str(ram_bytes)]+([] if host_expected else ['--baseline']),check=True,timeout=90,
+                    '--out',str(out),'--steps',str(steps),'--ram-bytes',str(ram_bytes),'--cartridge-bytes',str(cartridge_bytes)]+([] if host_expected else ['--baseline']),check=True,timeout=90,
                    stdout=subprocess.DEVNULL)
     return json.loads(out.read_text())
 
@@ -156,8 +160,9 @@ def check_registers(report: dict, *, nested: bool, mirror: bool) -> dict:
 if __name__ == '__main__':
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--sample',choices=['timeline','registers']);p.add_argument('--steps',type=int,default=112);p.add_argument('--ram-bytes',type=int,choices=(512,2048),default=512)
+    p.add_argument('--cartridge-bytes',type=int,choices=(0,32768),default=0)
     p.add_argument('--baseline',action='store_true',help='Only for a no-host baseline; host metadata is uninitialized and is not acceptance evidence')
     for key in ('core','rom','out'):p.add_argument('--'+key,type=Path,required=True)
     a=p.parse_args()
-    report=sample_registers(a.core,a.rom,a.out) if a.sample=='registers' else sample(a.core,a.rom,a.out,a.steps,host_expected=not a.baseline,ram_bytes=a.ram_bytes)
+    report=sample_registers(a.core,a.rom,a.out) if a.sample=='registers' else sample(a.core,a.rom,a.out,a.steps,host_expected=not a.baseline,ram_bytes=a.ram_bytes,cartridge_bytes=a.cartridge_bytes)
     print(json.dumps({k:v for k,v in report.items() if k!='records'},indent=2))

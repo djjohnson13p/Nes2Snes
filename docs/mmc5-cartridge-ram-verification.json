@@ -1,0 +1,311 @@
+{
+  "base_revision": "f08f634ab2120281851bd0871b5d79ed1956f740",
+  "unit_tests": {
+    "passed": true,
+    "count": 533,
+    "skipped": 0,
+    "clean_source_passed": true
+  },
+  "cartridge_matrix": {
+    "passed": true,
+    "profile": "mmc5-prg-ram32",
+    "plans": 196,
+    "scenarios": 404,
+    "boundaries": 12524,
+    "internal_state_bytes": 26049920,
+    "final_cartridge_bytes": 13238272,
+    "access_opcode_forms": 61,
+    "no_request_controls": 195,
+    "host_scenarios": 208,
+    "host_interrupts": 7401,
+    "negative_controls": [
+      {
+        "name": "locked-write",
+        "rejected": true
+      },
+      {
+        "name": "wrong-page",
+        "rejected": true
+      },
+      {
+        "name": "unmasked-protection",
+        "rejected": true
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "cw-guard-absent-chip",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768
+      },
+      {
+        "name": "cw-guard-absent-upper-chip",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768
+      },
+      {
+        "name": "cw-guard-mode-zero",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768
+      },
+      {
+        "name": "cw-guard-ram-code",
+        "rejected": true,
+        "completed_steps": 3,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768
+      },
+      {
+        "name": "cw-guard-rom-write",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768
+      },
+      {
+        "name": "cw-guard-io-cross",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768
+      }
+    ],
+    "cores": {
+      "nes_plain": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "nes_wram_probe": "fbade99eb7d4d4272215303c1b76a0aae330502bb3f72a8c137c9d4904d0a6e8",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "new_game_replay": false,
+    "scope": "Explicit 32-KiB single-chip PRG-RAM wiring, state and instruction cost only. Full cartridge snapshot at final boundary; not each intermediate boundary. No RAM code execution, open bus, cycle-level I/O, physical NES interrupts or live CV3 scheduling."
+  },
+  "retained_mmc5": {
+    "passed": true,
+    "plans": 322,
+    "scenarios": 656,
+    "dependent_boundaries": 20336,
+    "compared_bytes": 42298880,
+    "no_request_plain_comparisons": 319,
+    "host_scenarios": 334,
+    "host_interrupts": 11878,
+    "admitted_prg_modes": [
+      1,
+      2,
+      3
+    ],
+    "read_opcode_forms": 42,
+    "physical_rom_banks_observed": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      62,
+      63,
+      126,
+      127
+    ],
+    "physical_execution_banks_observed": [
+      0,
+      3,
+      4,
+      5,
+      7,
+      15,
+      31,
+      63,
+      127
+    ],
+    "observed_slot_changes": 827,
+    "negative_controls": [
+      {
+        "name": "pc-without-bank",
+        "rejected": true,
+        "marker": 90,
+        "status": 0
+      },
+      {
+        "name": "unaligned-pair",
+        "rejected": true,
+        "marker": 90,
+        "status": 0
+      },
+      {
+        "name": "stale-vector",
+        "rejected": true,
+        "marker": 238,
+        "status": 225
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "m5-guard-mode-zero",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      },
+      {
+        "name": "m5-guard-ram-bank",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      },
+      {
+        "name": "m5-guard-rom-write",
+        "rejected": true,
+        "completed_steps": 1,
+        "status": 5,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      },
+      {
+        "name": "m5-guard-unobserved-bank",
+        "rejected": true,
+        "completed_steps": 3,
+        "status": 225,
+        "unchanged_ram_bytes": 2048,
+        "unchanged_context_bytes": 14,
+        "unchanged_mapping_bytes": 4
+      }
+    ],
+    "mode_zero_reference_disagreement": {
+      "reference_noninterference": true,
+      "observed_slots": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "documented_slots": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "disagreement_preserved": true,
+      "accepted_as_correct_mapping": false,
+      "scope": "Pinned FCEUmm mode-0 register selection disagreement; native profile rejects mode 0."
+    },
+    "cores": {
+      "nes_plain": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "nes_mmc5_stimulus": "dbd6896c7ab81ecbeaebd97e9ca1de5b4456a7c49f2c2c7581ba32e831a89474",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "new_cv3_replay_performed": false,
+    "scope": "Authored MMC5 PRG-ROM modes 1/2/3, bank-qualified code, raw data and current vectors on the protected timeline. Not PRG RAM, CHR, mapper IRQ/audio, bus cycles, physical event scheduling, DMA/DMC, CV3 integration or speed."
+  },
+  "retained_runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0
+  },
+  "old_profile_binary_identity": {
+    "passed": true,
+    "default": 18,
+    "internal_2k": 244,
+    "nrom": 97,
+    "mmc5_rom": 322,
+    "total": 681
+  },
+  "clean_source_replays": {
+    "passed": true,
+    "scenarios": 4,
+    "results": [
+      {
+        "name": "cw-lock-fe-fd",
+        "host_mode": null,
+        "steps": 31,
+        "internal_bytes": 64480,
+        "cartridge_bytes": 32768,
+        "identical_captures": true,
+        "identical_rom": true
+      },
+      {
+        "name": "cw-cross-fe",
+        "host_mode": "nested",
+        "steps": 31,
+        "internal_bytes": 64480,
+        "cartridge_bytes": 32768,
+        "identical_captures": true,
+        "identical_rom": true
+      },
+      {
+        "name": "cw-persistence-nmi",
+        "host_mode": "time",
+        "steps": 31,
+        "internal_bytes": 64480,
+        "cartridge_bytes": 32768,
+        "identical_captures": true,
+        "identical_rom": true
+      },
+      {
+        "name": "cw-jump-wrap",
+        "host_mode": null,
+        "steps": 31,
+        "internal_bytes": 64480,
+        "cartridge_bytes": 32768,
+        "identical_captures": true,
+        "identical_rom": true
+      }
+    ]
+  },
+  "production_source_hashes": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  },
+  "no_new_commercial_game_replay": true,
+  "production_scheduler_changed": false,
+  "rng_mismatch_fixed": false,
+  "gameplay_speedup_claimed": false,
+  "ci_scope": "Completed local evidence. Verify the published commit and its independent CI separately."
+}
