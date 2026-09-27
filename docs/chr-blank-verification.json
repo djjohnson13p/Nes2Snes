@@ -1,0 +1,170 @@
+{
+  "base_revision": "57f8976ea7e847970ea3686783c138861660a93f",
+  "unit_tests": {
+    "passed": true,
+    "count": 595,
+    "skipped": 0
+  },
+  "chr_matrix": {
+    "passed": true,
+    "profile": "mmc5-chr-blank",
+    "plans": 109,
+    "scenarios": 230,
+    "boundaries": 7130,
+    "cpu_state_bytes": 14830400,
+    "ppu_state_bytes": 114080,
+    "chr_state_bytes": 342240,
+    "final_ciram_bytes": 471040,
+    "final_exram_bytes": 235520,
+    "final_cartridge_bytes": 7536640,
+    "no_request_controls": 108,
+    "host_scenarios": 121,
+    "host_interrupts": 4824,
+    "negative_controls": [
+      {
+        "name": "raw-bank",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "live-high-bits",
+        "rejected": true,
+        "completed": true
+      },
+      {
+        "name": "unbuffered",
+        "rejected": true,
+        "completed": true
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "chr-guard-5101-02",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16,
+        "chr_register_bytes_unchanged": 11
+      },
+      {
+        "name": "chr-guard-5128-01",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16,
+        "chr_register_bytes_unchanged": 11
+      },
+      {
+        "name": "chr-guard-512b-ff",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16,
+        "chr_register_bytes_unchanged": 11
+      },
+      {
+        "name": "chr-guard-2000-20",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16,
+        "chr_register_bytes_unchanged": 11
+      },
+      {
+        "name": "chr-guard-2001-08",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16,
+        "chr_register_bytes_unchanged": 11
+      },
+      {
+        "name": "chr-guard-palette",
+        "rejected": true,
+        "completed_steps": 4,
+        "status": 5,
+        "internal_bytes_unchanged": 2048,
+        "cartridge_bytes_unchanged": 32768,
+        "exram_bytes_unchanged": 1024,
+        "ciram_bytes_unchanged": 2048,
+        "ppu_register_bytes_unchanged": 16,
+        "chr_register_bytes_unchanged": 11
+      }
+    ],
+    "cores": {
+      "nes_plain": "3a0ec0f753a7f29b81c2603fd0d14893855efb363922fa234c66a2da3ae3b61d",
+      "chr_probe": "a902ada2104d55a2aeffdc482252f3037c902806e39cdbe41d5a93121ae0d836",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "scope": "Blanked set-A CHR-ROM transfers; fixed CHR size per run. No set B, live size changes, pixel rendering, event/stall timing, production CV3 change or new game replay."
+  },
+  "retained_ppu": {
+    "passed": true,
+    "scenarios": 380,
+    "boundaries": 11780,
+    "internal_state_bytes": 24502400,
+    "ppu_register_bytes": 188480,
+    "host_interrupts": 7186,
+    "reference_disagreement": {
+      "reference_accuracy_passed": false,
+      "diagnostic_reproduced": true,
+      "no_request_plain_matches": true,
+      "register": 20743,
+      "written": 4,
+      "documented_attribute": 0,
+      "observed_attribute": 84,
+      "comparison_address": 1666,
+      "native_behavior": "Guarded before register mutation; excluded from supported mapping passes.",
+      "scope": "One authored upper-bit fill-register diagnostic against the pinned original core; not physical hardware verification."
+    }
+  },
+  "runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0
+  },
+  "representative_prior_builds": {
+    "byte_identical": true,
+    "count": 42,
+    "profiles": 7,
+    "programs_per_profile": 3,
+    "host_modes": [
+      null,
+      "nested"
+    ],
+    "all_historical_fixtures": false
+  },
+  "production_hashes": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  },
+  "new_commercial_game_replay": false,
+  "production_runtime_changed": false,
+  "rng_mismatch_fixed": false,
+  "pixel_rendering_implemented": false,
+  "performance_gain_claimed": false,
+  "ci_status": "Completed local results. Verify exact published revision and its workflow runs separately."
+}

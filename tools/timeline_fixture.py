@@ -51,6 +51,9 @@ def cases() -> list[dict]:
 
 def create_nes(out: Path,plan: dict) -> Path:
     validate_plan(plan)
+    if plan.get('memory_model')=='mmc5-chr-blank':
+        from mmc5_chr_blank import create_nes
+        return create_nes(out,plan)
     if plan.get('memory_model')=='mmc5-ppu-blank':
         from mmc5_ppu_blank import create_nes as banked
         return banked(out,plan)
@@ -94,11 +97,11 @@ def expected_initial(plan: dict) -> bytes:
     data=bytearray(32+memory_bytes(plan));struct.pack_into('<H',data,4,plan['origin'])
     data[6:11]=bytes((plan['a'],plan['x'],plan['y'],0x24,plan['stack']))
     data[32+0x20]=plan['seed'];data[32+0x21]=plan['counter'];data[32+0x100+plan['stack']]=0x24
-    if plan.get('memory_model') in ('mmc5-prg-rom','mmc5-prg-ram32','mmc5-cpu-io','mmc5-ppu-blank'):
+    if plan.get('memory_model') in ('mmc5-prg-rom','mmc5-prg-ram32','mmc5-cpu-io','mmc5-ppu-blank','mmc5-chr-blank'):
         from mmc5_timeline import slots,INITIAL
         data[20:24]=bytes(slots(INITIAL,plan['prg_banks']));data[24]=data[23]
-    if plan.get('memory_model') in ('mmc5-prg-ram32','mmc5-cpu-io','mmc5-ppu-blank'):
+    if plan.get('memory_model') in ('mmc5-prg-ram32','mmc5-cpu-io','mmc5-ppu-blank','mmc5-chr-blank'):
         data[25]=0x80
-    if plan.get('memory_model') in ('mmc5-cpu-io','mmc5-ppu-blank'):
+    if plan.get('memory_model') in ('mmc5-cpu-io','mmc5-ppu-blank','mmc5-chr-blank'):
         data[28]=3
     return bytes(data)
