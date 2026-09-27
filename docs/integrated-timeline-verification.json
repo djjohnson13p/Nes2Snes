@@ -1,0 +1,559 @@
+{
+  "base_revision": "3d93f14d3c96b9865c49e4aeae79829e46e854af",
+  "unit_tests": {
+    "passed": true,
+    "count": 427,
+    "skipped": 0
+  },
+  "integrated_timeline": {
+    "passed": true,
+    "programs": 18,
+    "dependent_boundaries": 2016,
+    "compared_state_bytes": 1096704,
+    "guest_ram_bytes": 1032192,
+    "inert_plain_comparisons": 3,
+    "negative_controls": [
+      {
+        "name": "lost-entry-cost",
+        "rejected": true
+      },
+      {
+        "name": "one-shot-events",
+        "rejected": true
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "unknown-pc",
+        "rejected": true,
+        "passed": false,
+        "marker": 238,
+        "status": 225,
+        "completed_steps": 1,
+        "pc": "0090"
+      },
+      {
+        "name": "clock-overflow",
+        "rejected": true,
+        "passed": false,
+        "marker": 238,
+        "status": 4,
+        "completed_steps": 0,
+        "pc": "0180"
+      }
+    ],
+    "clock_epoch_checks": [
+      {
+        "epoch": 65520,
+        "steps": 112,
+        "passed": true
+      },
+      {
+        "epoch": 1245168,
+        "steps": 112,
+        "passed": true
+      }
+    ],
+    "rebased_boundaries": 224,
+    "branch_page_crossings": 12,
+    "irq_entries": 18,
+    "nmi_entries": 33,
+    "cores": {
+      "nes_plain": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "nes_stimulus": "760c838a06f660653df9759b0229a27208533e38af438df8c164ae3bb05c5765",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "results": [
+      {
+        "name": "8000-none",
+        "steps": 112,
+        "cycles": 347,
+        "entries": {
+          "irq": 0,
+          "nmi": 0
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "8000-irq",
+        "steps": 112,
+        "cycles": 360,
+        "entries": {
+          "irq": 2,
+          "nmi": 0
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "8000-nmi",
+        "steps": 112,
+        "cycles": 374,
+        "entries": {
+          "irq": 0,
+          "nmi": 3
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "8000-both",
+        "steps": 112,
+        "cycles": 400,
+        "entries": {
+          "irq": 4,
+          "nmi": 3
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "8000-pulse",
+        "steps": 112,
+        "cycles": 360,
+        "entries": {
+          "irq": 0,
+          "nmi": 2
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "8000-entry-window",
+        "steps": 112,
+        "cycles": 374,
+        "entries": {
+          "irq": 0,
+          "nmi": 3
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80ec-none",
+        "steps": 112,
+        "cycles": 349,
+        "entries": {
+          "irq": 0,
+          "nmi": 0
+        },
+        "branch_page_crossings": 2,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80ec-irq",
+        "steps": 112,
+        "cycles": 362,
+        "entries": {
+          "irq": 2,
+          "nmi": 0
+        },
+        "branch_page_crossings": 2,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80ec-nmi",
+        "steps": 112,
+        "cycles": 376,
+        "entries": {
+          "irq": 0,
+          "nmi": 3
+        },
+        "branch_page_crossings": 2,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80ec-both",
+        "steps": 112,
+        "cycles": 400,
+        "entries": {
+          "irq": 4,
+          "nmi": 3
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80ec-pulse",
+        "steps": 112,
+        "cycles": 362,
+        "entries": {
+          "irq": 0,
+          "nmi": 2
+        },
+        "branch_page_crossings": 2,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80ec-entry-window",
+        "steps": 112,
+        "cycles": 376,
+        "entries": {
+          "irq": 0,
+          "nmi": 3
+        },
+        "branch_page_crossings": 2,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80e2-none",
+        "steps": 112,
+        "cycles": 347,
+        "entries": {
+          "irq": 0,
+          "nmi": 0
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80e2-irq",
+        "steps": 112,
+        "cycles": 361,
+        "entries": {
+          "irq": 2,
+          "nmi": 0
+        },
+        "branch_page_crossings": 1,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80e2-nmi",
+        "steps": 112,
+        "cycles": 375,
+        "entries": {
+          "irq": 0,
+          "nmi": 3
+        },
+        "branch_page_crossings": 1,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80e2-both",
+        "steps": 112,
+        "cycles": 400,
+        "entries": {
+          "irq": 4,
+          "nmi": 3
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80e2-pulse",
+        "steps": 112,
+        "cycles": 360,
+        "entries": {
+          "irq": 0,
+          "nmi": 2
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      },
+      {
+        "name": "80e2-entry-window",
+        "steps": 112,
+        "cycles": 374,
+        "entries": {
+          "irq": 0,
+          "nmi": 3
+        },
+        "branch_page_crossings": 0,
+        "record_bytes": 60928,
+        "passed": true
+      }
+    ],
+    "production_scheduler_changed": false,
+    "physical_polling_verified": false,
+    "scope": "Dependent execution of authored RAM/control programs with one boot input and after-instruction request policy. Not hardware pin timing, bus stalls, mapper/PPU scheduling, private gameplay, or a speed improvement.",
+    "full_local_report_sha256": "9e640b111d4f769d2be43adfa6fbd1a0f682b7b9666cebd803e5b45d17ccd347"
+  },
+  "runtime_safety": {
+    "passed": true,
+    "fault_guards": [
+      {
+        "runtime_counters": true,
+        "code": 1,
+        "bank": 161,
+        "pc": 63488
+      },
+      {
+        "runtime_counters": false,
+        "code": 1,
+        "bank": 161,
+        "pc": 63488
+      }
+    ],
+    "audio_regressions": [
+      {
+        "name": "direct",
+        "passed": true,
+        "frames_checked": 140,
+        "state_bytes_checked": 3920,
+        "host_frames": 152,
+        "pcm_segments": [
+          {
+            "name": "overflow",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4264
+          },
+          {
+            "name": "zero_shift_overflow",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4266
+          },
+          {
+            "name": "negate_zero_tone",
+            "kind": "audible",
+            "rms": 3571.1829958272774,
+            "samples": 4266
+          },
+          {
+            "name": "period_seven",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4264
+          },
+          {
+            "name": "disabled",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4266
+          },
+          {
+            "name": "no_resurrection",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4264
+          },
+          {
+            "name": "final_silence",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 5332
+          }
+        ],
+        "rom_sha256": "ce173743107ac4cdae37c36fc7ec60b861c7d82f4cab8786d248be4f9dac832b",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "scope": "Frame-quantized sweep/counter state, actual overflow/mute PCM; not independent NES cycle or waveform equivalence"
+      },
+      {
+        "name": "generic",
+        "passed": true,
+        "frames_checked": 140,
+        "state_bytes_checked": 3920,
+        "host_frames": 152,
+        "pcm_segments": [
+          {
+            "name": "overflow",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4264
+          },
+          {
+            "name": "zero_shift_overflow",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4266
+          },
+          {
+            "name": "negate_zero_tone",
+            "kind": "audible",
+            "rms": 3180.9276408545597,
+            "samples": 4266
+          },
+          {
+            "name": "period_seven",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4264
+          },
+          {
+            "name": "disabled",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4266
+          },
+          {
+            "name": "no_resurrection",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 4264
+          },
+          {
+            "name": "final_silence",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 5332
+          }
+        ],
+        "rom_sha256": "0e95593faabec714e798ea06b3e2a50ee606d3ecb9ea6a4f15de338cda8d3cb1",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "scope": "Frame-quantized sweep/counter state, actual overflow/mute PCM; not independent NES cycle or waveform equivalence"
+      },
+      {
+        "name": "nested-nmi",
+        "passed": true,
+        "frames_checked": 140,
+        "state_bytes_checked": 3920,
+        "host_frames": 848,
+        "pcm_segments": [
+          {
+            "name": "overflow",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 30922
+          },
+          {
+            "name": "zero_shift_overflow",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 30920
+          },
+          {
+            "name": "negate_zero_tone",
+            "kind": "audible",
+            "rms": 6937.27351893581,
+            "samples": 30922
+          },
+          {
+            "name": "period_seven",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 30922
+          },
+          {
+            "name": "disabled",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 30922
+          },
+          {
+            "name": "no_resurrection",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 30922
+          },
+          {
+            "name": "final_silence",
+            "kind": "silent",
+            "rms": 0.0,
+            "samples": 37318
+          }
+        ],
+        "rom_sha256": "796b52edc80e1f803e1c7d66a6a1b33a62813f6926ff41ca903296c8e54166af",
+        "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+        "scope": "Frame-quantized sweep/counter state, actual overflow/mute PCM; not independent NES cycle or waveform equivalence"
+      }
+    ],
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0,
+    "nes_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "snes_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Counted and counter-free variants: explicit CPU/PPU/APU events, mapper returns, interrupt stress and zero-offset OAM contents; not cycle accuracy or full-game coverage."
+  },
+  "runtime_safety_configurations": 32,
+  "private_route": {
+    "passed": true,
+    "complete_routes": true,
+    "fault_free": true,
+    "reference_fault": null,
+    "ram_addresses": [
+      60
+    ],
+    "ram_bytes_checked": 133,
+    "ram_mismatched_checkpoints": 0,
+    "ram_mismatches": [],
+    "clock_mode": "guarded",
+    "reference_platform": "nes",
+    "candidate_platform": "snes",
+    "reference_status": "completed_budget",
+    "candidate_status": "completed_budget",
+    "candidate_fault": null,
+    "planned_checkpoints": 133,
+    "checkpoints_compared": 133,
+    "state_fields_checked": 665,
+    "state_bytes_checked": 1197,
+    "mismatched_checkpoints": 0,
+    "mismatches": [],
+    "reference_report_sha256": "8e71a8f40724395aa5513448e17cdb4d0d8f1f63da5a1f668aa31e2448e81d34",
+    "candidate_report_sha256": "55d4c355fc979aa5d95e44d326be405a3867b74a9a2f2b09a2e35dbbf9764d84",
+    "reference_rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "candidate_rom_sha256": "0f4ac141190f4b7e0c3bbc1a691938c21872b133560e33bb4256f57c5b66f0ac",
+    "reference_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13",
+    "candidate_core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Selected area, camera and player fields plus explicitly requested common-RAM bytes at named input endpoints. Non-null faults reject acceptance. Not full RAM, pixels, audio, cycle timing, boss completion or whole-game equivalence."
+  },
+  "private_milestones": {
+    "passed": true,
+    "complete_route": true,
+    "label": "Newly authored CV3 Block 1-03 entry, not the missing 117-action route",
+    "platform": "snes",
+    "milestones_checked": 3,
+    "results": [
+      {
+        "name": "b103-082-down-200",
+        "passed": true,
+        "differences": {}
+      },
+      {
+        "name": "b103-129-none-60",
+        "passed": true,
+        "differences": {}
+      },
+      {
+        "name": "b103-entry-settled",
+        "passed": true,
+        "differences": {}
+      }
+    ],
+    "contract_sha256": "53ae4bf196f2bb875c46b20aa43a07d1733d7b4e23e7186732ba6308f22b4a8b",
+    "route_report_sha256": "55d4c355fc979aa5d95e44d326be405a3867b74a9a2f2b09a2e35dbbf9764d84",
+    "actions_sha256": "e08062f4d5e3c3847ffa964e50fca5e7650494fa0b614c7ba8b400a8f319269c",
+    "rom_sha256": "0f4ac141190f4b7e0c3bbc1a691938c21872b133560e33bb4256f57c5b66f0ac",
+    "core_sha256": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3",
+    "scope": "Named selected-state and common-RAM predicates for this exact input. Not full memory, pixels, audio, speed, boss defeat or whole-game equivalence."
+  },
+  "preserved_rng_failure": {
+    "passed": false,
+    "ram_mismatched_checkpoints": 131,
+    "ram_bytes_checked": 133
+  },
+  "production_source_hashes": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  },
+  "new_runtime_linked_to_game": false,
+  "physical_polling_verified": false,
+  "gameplay_speedup_claimed": false,
+  "ci_status": "Fresh local measurements; verify exact candidate CI independently before merge.",
+  "reference_replay": {
+    "passed": true,
+    "scope": "Unmodified NES reference vs instrumented NES observations at identical host-frame input times. Not SNES equivalence.",
+    "rom_sha256": "085ec6395681c7ebfda19c2986069c21a3d27738cc61ada76249de70a07ed7d3",
+    "reference_core_sha256": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+    "probe_core_sha256": "a21287f5773b9ba89299a3400e443405def3de45d095f0aa3514fac59a05bb13"
+  }
+}

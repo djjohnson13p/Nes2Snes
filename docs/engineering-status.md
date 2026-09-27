@@ -123,3 +123,10 @@ Read `interrupt-boundary.md` for native IRQ/NMI decision and stack entry, the
 fixture-only external-request harness, independent checks and remaining timing
 limits. The preceding local-only block executor was not recovered. Production
 runtime is unchanged; this is not a live scheduling or random-state correction.
+
+## Latest composed execution prototype
+
+Read `integrated-timeline.md` for the native instruction/cycle/interrupt integration,
+dependent stream comparisons, exact clock-origin checks and actual fault guards.
+The authored request policy is not physical pin sampling or the live CV3 scheduler.
+The production game binary is unchanged and the explicit RNG test still fails.
