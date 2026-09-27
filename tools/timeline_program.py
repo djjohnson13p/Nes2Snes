@@ -32,7 +32,18 @@ def validate_events(events: object) -> list[dict]:
     return events
 
 
-def decode(code: bytes,origin: int,starts: list[int]) -> list[tuple]:
+def memory_bytes(plan: dict) -> int:
+    """Explicit ABI selection; the omitted profile preserves the prior prototype."""
+    if 'memory_model' not in plan:
+        return 512
+    if plan['memory_model'] != 'internal-2k':
+        raise ValueError('Unknown timeline memory model')
+    return 2048
+
+
+def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False) -> list[tuple]:
+    if type(ram) is not bool:
+        raise ValueError('RAM extension gate must be boolean')
     if not isinstance(code,bytes) or not 1<=len(code)<=2048 or type(origin) is not int or not 0x8000<=origin<=0xFFF0 or origin+len(code)>0xFFFA:
         raise ValueError('Require a bounded immutable cartridge program')
     if not isinstance(starts,list) or any(type(p) is not int for p in starts) or starts!=sorted(set(starts)):
@@ -48,11 +59,15 @@ def decode(code: bytes,origin: int,starts: list[int]) -> list[tuple]:
         allowed|=name in CONTROL and mode=='imp'
         allowed|=name in ('JMP','JSR') and mode=='abs'
         allowed|=name in BRANCHES and mode=='rel'
+        if ram:
+            allowed |= name in REGULAR and mode in ('zpx','zpy','absx','absy','ix','iy')
+            allowed |= name in REGULAR and mode == 'abs' and operand < 0x2000
+            allowed |= name == 'JMP' and mode == 'ind' and operand < 0x2000
         if not allowed:raise ValueError('Instruction is outside the procedural translator contract')
         rows.append((pc,name,mode,raw,operand));pos+=size
     if [r[0] for r in rows]!=starts:raise ValueError('Missing or overlapping original instruction entries')
     for pc,name,mode,raw,operand in rows:
-        target=operand if name in ('JMP','JSR') else (pc+2+(operand if operand<128 else operand-256))&65535 if mode=='rel' else None
+        target=operand if name in ('JMP','JSR') and mode=='abs' else (pc+2+(operand if operand<128 else operand-256))&65535 if mode=='rel' else None
         if target is not None and target not in starts:raise ValueError('Static control target is not an observed entry')
     return rows
 
@@ -60,27 +75,28 @@ def decode(code: bytes,origin: int,starts: list[int]) -> list[tuple]:
 
 def validate_plan(plan: object) -> dict:
     keys={'name','origin','code','starts','irq','nmi','steps','stack','a','x','y','seed','counter','events'}
-    if not isinstance(plan,dict) or set(plan)!=keys:
+    if not isinstance(plan,dict) or set(plan)-{'memory_model'}!=keys:
         raise ValueError('Unknown or missing timeline plan fields')
     import re
     if not isinstance(plan['name'],str) or not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}',plan['name']):
         raise ValueError('Unsafe fixture name')
     if not isinstance(plan['code'],str) or len(plan['code'])>4096:
         raise ValueError('Invalid immutable program encoding')
-    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'])
+    size=memory_bytes(plan)
+    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'],ram=size==2048)
     for key in ('stack','a','x','y','seed','counter'):
         if type(plan[key]) is not int or not 0<=plan[key]<=255:
             raise ValueError('Declared boot inputs must be byte integers')
-    if type(plan['steps']) is not int or not 1<=plan['steps']<=112:
-        raise ValueError('Require 1..112 dependent steps')
+    if type(plan['steps']) is not int or not 1<=plan['steps']<=(31 if size==2048 else 112):
+        raise ValueError('Step count exceeds the selected capture ABI capacity')
     if any(type(plan[k]) is not int or plan[k] not in plan['starts'] for k in ('irq','nmi')) or plan['irq']==plan['nmi']:
         raise ValueError('Distinct observed vector entries required')
     validate_events(plan['events'])
     return plan
 
 
-def generate(code: bytes,origin: int,starts: list[int]) -> str:
-    rows=decode(code,origin,starts);out=[]
+def generate(code: bytes,origin: int,starts: list[int], *, ram: bool=False) -> str:
+    rows=decode(code,origin,starts,ram=ram);out=[]
     for pc,name,mode,raw,operand in rows:
         out.append(f'''.a16
 .i16
@@ -110,7 +126,13 @@ ins_{pc:04x}:
     sta GT+4
     jmp retire
 '''
-        if name in REGULAR:
+        if ram and name in REGULAR and mode not in ('imp','imm','acc'):
+            from timeline_ram import access
+            out.append(access(name,mode,operand)+resume(pc+len(raw)))
+        elif ram and name=='JMP' and mode=='ind':
+            from timeline_ram import jump
+            out.append(jump(operand))
+        elif name in REGULAR:
             out.append('    jsr load_guest\n.a8\n.i8\n    .byte '+','.join(f'${v:02X}' for v in raw)+'\n    jsr save_guest\n'+resume(pc+len(raw)))
         elif name in BRANCHES:
             target=(pc+2+(operand if operand<128 else operand-256))&65535
@@ -361,9 +383,10 @@ def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=Non
         from timeline_host import MODES
         if not isinstance(host_mode,str) or host_mode not in MODES:
             raise ValueError('Unknown host NMI mode')
-    code=bytes.fromhex(plan['code']);rows=decode(code,plan['origin'],plan['starts']);events=validate_events(plan['events'])
+    ram_bytes=memory_bytes(plan)
+    code=bytes.fromhex(plan['code']);rows=decode(code,plan['origin'],plan['starts'],ram=ram_bytes==2048);events=validate_events(plan['events'])
     if type(plan['steps']) is not int or not 1<=plan['steps']<=112:raise ValueError('Require 1..112 dependent steps')
-    if not isinstance(initial,bytes) or len(initial)!=544 or any(initial[:4]) or int.from_bytes(initial[4:6],'little')!=plan['origin']:
+    if not isinstance(initial,bytes) or len(initial)!=32+ram_bytes or any(initial[:4]) or int.from_bytes(initial[4:6],'little')!=plan['origin']:
         raise ValueError('Require one initial reference state at time zero and program entry')
     if any(initial[11:32]):raise ValueError('Initial state must precede requests and any executed step')
     if plan['irq'] not in plan['starts'] or plan['nmi'] not in plan['starts'] or plan['irq']==plan['nmi']:
@@ -372,7 +395,7 @@ def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=Non
     (out/'initial-ram.bin').write_bytes(initial[32:])
     (out/'initial-registers.bin').write_bytes(initial[4:11])
     (out/'events.bin').write_bytes(b''.join(struct.pack('<IBBBB',e['cycle'],e['irq'],e['nmi'],0,0) for e in events))
-    (out/'program.inc').write_text(generate(code,plan['origin'],plan['starts']) if program_text is None else program_text)
+    (out/'program.inc').write_text(generate(code,plan['origin'],plan['starts'],ram=ram_bytes==2048) if program_text is None else program_text)
     (out/'tables.inc').write_text(tables()+native_tables())
     for name in ('guest_cycles.inc','guest_interrupt.inc','guest_timeline.inc'):
         text=(ROOT/'snes/src'/name).read_text()
@@ -380,6 +403,12 @@ def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=Non
         (out/name).write_text(text)
     prefix=f"TimelineSteps={plan['steps']}\nTimelineInstructions={len(rows)}\nTimelineEventCount={len(events)}\nTimelineIRQ=${plan['irq']:04X}\nTimelineNMI=${plan['nmi']:04X}\n"
     driver=DRIVER
+    if ram_bytes==2048:
+        # Every guest address is resolved before access; raw mirrors never touch
+        # the host context at $1800. Capture all 2 KiB, at most 31 rows per bank.
+        driver=driver.replace('cpx #512','cpx #2048').replace('cpy #512','cpy #2048')
+        driver=driver.replace('.include "guest_cycles.inc"','.include "timeline_ram.inc"\n.include "guest_cycles.inc"')
+        (out/'timeline_ram.inc').write_bytes((ROOT/'snes/src/timeline_ram.inc').read_bytes())
     if host_mode is not None:
         from timeline_host import prepare
         driver=prepare(out,driver,host_mode)

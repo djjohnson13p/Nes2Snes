@@ -7,7 +7,7 @@ instructions on both platforms. This is intentionally not a physical pin model.
 from pathlib import Path
 import struct
 from native_fixture import Program
-from timeline_program import decode,validate_events,validate_plan
+from timeline_program import decode,validate_events,validate_plan,memory_bytes
 
 
 def program(origin: int=0x80D0) -> Program:
@@ -51,7 +51,7 @@ def cases() -> list[dict]:
 
 def create_nes(out: Path,plan: dict) -> Path:
     validate_plan(plan)
-    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts']);validate_events(plan['events'])
+    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'],ram=memory_bytes(plan)==2048);validate_events(plan['events'])
     out.mkdir(parents=True,exist_ok=True)
     boot=Program(0xE000);boot.op('SEI');boot.op('CLD');boot.op('LDX','imm',255);boot.op('TXS')
     boot.op('LDA','imm',0)
@@ -75,7 +75,7 @@ def create_nes(out: Path,plan: dict) -> Path:
 def expected_initial(plan: dict) -> bytes:
     """The declared boot inputs, independently checked against original execution."""
     validate_plan(plan)
-    data=bytearray(544);struct.pack_into('<H',data,4,plan['origin'])
+    data=bytearray(32+memory_bytes(plan));struct.pack_into('<H',data,4,plan['origin'])
     data[6:11]=bytes((plan['a'],plan['x'],plan['y'],0x24,plan['stack']))
     data[32+0x20]=plan['seed'];data[32+0x21]=plan['counter'];data[32+0x100+plan['stack']]=0x24
     return bytes(data)

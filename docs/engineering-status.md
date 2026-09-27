@@ -137,3 +137,10 @@ Read `host-nmi.md` for real SNES vblank interruption of the composed prototype,
 register/scratch preservation, nested entry, actual corruption controls, and the
 bounded worker contract. This does not change the authored guest request policy
 or install a physical-event scheduler in CV3. The RNG comparison remains failing.
+
+## Latest guarded RAM timeline
+
+Read `ram-timeline.md` for the opt-in full 2-KiB RAM profile, indexed/indirect
+address resolution, original cycle costs, complete-memory captures and actual
+before-access fault guards. Host NMI protection remains enabled in its tests.
+Production CV3 scheduling is unchanged; ROM/I/O and physical timing remain open.
