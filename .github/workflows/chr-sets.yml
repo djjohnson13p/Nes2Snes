@@ -1,0 +1,102 @@
+name: Blanked CHR set selection and independent mapper endpoints
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/chr-sets-verified-20260927]
+    paths: ['.github/workflows/chr-sets.yml', 'tools/**', 'tests/**', 'snes/**']
+  pull_request:
+    paths: ['.github/workflows/chr-sets.yml', 'tools/chr_sets*', 'tools/verify_chr_sets.py', 'tools/palette_state.py', 'tests/test_chr_sets.py', 'snes/src/chr_sets.inc']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies and exact tested source
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+          mkdir -p build
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - name: Unit and assembler tests
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Build pinned unmodified independent cores
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/libretro/nestopia.git build/nestopia
+          git -C build/nestopia checkout 8f00f500912a847062de432e38765c7285483e62
+          make -C build/nestopia/libretro -j2 > build/nestopia-build.log 2>&1
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/fceumm-build.log 2>&1
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes-build.log 2>&1
+      - name: Complete bank set, size, slot and capacity matrix
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_chr_sets.py \
+            --nes-core build/nestopia/libretro/nestopia_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/chr-sets 2>&1 | tee build/chr-sets.log
+      - name: Interrupted execution, wrong-result controls and refused prefixes
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_chr_sets.py --controls \
+            --nes-core build/nestopia/libretro/nestopia_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/chr-sets-controls 2>&1 | tee build/chr-sets-controls.log
+      - name: Retain full OAM execution and controls
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_oam_ports.py \
+            --nes-core build/nestopia/libretro/nestopia_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/retained-oam 2>&1 | tee build/retained-oam.log
+          /usr/bin/python3 tools/verify_oam_ports.py --controls \
+            --nes-core build/nestopia/libretro/nestopia_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --fce-core build/fceumm/fceumm_libretro.so \
+            --out build/retained-oam-controls 2>&1 | tee build/retained-oam-controls.log
+      - name: Retain fault guards and runtime safety
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_runtime_counters.py \
+            --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/runtime-safety 2>&1 | tee build/runtime-safety.log
+      - name: Archive authored inputs and raw independent observations
+        if: always()
+        run: |
+          roots=()
+          for d in build/chr-sets build/chr-sets-controls; do
+            if test -d "$d"; then roots+=("$d"); fi
+          done
+          if ((${#roots[@]})); then
+            find "${roots[@]}" -type f \( -name '*.json' -o -name '*.nst' -o -name '*.nes' -o -name '*.inc' -o -name '*.s' \) -print0 | \
+              tar --null -T - -czf build/chr-sets-evidence.tar.gz
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chr-sets-verification
+          path: |
+            build/*.log
+            build/tested-revision.txt
+            build/tested-source.zip
+            build/chr-sets-evidence.tar.gz
+            build/chr-sets/chr-sets-verification.json
+            build/chr-sets-controls/chr-sets-controls.json
+            build/retained-oam/oam-ports-verification.json
+            build/retained-oam-controls/oam-ports-controls.json
+            build/runtime-safety/runtime-counter-verification.json
+          retention-days: 30
