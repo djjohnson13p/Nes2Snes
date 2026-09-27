@@ -1,0 +1,85 @@
+name: Blanked CHR banking and protected PPU transfers
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/chr-blank-20260927]
+    paths: ['.github/workflows/chr-blank.yml', 'tools/**', 'tests/**', 'snes/**']
+  pull_request:
+    paths: ['.github/workflows/chr-blank.yml', 'tools/*chr_blank*', 'tools/*timeline*', 'tests/test_chr*', 'snes/src/mmc5_chr_blank.inc']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies and exact tested source
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+          mkdir -p build
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - name: Unit, assembler and compiled snapshot tests
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Pinned plain NES and read-only PPU observations
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/nes-plain-build.log 2>&1
+          cp build/fceumm/fceumm_libretro.so build/nes-plain.so
+          /usr/bin/python3 tools/instrument_chr_blank.py build/fceumm
+          make -C build/fceumm -f Makefile.libretro -j2 > build/nes-ppu-build.log 2>&1
+          cp build/fceumm/fceumm_libretro.so build/nes-ppu.so
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes-build.log 2>&1
+      - name: Independent CHR bank latches, transfers, mutations and guards
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_chr_blank.py \
+            --nes-plain build/nes-plain.so --nes-probe build/nes-ppu.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/chr-blank 2>&1 | tee build/chr-blank.log
+      - name: Retain complete blanked PPU and nametable execution
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_ppu_blank.py \
+            --nes-plain build/nes-plain.so --nes-probe build/nes-ppu.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/retained-ppu 2>&1 | tee build/retained-ppu.log
+      - name: Retain runtime fault guards and audio stress
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_runtime_counters.py \
+            --nes-core build/nes-plain.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/runtime-safety 2>&1 | tee build/runtime-safety.log
+      - name: Archive full authored CHR evidence
+        if: always()
+        run: |
+          if test -d build/chr-blank; then
+            find build/chr-blank -type f \( -name '*.json' -o -name '*.inc' -o -name '*.s' -o -name '*prg.bin' \) -print0 | \
+              tar --null -T - -czf build/chr-blank-evidence.tar.gz
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chr-blank-verification
+          path: |
+            build/*.log
+            build/tested-revision.txt
+            build/tested-source.zip
+            build/chr-blank-evidence.tar.gz
+            build/chr-blank/chr-blank-verification.json
+            build/retained-ppu/ppu-blank-verification.json
+            build/runtime-safety/runtime-counter-verification.json
+          retention-days: 30

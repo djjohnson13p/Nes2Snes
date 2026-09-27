@@ -182,3 +182,11 @@ CIRAM/fill routing, extended host-context protection and independent PPU snapsho
 Rendering, CHR/palettes/OAM, status timing and ExRAM nametables remain guarded.
 An upper-bit fill-attribute reference disagreement is retained separately. This
 profile is not installed in production CV3 and has no fresh commercial-game replay.
+
+## Latest fixed-size CHR-ROM transfer profile
+
+Read `chr-blank.md` for blanked set-A CHR reads, latched upper bits, original
+CHR separation, independent physical-map snapshots and compact host context.
+All four bank sizes are tested separately; live size changes and set B remain
+guarded. This is not rendering or production CV3 integration. No new private
+gameplay replay, RNG fix or speed improvement is claimed.

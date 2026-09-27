@@ -36,12 +36,13 @@ def memory_bytes(plan: dict) -> int:
     """Explicit ABI selection; the omitted profile preserves the prior prototype."""
     if 'memory_model' not in plan:
         return 512
-    if plan['memory_model'] not in ('internal-2k', 'nrom-32k', 'mmc5-prg-rom', 'mmc5-prg-ram32', 'mmc5-cpu-io', 'mmc5-ppu-blank'):
+    if plan['memory_model'] not in ('internal-2k', 'nrom-32k', 'mmc5-prg-rom', 'mmc5-prg-ram32', 'mmc5-cpu-io', 'mmc5-ppu-blank', 'mmc5-chr-blank'):
         raise ValueError('Unknown timeline memory model')
     return 2048
 
 
-def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False, mapper: bool=False, static_targets: set[int]|None=None, cartridge_ram: bool=False, cpu_io: bool=False, ppu_blank: bool=False) -> list[tuple]:
+def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False, mapper: bool=False, static_targets: set[int]|None=None, cartridge_ram: bool=False, cpu_io: bool=False, ppu_blank: bool=False, chr_blank: bool=False) -> list[tuple]:
+    if type(chr_blank) is not bool or (chr_blank and not ppu_blank):raise ValueError('CHR requires blank PPU')
     if type(ppu_blank) is not bool or (ppu_blank and not cpu_io):
         raise ValueError('Blank PPU requires the explicit CPU-I/O gate')
     if type(cpu_io) is not bool or (cpu_io and not cartridge_ram):
@@ -86,6 +87,8 @@ def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: b
             allowed |= name=='JMP' and mode=='ind' and 0x5C00 <= operand < 0x6000
             allowed |= name=='STA' and mode=='abs' and operand==0x5104
             allowed |= name in ('LDA','STA') and mode=='abs' and operand in (0x5205,0x5206)
+        if chr_blank:
+            allowed |= name=='STA' and mode=='abs' and (operand in (0x5101,0x5130) or 0x5120<=operand<=0x512B)
         if ppu_blank:
             allowed |= name in ('LDA','STA') and mode=='abs' and 0x2000 <= operand < 0x4000
             allowed |= name=='STA' and mode=='abs' and operand in (0x5105,0x5106,0x5107)
@@ -100,6 +103,9 @@ def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: b
 
 
 def validate_plan(plan: object) -> dict:
+    if isinstance(plan,dict) and plan.get('memory_model')=='mmc5-chr-blank':
+        from mmc5_chr_blank import validate
+        return validate(plan)
     if isinstance(plan,dict) and plan.get('memory_model')=='mmc5-ppu-blank':
         from mmc5_ppu_blank import validate
         return validate(plan)
@@ -135,8 +141,8 @@ def validate_plan(plan: object) -> dict:
     return plan
 
 
-def generate(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False, mapper: bool=False, static_targets: set[int]|None=None, cartridge_ram: bool=False, cpu_io: bool=False, ppu_blank: bool=False) -> str:
-    rows=decode(code,origin,starts,ram=ram,rom=rom,mapper=mapper,static_targets=static_targets,cartridge_ram=cartridge_ram,cpu_io=cpu_io,ppu_blank=ppu_blank);out=[]
+def generate(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False, mapper: bool=False, static_targets: set[int]|None=None, cartridge_ram: bool=False, cpu_io: bool=False, ppu_blank: bool=False, chr_blank: bool=False) -> str:
+    rows=decode(code,origin,starts,ram=ram,rom=rom,mapper=mapper,static_targets=static_targets,cartridge_ram=cartridge_ram,cpu_io=cpu_io,ppu_blank=ppu_blank,chr_blank=chr_blank);out=[]
     for pc,name,mode,raw,operand in rows:
         out.append(f'''.a16
 .i16
@@ -166,7 +172,10 @@ ins_{pc:04x}:
     sta GT+4
     jmp retire
 '''
-        if ppu_blank and mode=='abs' and (0x2000 <= operand < 0x4000 or operand in (0x5105,0x5106,0x5107)):
+        if chr_blank and name=='STA' and mode=='abs' and (operand in (0x5101,0x5130) or 0x5120<=operand<=0x512B):
+            from mmc5_chr_blank import register_code
+            out.append(register_code(operand)+resume(pc+len(raw)))
+        elif ppu_blank and mode=='abs' and (0x2000 <= operand < 0x4000 or operand in (0x5105,0x5106,0x5107)):
             from mmc5_ppu_blank import register_code
             out.append(register_code(name,operand)+resume(pc+len(raw)))
         elif cpu_io and mode=='abs' and operand in (0x5104,0x5205,0x5206):
@@ -444,6 +453,9 @@ InitialRegisters: .incbin "initial-registers.bin"
 
 def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=None,program_text: str|None=None,host_mode: str|None=None) -> Path:
     validate_plan(plan)
+    if plan.get('memory_model')=='mmc5-chr-blank':
+        from mmc5_chr_blank import create_native as banked
+        return banked(out,plan,initial,retirement=retirement,program_text=program_text,host_mode=host_mode)
     if plan.get('memory_model')=='mmc5-ppu-blank':
         from mmc5_ppu_blank import create_native as banked
         return banked(out,plan,initial,retirement=retirement,program_text=program_text,host_mode=host_mode)
