@@ -2,7 +2,7 @@ name: Secondary NES oracle toolchain
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, development/palette-timeline-20260927]
     paths: ['.github/workflows/secondary-nes-oracle.yml']
 permissions:
   contents: read
