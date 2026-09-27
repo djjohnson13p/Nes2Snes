@@ -1,5 +1,12 @@
 # Nes2Snes
 
+## Current: protected MMC5 cartridge RAM
+
+The experimental timeline now supports an explicit 32-KiB cartridge-RAM profile,
+including bank aliases and ignored protected writes. Original execution supplies
+independent state and final-memory comparisons. It is not enabled in the production
+CV3 runtime; see [scope, evidence and resumption](docs/mmc5-cartridge-ram.md).
+
 ## Current: bank-qualified MMC5 PRG execution
 
 The protected prototype now executes MMC5 PRG-ROM bank writes, selects code by
