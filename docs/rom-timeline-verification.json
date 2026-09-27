@@ -1,0 +1,139 @@
+{
+  "base_revision": "efb4eafbd564cdd5a3fa7d4e864d72d3b5b4434b",
+  "base_pr": 13,
+  "unit_tests": {
+    "passed": true,
+    "count": 483,
+    "skipped": 0,
+    "clean_source_passed": true
+  },
+  "rom_matrix": {
+    "passed": true,
+    "memory_model": "nrom-32k",
+    "plans": 97,
+    "scenarios": 206,
+    "dependent_boundaries": 6386,
+    "compared_bytes": 13282880,
+    "no_request_plain_comparisons": 93,
+    "host_scenarios": 109,
+    "host_interrupts": 4037,
+    "read_opcode_variants": 42,
+    "negative_controls": [
+      {
+        "name": "translated-not-original",
+        "rejected": true
+      },
+      {
+        "name": "wrong-upper-bank",
+        "rejected": true
+      },
+      {
+        "name": "missing-write-guard",
+        "rejected": true
+      }
+    ],
+    "fault_guards": [
+      {
+        "name": "rom-guard-store-rom",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      },
+      {
+        "name": "rom-guard-rmw-rom",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      },
+      {
+        "name": "rom-guard-indexed-rom-write",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      },
+      {
+        "name": "rom-guard-preliminary-unmapped",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      },
+      {
+        "name": "rom-guard-wrapped-into-ppu",
+        "rejected": true,
+        "completed_steps": 2,
+        "status": 5,
+        "unchanged_guest_bytes": 2048,
+        "unchanged_header_bytes": 14
+      }
+    ],
+    "cores": {
+      "nes_plain": "3755f1d56a2e6e6f1ab1a5fb5063da6efd197fa644046ae86dd3b55f84306157",
+      "nes_stimulus": "79d15b63af50b42f203d19bc9a7bcd621046aa903611422ff8ad856a2f622a0f",
+      "snes": "89f581685aa126fad2ba6518cc7534e2174322d6db9ff278cb948ad53719dcc3"
+    },
+    "production_runtime_changed": false,
+    "mmc5_mapping_implemented": false,
+    "scope": "Authored immutable NROM-256 data reads and RAM, instruction costs and sampled guest requests under real emulated host NMIs. Not MMC5, bus transactions, physical pin timing, DMA/DMC, CV3 scheduling or speed."
+  },
+  "preserved_profile_builds": {
+    "byte_identical": true,
+    "default": 18,
+    "internal_2k": 244
+  },
+  "retained_runtime_safety": {
+    "passed": true,
+    "configurations": 32,
+    "records_checked": 4224,
+    "bytes_checked": 16896,
+    "oam_bytes_checked": 1024,
+    "mismatches": 0
+  },
+  "new_cv3_replay_performed": false,
+  "production_runtime_changed": false,
+  "prior_rng_failure_fixed": false,
+  "mmc5_mapping_implemented": false,
+  "gameplay_speedup_claimed": false,
+  "ci_status": "Local results. Verify the published candidate and its actual workflows separately.",
+  "clean_source_replays": {
+    "passed": true,
+    "scenarios": 3,
+    "results": [
+      {
+        "name": "rom-bd-1-80c0-00",
+        "host_mode": null,
+        "steps": 31,
+        "bytes": 64480,
+        "identical_saved_reference": true,
+        "identical_saved_native": true
+      },
+      {
+        "name": "rom-b1-1-90ff-03-events",
+        "host_mode": "nested",
+        "steps": 31,
+        "bytes": 64480,
+        "identical_saved_reference": true,
+        "identical_saved_native": true
+      },
+      {
+        "name": "rom-jmp-92ff",
+        "host_mode": null,
+        "steps": 31,
+        "bytes": 64480,
+        "identical_saved_reference": true,
+        "identical_saved_native": true
+      }
+    ]
+  },
+  "production_source_hashes": {
+    "snes/src/native.s": "3c42b333ecc3b01ad1aad5347638ccbf0545d9331582c4116497f01e0db20399",
+    "tools/build_native.py": "3f84ad50916de1bcae935ec9a2dd475fa666fd5273aaddf61887883c4c6804cf"
+  }
+}

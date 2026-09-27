@@ -36,14 +36,14 @@ def memory_bytes(plan: dict) -> int:
     """Explicit ABI selection; the omitted profile preserves the prior prototype."""
     if 'memory_model' not in plan:
         return 512
-    if plan['memory_model'] != 'internal-2k':
+    if plan['memory_model'] not in ('internal-2k', 'nrom-32k'):
         raise ValueError('Unknown timeline memory model')
     return 2048
 
 
-def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False) -> list[tuple]:
-    if type(ram) is not bool:
-        raise ValueError('RAM extension gate must be boolean')
+def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False) -> list[tuple]:
+    if type(ram) is not bool or type(rom) is not bool or (rom and not ram):
+        raise ValueError('ROM extension requires explicit boolean RAM and ROM gates')
     if not isinstance(code,bytes) or not 1<=len(code)<=2048 or type(origin) is not int or not 0x8000<=origin<=0xFFF0 or origin+len(code)>0xFFFA:
         raise ValueError('Require a bounded immutable cartridge program')
     if not isinstance(starts,list) or any(type(p) is not int for p in starts) or starts!=sorted(set(starts)):
@@ -63,6 +63,9 @@ def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False) -> lis
             allowed |= name in REGULAR and mode in ('zpx','zpy','absx','absy','ix','iy')
             allowed |= name in REGULAR and mode == 'abs' and operand < 0x2000
             allowed |= name == 'JMP' and mode == 'ind' and operand < 0x2000
+        if rom:
+            allowed |= name in REGULAR and mode == 'abs' and operand >= 0x8000
+            allowed |= name == 'JMP' and mode == 'ind' and operand >= 0x8000
         if not allowed:raise ValueError('Instruction is outside the procedural translator contract')
         rows.append((pc,name,mode,raw,operand));pos+=size
     if [r[0] for r in rows]!=starts:raise ValueError('Missing or overlapping original instruction entries')
@@ -75,7 +78,7 @@ def decode(code: bytes,origin: int,starts: list[int], *, ram: bool=False) -> lis
 
 def validate_plan(plan: object) -> dict:
     keys={'name','origin','code','starts','irq','nmi','steps','stack','a','x','y','seed','counter','events'}
-    if not isinstance(plan,dict) or set(plan)-{'memory_model'}!=keys:
+    if not isinstance(plan,dict) or set(plan)-{'memory_model','rom_data'}!=keys:
         raise ValueError('Unknown or missing timeline plan fields')
     import re
     if not isinstance(plan['name'],str) or not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}',plan['name']):
@@ -83,7 +86,9 @@ def validate_plan(plan: object) -> dict:
     if not isinstance(plan['code'],str) or len(plan['code'])>4096:
         raise ValueError('Invalid immutable program encoding')
     size=memory_bytes(plan)
-    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'],ram=size==2048)
+    code=bytes.fromhex(plan['code']);decode(code,plan['origin'],plan['starts'],ram=size==2048,rom=plan.get('memory_model')=='nrom-32k')
+    from timeline_rom import validate_data
+    validate_data(plan)
     for key in ('stack','a','x','y','seed','counter'):
         if type(plan[key]) is not int or not 0<=plan[key]<=255:
             raise ValueError('Declared boot inputs must be byte integers')
@@ -95,8 +100,8 @@ def validate_plan(plan: object) -> dict:
     return plan
 
 
-def generate(code: bytes,origin: int,starts: list[int], *, ram: bool=False) -> str:
-    rows=decode(code,origin,starts,ram=ram);out=[]
+def generate(code: bytes,origin: int,starts: list[int], *, ram: bool=False, rom: bool=False) -> str:
+    rows=decode(code,origin,starts,ram=ram,rom=rom);out=[]
     for pc,name,mode,raw,operand in rows:
         out.append(f'''.a16
 .i16
@@ -128,9 +133,13 @@ ins_{pc:04x}:
 '''
         if ram and name in REGULAR and mode not in ('imp','imm','acc'):
             from timeline_ram import access
+            if rom:
+                from timeline_rom import access
             out.append(access(name,mode,operand)+resume(pc+len(raw)))
         elif ram and name=='JMP' and mode=='ind':
             from timeline_ram import jump
+            if rom:
+                from timeline_rom import jump
             out.append(jump(operand))
         elif name in REGULAR:
             out.append('    jsr load_guest\n.a8\n.i8\n    .byte '+','.join(f'${v:02X}' for v in raw)+'\n    jsr save_guest\n'+resume(pc+len(raw)))
@@ -384,7 +393,7 @@ def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=Non
         if not isinstance(host_mode,str) or host_mode not in MODES:
             raise ValueError('Unknown host NMI mode')
     ram_bytes=memory_bytes(plan)
-    code=bytes.fromhex(plan['code']);rows=decode(code,plan['origin'],plan['starts'],ram=ram_bytes==2048);events=validate_events(plan['events'])
+    code=bytes.fromhex(plan['code']);rows=decode(code,plan['origin'],plan['starts'],ram=ram_bytes==2048,rom=plan.get('memory_model')=='nrom-32k');events=validate_events(plan['events'])
     if type(plan['steps']) is not int or not 1<=plan['steps']<=112:raise ValueError('Require 1..112 dependent steps')
     if not isinstance(initial,bytes) or len(initial)!=32+ram_bytes or any(initial[:4]) or int.from_bytes(initial[4:6],'little')!=plan['origin']:
         raise ValueError('Require one initial reference state at time zero and program entry')
@@ -395,7 +404,7 @@ def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=Non
     (out/'initial-ram.bin').write_bytes(initial[32:])
     (out/'initial-registers.bin').write_bytes(initial[4:11])
     (out/'events.bin').write_bytes(b''.join(struct.pack('<IBBBB',e['cycle'],e['irq'],e['nmi'],0,0) for e in events))
-    (out/'program.inc').write_text(generate(code,plan['origin'],plan['starts'],ram=ram_bytes==2048) if program_text is None else program_text)
+    (out/'program.inc').write_text(generate(code,plan['origin'],plan['starts'],ram=ram_bytes==2048,rom=plan.get('memory_model')=='nrom-32k') if program_text is None else program_text)
     (out/'tables.inc').write_text(tables()+native_tables())
     for name in ('guest_cycles.inc','guest_interrupt.inc','guest_timeline.inc'):
         text=(ROOT/'snes/src'/name).read_text()
@@ -409,11 +418,19 @@ def create_native(out: Path,plan: dict,initial: bytes,*,retirement: str|None=Non
         driver=driver.replace('cpx #512','cpx #2048').replace('cpy #512','cpy #2048')
         driver=driver.replace('.include "guest_cycles.inc"','.include "timeline_ram.inc"\n.include "guest_cycles.inc"')
         (out/'timeline_ram.inc').write_bytes((ROOT/'snes/src/timeline_ram.inc').read_bytes())
+    if plan.get('memory_model')=='nrom-32k':
+        driver=driver.replace('.include "timeline_ram.inc"','.include "timeline_rom.inc"')
+        (out/'timeline_rom.inc').write_bytes((ROOT/'snes/src/timeline_rom.inc').read_bytes())
     if host_mode is not None:
         from timeline_host import prepare
         driver=prepare(out,driver,host_mode)
     (out/'fixture.s').write_text(prefix+driver)
     subprocess.run([tool('ca65'),'-g','-I',str(out),'--bin-include-dir',str(out),'-o',str(out/'fixture.o'),str(out/'fixture.s')],check=True)
     subprocess.run([tool('ld65'),'-C',str(ROOT/'snes/linker/viewer.cfg'),'-o',str(out/'fixture.bin'),str(out/'fixture.o')],check=True)
-    data=finalize_rom((out/'fixture.bin').read_bytes(),b'');validate_sfc(data)
+    original=b''
+    if plan.get('memory_model')=='nrom-32k':
+        from timeline_fixture import create_nes
+        original=create_nes(out/'original',plan).read_bytes()[16:16+32768]
+        (out/'original-prg.bin').write_bytes(original)
+    data=finalize_rom((out/'fixture.bin').read_bytes(),original);validate_sfc(data)
     path=out/'fixture.sfc';path.write_bytes(data);return path
