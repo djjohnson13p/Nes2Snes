@@ -116,3 +116,10 @@ Read `guest-cycles.md` for the isolated native instruction-cost primitive, indep
 NES timing measurements and separate observed interrupt accounting. This is not a
 live scheduler or a recovered copy of the previously unpublished idle-budget work.
 The production runtime remains unchanged and the private RNG comparison still fails.
+
+## Latest sampled interrupt-entry component
+
+Read `interrupt-boundary.md` for native IRQ/NMI decision and stack entry, the
+fixture-only external-request harness, independent checks and remaining timing
+limits. The preceding local-only block executor was not recovered. Production
+runtime is unchanged; this is not a live scheduling or random-state correction.
