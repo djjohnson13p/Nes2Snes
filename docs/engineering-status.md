@@ -83,3 +83,13 @@ accuracy criteria and eventual physical-console testing.
 The previous chronological guide is preserved unchanged in
 [engineering-status-history.md](engineering-status-history.md). It supplies
 historical context, not current acceptance totals.
+
+## Latest blanked A/B CHR transfer adapter
+
+Read [CHR set transfers](chr-set-transfers.md) for the explicit forced-blank,
+8x16-sprite profile composed with OAM/palette transfers. It retains both bank
+sets and the last-write selection under host interruption without enlarging the
+protected stack frame. This is newly authored from merged PR #22, not recovery
+of a previous local-only CHR experiment. Live size changes and rendering remain
+refused. Check the exact candidate's completed reports and CI before merge.
+Production CV3 is unchanged and has no fresh gameplay/timing acceptance here.

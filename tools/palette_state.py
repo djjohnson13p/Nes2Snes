@@ -21,7 +21,8 @@ def unpack(data: bytes, size: int) -> bytes:
     return result
 
 
-def decode(data: bytes) -> dict:
+def decode(data: bytes, *, sprite_16: bool=False) -> dict:
+    if type(sprite_16) is not bool:raise ValueError('Explicit boolean sprite decoding gate required')
     if not isinstance(data,bytes) or not 8<=len(data)<=8*1024*1024 or data[:4]!=b'NST\x1a':
         raise ValueError('Require a bounded NST state')
     end=8+int.from_bytes(data[4:8],'little')
@@ -29,7 +30,7 @@ def decode(data: bytes) -> dict:
     root=_chunks(data[8:end]);ppu=_chunks(root.get(b'PPU\0',b''));cpu=_chunks(root.get(b'CPU\0',b''))
     reg=ppu.get(b'REG\0',b'');cr=cpu.get(b'REG\0',b'')
     if len(reg)!=11 or len(cr)!=7:raise ValueError('Missing or incorrect register chunks')
-    if reg[0]&0xE0 or reg[1]&0x18:raise ValueError('Rendering/NMI/sprite mode outside blanked profile')
+    if reg[0]&(0xC0 if sprite_16 else 0xE0) or reg[1]&0x18:raise ValueError('Rendering/NMI/sprite mode outside blanked profile')
     if reg[4]&0x80 or reg[6]&0x80 or reg[7]&0xF0:
         raise ValueError('Invalid serialized PPU address or write-phase bits')
     # Status vblank and OAM are outside this profile; no CPU output masking.
@@ -45,14 +46,14 @@ def decode(data: bytes) -> dict:
                 palette=bytes(v&63 for v in palette).hex(),ciram=unpack(ppu.get(b'NMT\0',b''),2048).hex())
 
 
-def decode_mmc5(data: bytes) -> dict:
+def decode_mmc5(data: bytes, *, sprite_16: bool=False) -> dict:
     """Decode stored MMC5 fields, not a simulated mapping or expected result.
 
     NstBoardMmc5::SubSave packs ExRAM mode in REG[0], NT routing in REG[6],
     fill tile in REG[23], and color in REG[24]'s low two bits (other bits belong
     to split-screen state). Original raw NST bytes are retained by the caller.
     """
-    decode(data)  # enforce the complete bounded NST and blanked-PPU contract
+    decode(data, sprite_16=sprite_16)  # enforce the complete bounded NST and blanked-PPU contract
     end=8+int.from_bytes(data[4:8],'little')
     root=_chunks(data[8:end])
     image=_chunks(root.get(b'IMG\0',b''))
