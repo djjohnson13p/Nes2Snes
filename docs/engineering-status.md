@@ -93,3 +93,13 @@ protected stack frame. This is newly authored from merged PR #22, not recovery
 of a previous local-only CHR experiment. Live size changes and rendering remain
 refused. Check the exact candidate's completed reports and CI before merge.
 Production CV3 is unchanged and has no fresh gameplay/timing acceptance here.
+
+## Latest guarded live CHR size adapter
+
+Read [guarded size changes](chr-mode-rewrite.md) for `mmc5-chr-rewrite-blank`.
+It starts from merged PR #23, `7fde149f2e49ed687b688883f25c74f4f97b651e`.
+Size changes are admitted, but pattern access requires rewriting all active banks
+of the selected set. A documented-latch/reference disagreement remains separate
+from passing tests; this gate is a translator policy, not NES hardware behavior.
+Existing fixed-size adapters and the production CV3 runtime remain unchanged.
+Check the new candidate's actual completed reports and CI before requesting merge.
