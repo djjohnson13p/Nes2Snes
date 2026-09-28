@@ -1,0 +1,96 @@
+name: RAM sprite DMA and independent instruction timing
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, development/oam-dma-clock-20260927]
+    paths: ['.github/workflows/oam-dma.yml', 'tools/**', 'tests/**', 'snes/**']
+  pull_request:
+    paths: ['.github/workflows/oam-dma.yml', 'tools/*dma*', 'tools/chr_mode_rewrite*', 'tools/verify_chr_mode_rewrite.py', 'tests/test_oam_dma_timeline.py', 'snes/src/oam_dma_timeline.inc']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies and exact tested source
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y cc65 python3-numpy python3-pil
+          mkdir -p build
+          git rev-parse HEAD > build/tested-revision.txt
+          git archive --format=zip --output=build/tested-source.zip HEAD
+      - name: Unit and assembler tests
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -m unittest discover -s tests -v 2>&1 | tee build/unit-tests.log
+      - name: Pinned plain and read-only timing cores
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/libretro/nestopia.git build/nestopia
+          git -C build/nestopia checkout 8f00f500912a847062de432e38765c7285483e62
+          make -C build/nestopia/libretro -j2 > build/nes-plain-build.log 2>&1
+          cp build/nestopia/libretro/nestopia_libretro.so build/nes-plain.so
+          /usr/bin/python3 tools/instrument_nestopia_dma.py build/nestopia
+          make -C build/nestopia/libretro -j2 > build/nes-timed-build.log 2>&1
+          cp build/nestopia/libretro/nestopia_libretro.so build/nes-timed.so
+          git clone --quiet https://github.com/libretro/snes9x.git build/snes9x
+          git -C build/snes9x checkout fae2fea08f74180759ef540ee94259213f503480
+          make -C build/snes9x/libretro -j2 > build/snes-build.log 2>&1
+          git clone --quiet https://github.com/libretro/libretro-fceumm.git build/fceumm
+          git -C build/fceumm checkout 236ccdfc911e84c60fea6b9d0699c2d440a8de14
+          make -C build/fceumm -f Makefile.libretro -j2 > build/fceumm-build.log 2>&1
+      - name: Complete RAM DMA and independent elapsed-clock matrix
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_oam_dma.py --nes-core build/nes-plain.so \
+            --observed-core build/nes-timed.so --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/oam-dma 2>&1 | tee build/oam-dma.log
+      - name: Interrupted copies, clock carry, mutants and before-access guards
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_oam_dma.py --controls --nes-core build/nes-plain.so \
+            --observed-core build/nes-timed.so --snes-core build/snes9x/libretro/snes9x_libretro.so \
+            --out build/oam-dma-controls 2>&1 | tee build/oam-dma-controls.log
+      - name: Retain complete rewritten CHR modes and controls
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_chr_mode_rewrite.py --nes-core build/nes-plain.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so --out build/retained-chr \
+            2>&1 | tee build/retained-chr.log
+          /usr/bin/python3 tools/verify_chr_mode_rewrite.py --controls --nes-core build/nes-plain.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so --out build/retained-chr-controls \
+            2>&1 | tee build/retained-chr-controls.log
+      - name: Retain runtime guards and audio stress
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 tools/verify_runtime_counters.py --nes-core build/fceumm/fceumm_libretro.so \
+            --snes-core build/snes9x/libretro/snes9x_libretro.so --out build/runtime-safety \
+            2>&1 | tee build/runtime-safety.log
+      - name: Archive original snapshots, actual timings and authored sources
+        if: always()
+        run: |
+          if test -d build/oam-dma; then
+            find build/oam-dma build/oam-dma-controls -type f \( -name '*.json' -o -name '*.nst' -o -name '*.nes' -o -name '*.inc' -o -name '*.s' \) -print0 | \
+              tar --null -T - -czf build/dma-evidence.tar.gz
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oam-dma-verification
+          path: |
+            build/*.log
+            build/tested-revision.txt
+            build/tested-source.zip
+            build/dma-evidence.tar.gz
+            build/oam-dma/dma-verification.json
+            build/oam-dma-controls/dma-controls.json
+            build/retained-chr/chr-mode-verification.json
+            build/retained-chr-controls/chr-mode-controls.json
+            build/runtime-safety/runtime-counter-verification.json
+          retention-days: 30

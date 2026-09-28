@@ -103,3 +103,14 @@ of the selected set. A documented-latch/reference disagreement remains separate
 from passing tests; this gate is a translator policy, not NES hardware behavior.
 Existing fixed-size adapters and the production CV3 runtime remain unchanged.
 Check the new candidate's actual completed reports and CI before requesting merge.
+
+## Latest RAM sprite-DMA adapter
+
+Read [DMA and elapsed timing](oam-dma-timeline.md) for `mmc5-oam-dma-ram`, based
+on merged PR #24 (`0398862d7f0d6c3052738e31a72d656152592905`). It combines an
+actual 256-byte RAM-to-OAM copy with a phase-synchronized 513/514-cycle stall,
+and checks elapsed instruction clocks/PCs against a read-only NES-core observer.
+Full memory comparisons remain final endpoints. DMC, guest interrupt requests,
+rendering and external source regions are not admitted. A final-attribute latch
+disagreement remains guarded rather than masked. Check the exact candidate's
+completed execution reports and CI before merge. Production CV3 is unchanged.
